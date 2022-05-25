@@ -1,0 +1,135 @@
+import * as Yup from 'yup';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useFormik, Form, FormikProvider } from 'formik';
+import axios from "axios";
+import styled from 'styled-components';
+
+// material
+import {
+  Alert,
+  Link,
+  Stack,
+  Checkbox,
+  TextField,
+  IconButton,
+  InputAdornment,
+  FormControlLabel
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+// component
+import Iconify from '../../../components/Iconify';
+import {useAuth} from '../../../hooks/authContext.js';
+
+// ----------------------------------------------------------------------
+
+export default function LoginForm() {
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error,setError] = useState(null);
+  const {loginContext, setLoginContext} = useAuth();
+
+
+ const ErrorTitle = styled.span`
+  font-size: 14px;
+  color:red;
+`;
+
+
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    password: Yup.string().required('Password is required')
+  });
+
+  const LoginSubmit = async (values) => {
+     const res = await axios.post("https://btcdb-test.ucsf.edu/api/auth", {"username":values.email,"password":values.password}).catch((err) => {
+       if(err && err.response)
+          if(err.response.status != 200) 
+              setError("User name or Password is invalid");
+     });
+
+     if(res && res.status == 200) {
+          setLoginContext({token:res.data.token})
+          navigate('/postLogin');
+     }
+  }  
+
+ const formik = useFormik({
+    initialValues: {
+      email:'',
+      password:'',
+      remember: true
+    },
+    validationSchema: LoginSchema,
+    onSubmit:LoginSubmit,
+  });
+
+  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+
+  const handleShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
+
+  return (
+    <FormikProvider value={formik}>
+      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+        { error &&
+        <ErrorTitle>
+            {error}
+        </ErrorTitle>
+        }
+        <TextField
+            fullWidth
+            autoComplete="username"
+            type="email"
+            label="User name"
+            {...getFieldProps('email')}
+            error={Boolean(touched.email && errors.email)}
+            helperText={touched.email && errors.email}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="current-password"
+            type={showPassword ? 'text' : 'password'}
+            label="Password"
+            {...getFieldProps('password')}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleShowPassword} edge="end">
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            error={Boolean(touched.password && errors.password)}
+            helperText={touched.password && errors.password}
+          />
+        </Stack>
+
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+          <FormControlLabel
+            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
+            label="Remember me"
+          />
+
+          <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
+            Forgot password?
+          </Link>
+        </Stack>
+
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+        >
+          Login
+        </LoadingButton>
+      </Form>
+    </FormikProvider>
+  );
+}
