@@ -1,7 +1,10 @@
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import MUIDataTable from "mui-datatables";
+import axios from "axios";
+
 // material
 import {
   Card,
@@ -14,6 +17,8 @@ import {
   TableBody,
   TableCell,
   Container,
+  LinearProgress,    
+  Box,    
   Typography,
   TableContainer,
   TablePagination
@@ -28,126 +33,139 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashbo
 //
 import USERLIST from '../_mocks_/user';
 
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'Institution', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' }
-];
-
-// ----------------------------------------------------------------------
+import { useNavigate } from "react-router-dom";
+import IconButton from '@mui/material/IconButton';
+import ResetTvIcon from '@mui/icons-material/ResetTv';
+import {useAuth} from '../hooks/authContext.js';
+import {CSV2JSON} from '../helper/csv2json_helper';
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
 
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
 }
 
 export default function User() {
-  const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('name');
-  const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+const navigate = useNavigate();
+const {loginContext} = useAuth();
+const [data, setData] = useState([]);    
+const [error, setError] = useState([]);  
+const [loading, setLoading] = useState(true);        
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+    
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+ useEffect(() => {
+        const fetchData = async () => {
+           const response = await axios.get("https://btcdb-test.ucsf.edu/api/patients/list", 
+                                    {headers:{
+                                      'Content-Type' :'applicaiton/json',
+                                      'X-Requested-With':'XMLHttpRequest', 
+                                      'UCSFAUTH-TOKEN':loginContext.token,
+                                       'tagId':loginContext.selTag.tagId,
+                                        'selRole':loginContext.selRole,
+                                        'Accept': 'application/json',
+                                    }}
+                                    ).catch((err) => {
+               if(err && err.response)
+                  if(err.response.status != 200) 
+                      setError("User name or Password is invalid");
+            });
+           
+            if(response && response.data) {
+               setData(response.data);
+                setLoading(false);
+            }
+            
+         };
+    fetchData();
+ }, []);
+    
+const getOptions =() =>{
+		var options = {};
+		
+		options.fixedHeader = true;
+		options.print =false;
+		options.pagination = false;
+		options.responsive='scroll';
+		options.selectableRows = 'none';
+		options.filterType='multiselect';
+        options.download=false;
+    	return options;
+};
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+const getColumns = () => {
+		var columns = [];
+		var options = {}
+		
+        
+        
+        options.customBodyRender = (value, tableMeta, updateValue) => {
+			if(isNonPHI())  {
+				return (
+					<Button size="small" color="primary" >
+					   {'XXXXXXXXXX'}
+			        </Button>
+				);
+			} else {
+				return (
+					<Button size="small" color="primary" >
+					   {value}
+			        </Button>
+				);	
+			}
+		};
+            
+		
+		var rows = loginContext.schema.filter(el => el.className === "Patient");
+		
+		
+		if(isNonPHI()) {
+			rows = rows.filter(el => (el.phi === false || el.id=='mrn'));
+			options.filter=false;
+			options.searchable=false;
+		}
+		
+		rows.forEach(
+				function(elem){
+					if(elem.type!='link'){
+					columns.push({
+				    	  name:'Patient.'+elem.id,
+				    	  label:elem.displayName,
+				    	  text: elem.displayName
+				     	});
+					} });
+		
+		columns.filter(el=>el.name==='Patient.mrn')[0].options = options;
+		
+		return columns;
+};    
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+const isNonPHI=()=>{
+    return (loginContext 
+            && loginContext.selRole == "NON_PHI" );
+};    
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
-
-  const isUserNotFound = filteredUsers.length === 0;
-
-  return (
-    <Page title="User | Minimal-UI">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            Patients
-          </Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="#"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            New Patient
-          </Button>
+return (
+    <Page title="Patients">
+        <Container maxWidth="xl">
+        <Box sx={{ pb: 5 }}>
+        <Stack direction="row" alignItems="center" spacing={0.5}>    
+          <Typography variant="h4">{loginContext.selTag.tagName}</Typography>
+          <IconButton aria-label="restart" size="medium"  onClick={() => navigate("/postLogin")}>
+            <ResetTvIcon fontSize="inherit" />
+          </IconButton>    
         </Stack>
-   
-      </Container>
+        </Box>
+
+        <Stack >    
+        <MUIDataTable
+            title="Patients"
+            options={getOptions()}
+            data={data}
+            columns={getColumns()} 
+            />
+        {loading && <LinearProgress />}
+        </Stack>
+                     
+     </Container>
     </Page>
   );
 }

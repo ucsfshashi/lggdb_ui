@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState,useEffect} from 'react';
+import { useState,useEffect,Fragment} from 'react';
 import {  useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import axios from "axios";
@@ -24,7 +24,8 @@ import {
   ListItem,
   Divider,
   ListItemText,
-  Typography    
+  Typography,
+  Box,    
 } from '@mui/material';
 
 
@@ -34,6 +35,7 @@ import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
 import {useAuth} from '../../../hooks/authContext.js';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 
 const roles = {
@@ -85,8 +87,30 @@ export default function PostLoginForm() {
 
     const PostLoginSubmit = async (values) => {
         setLoginContext({authority:roleId,selTag:selTagInfo});
-        navigate('/dashboard/app');
+        
+        if(roleId=='PHI_ACCESS' || roleId=='NON_PHI') {
+            fetchSchema();
+        } else {
+            navigate('/dashboard/app');    
+        }
     }  
+    
+    const fetchSchema = async () => {
+       const response = await axios.get("https://btcdb-test.ucsf.edu/api/schema?phi="+roleId+"&requestFor=INPUTUI", 
+                                {headers:{
+                                  'Content-Type' :'applicaiton/json',
+                                  'X-Requested-With':'XMLHttpRequest', 
+                                  'UCSFAUTH-TOKEN':loginContext.token,
+                                  'tagId':selTagInfo.tagId,          
+                                }}
+                                ).catch((err) => {
+           if(err && err.response)
+              if(err.response.status != 200) 
+                  setError("User name or Password is invalid");
+        }); 
+        setLoginContext({schema:response.data});
+        navigate('/dashboard/app');   
+    };
 
     const formik = useFormik({
       initialValues: {
@@ -113,6 +137,21 @@ export default function PostLoginForm() {
     setSelTagIndex(event.target.value);  
     setIsDisabled(false);    
   };
+    
+    const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+        ))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    border: '1px solid #dadde9',
+    width:'100%',  
+  },
+}));
+    
+  function truncate(str, n){
+     return (str.length > n) ? str.substr(0, n-1) + ' ...': str;
+  };    
 
   return (
     <FormikProvider value={formik}>
@@ -169,13 +208,26 @@ export default function PostLoginForm() {
                             {selTagInfo &&
                             <FormHelperText>
                                <strong> {'Investigator:'} </strong>
-                               {' (' +selTagInfo.principalInvestigator} {') - '}       
+                               {' ' +selTagInfo.principalInvestigator} {' - '}       
                                <strong> {'Contact:'} </strong>
-                               {' (' +selTagInfo.pointOfContact} {')'}      
+                               {' ' +selTagInfo.pointOfContact} {''}      
                                <br/>
-                               <strong> {'Description:'} </strong>
-                               {selTagInfo.description}       
-                            </FormHelperText>
+                              <HtmlTooltip
+                                    title={
+                                        <Fragment>
+                                           <Typography color="inherit">{selTagInfo.tagName}</Typography>
+                                           <Typography variant="body2">
+                                                        {selTagInfo.description}
+                                            </Typography>
+                                        </Fragment>
+                                        }
+                                >
+                                    <Link underline="none" sx={{cursor:'pointer'}}>
+                                   <strong> {'Description:'} </strong>
+                                   {truncate(selTagInfo.description,140)}
+                                    </Link>
+                               </HtmlTooltip>
+                             </FormHelperText>    
                             }
                           </FormControl>
 		        		)

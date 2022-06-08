@@ -13,17 +13,17 @@ const sidebarConfig = [
   },
   {
     title: 'Patient',
-    path: '/dashboard/user',
+    path: '/dashboard/patients',
     icon: getIcon('eva:people-fill')
   },
   {
     title: 'Query',
-    path: '/dashboard/products',
+    path: '/dashboard/query',
     icon: getIcon('eva:cloud-download-fill')
   },
   {
     title: 'Upload',
-    path: '/dashboard/blog',
+    path: '/dashboard/upload',
     icon: getIcon('eva:cloud-upload-fill')
   }
 ];

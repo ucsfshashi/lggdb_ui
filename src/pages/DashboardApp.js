@@ -32,7 +32,7 @@ export default function DashboardApp() {
     
     
   return (
-    <Page title="Dashboard | Minimal-UI">
+    <Page title="Dashboard">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
         <Stack direction="row" alignItems="center" spacing={0.5}>    
