@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import axios from "axios";
@@ -29,7 +29,12 @@ export default function LoginForm() {
   const [error,setError] = useState(null);
   const {loginContext, setLoginContext} = useAuth();
 
-
+  useEffect(() => {
+      //resetting login context  
+      localStorage.clear();   
+  }, []);
+    
+    
  const ErrorTitle = styled.span`
   font-size: 14px;
   color:red;
@@ -49,6 +54,7 @@ export default function LoginForm() {
      });
 
      if(res && res.status == 200) {
+          localStorage.clear();
           setLoginContext({token:res.data.token})
           navigate('/postLogin');
      }

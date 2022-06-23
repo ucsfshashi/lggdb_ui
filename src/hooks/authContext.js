@@ -5,14 +5,17 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({children}) => {
   
  const initialState = {token: null, authority: null,selTag:null,userName:null};   
- const [loginContext, setLoginContext] = useReducer(
-      (state, updates) => ({
-        ...state,
-        ...updates,
-      }),
-      initialState
+ const reducer = (state, updates) => {
+  localStorage.setItem("auth_context", JSON.stringify({...state,...updates}));     
+  return {...state,...updates};
+ };      
+    
+  const [loginContext, setLoginContext] = useReducer(
+      reducer,
+      JSON.parse(localStorage.getItem("auth_context"))
     );
-  return (
+                      
+ return (
     <AuthContext.Provider value={{loginContext, setLoginContext}}>
       {children}
     </AuthContext.Provider>

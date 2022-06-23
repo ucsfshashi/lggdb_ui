@@ -57,12 +57,14 @@ const roles = {
 
 export default function PostLoginForm() {
       const navigate = useNavigate();
+      
+      const {loginContext, setLoginContext} = useAuth();
       const [userInfo, setUserInfo] = useState(null);
-      const [selTagInfo, setSelTagInfo] = useState(null);
+      const [selTagInfo, setSelTagInfo] = useState(loginContext.selTag);
       const [selTagIndex, setSelTagIndex] = useState(null);
       const [isDisabled, setIsDisabled] = useState(true);
-      const [roleId, setRoleId] = useState('');
-      const {loginContext, setLoginContext} = useAuth();
+      const [roleId, setRoleId] = useState(loginContext.authority);
+      
     
       const [error,setError] = useState(null);
      
@@ -81,6 +83,18 @@ export default function PostLoginForm() {
                       setError("User name or Password is invalid");
             });    
             setUserInfo(response.data.principal);
+            
+            if(loginContext.selTag && response.data.principal ) {
+                var selTagIndex = response.data.principal.tags.map(object => object.tagId).indexOf(loginContext.selTag.tagId);
+                setSelTagIndex(selTagIndex);
+                
+                if(selTagIndex != -1) {
+                    setIsDisabled(false);
+                }
+            }
+            
+            
+            
         };
         fetchData();
         }, []);
@@ -193,10 +207,10 @@ export default function PostLoginForm() {
             		(roleId && roleId != 'ADMIN'  && roleId != 'STUDY_ADMIN' && userInfo
             			&&  userInfo.tags &&  userInfo.tags.length >0 && 
         				<FormControl sx={{ m: 1, minWidth: 120 }} >
-                            <InputLabel id="demo-select-small">Select Study</InputLabel>
+                            <InputLabel id="demo-select-study-small">Select Study</InputLabel>
                             <Select
-                                labelId="demo-select-small"
-                                id="demo-select-small"
+                                labelId="demo-select-study-small"
+                                id="demo-select-study-small"
                                 value={selTagIndex}
                                 label="Select Study"
                                 onChange={handleStudyChange}
@@ -222,7 +236,7 @@ export default function PostLoginForm() {
                                         </Fragment>
                                         }
                                 >
-                                    <Link underline="none" sx={{cursor:'pointer'}}>
+                                    <Link underline="none" sx={{cursor:'pointer',color:'#637381'}}>
                                    <strong> {'Description:'} </strong>
                                    {truncate(selTagInfo.description,140)}
                                     </Link>
