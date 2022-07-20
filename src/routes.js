@@ -2,11 +2,13 @@ import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
+import PatientLayout from './layouts/patient';
 //
 import Login from './pages/Login';
 import PostLogin from './pages/PostLogin';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
+import PatientApp from './pages/PatientApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
@@ -24,6 +26,13 @@ export default function Router() {
         { path: 'patients', element: <User /> },
         { path: 'query', element: <Products /> },
         { path: 'upload', element: <Blog /> }
+      ]
+    },
+    {
+      path: '/goto',
+      element: <PatientLayout/>,
+      children: [
+        { path: 'patient', element: <PatientApp /> },
       ]
     },
     {

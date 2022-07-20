@@ -45,7 +45,7 @@ function descendingComparator(a, b, orderBy) {
 
 export default function User() {
 const navigate = useNavigate();
-const {loginContext} = useAuth();
+const {loginContext, setLoginContext} = useAuth();
 const [data, setData] = useState([]);    
 const [error, setError] = useState([]);  
 const [loading, setLoading] = useState(true);        
@@ -98,15 +98,18 @@ const getColumns = () => {
         
         
         options.customBodyRender = (value, tableMeta, updateValue) => {
+        
+         
+        
 			if(isNonPHI())  {
 				return (
-					<Button size="small" color="primary" >
+					<Button size="small" color="primary"   onClick={()=>gotoPatient(value)} >
 					   {'XXXXXXXXXX'}
 			        </Button>
 				);
 			} else {
 				return (
-					<Button size="small" color="primary" >
+					<Button size="small" color="primary"  onClick={()=>gotoPatient(value)} >
 					   {value}
 			        </Button>
 				);	
@@ -137,6 +140,12 @@ const getColumns = () => {
 		
 		return columns;
 };    
+
+const gotoPatient=(value)=>{
+	setLoginContext({mrn:value});
+	setLoginContext({topic:'Demographics'});
+	navigate('/goto/patient');
+};
 
 const isNonPHI=()=>{
     return (loginContext 
