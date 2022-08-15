@@ -1,5 +1,4 @@
 import React from 'react';
-import {createMuiTheme,MuiThemeProvider} from '@material-ui/core/styles';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
@@ -10,26 +9,23 @@ import Typography from '@material-ui/core/Typography';
 import FileView  from '../common/file_view'
 import TagView  from '../common/tag_view'
 import LinkView  from '../common/link_view'
+import TextField from '@mui/material/TextField';
+
+
 
 function PatientLabelField({field, value,config}) {
 	  value = value || '';
 	  return (
-		<div className="loglio-input-div" >	  
-		<label className="loglio-input-label">
-	      <div className="label-text">{field.displayName}</div>
-	     
-	      {field.type == 'file' ? <FileView config={config} value={value} displayName={field.displayName} /> : 
-	    	 ( field.type == 'link' ? <LinkView value={value}  /> :
-	    	   (field.id == 'tags'  ? <TagView config={config} value={value} displayName={field.displayName} /> : (<div className="value-text">
-	    	      {value?value:'---'}
-		    		</div>) 
-	    			   )
-	          )
-	    		      
-	    	}
-	   
-	      </label>
-	    </div>
+			<div>
+			   <TextField
+	          id="outlined-read-only-input"
+	          label="HELLO HI HELLO HI HELLO HI"
+	          defaultValue={value}
+	          InputProps={{
+	            readOnly: true,
+	          }}
+	        />
+			</div>
 	  );
 }
 
@@ -40,32 +36,7 @@ export default class PatientCardView extends React.Component {
 	    super(props);
 	};
 	
-	getMuiTheme = () => createMuiTheme({
-		overrides: {
-			MuiPaper : {
-				root :{
-					    marginLeft: '-25px',
-					    width: '100%',
-					    padding : '5px',
-					    minHeight: '500px',
-					    fontFamily: 'Helvetica Light',
-					    marginTop: '-14px',
-					  }
-			},
-			MuiSvgIcon :{
-		    	root:{
-		    		fontSize: '2.5rem'
-		    	} 	
-		    },
-		    MuiTypography:{
-		    	h4:{
-	    		 fontSize:'3.3rem',
-	    		 letterSpacing:'0.03em',
-	    		 fontFamily:'Helvetica Light'		
-		    	}
-		    },
-		}
-	});	
+	
 
 	render() {  
 	
@@ -74,8 +45,8 @@ export default class PatientCardView extends React.Component {
 		
 		
 		return (
-				<MuiThemeProvider theme={this.getMuiTheme()}>
-				  <Paper elevation='0' >
+				
+				<Paper elevation='0' >
 				 
 				  <Grid container alignItems="center">
 			          <Grid item xs>
@@ -91,7 +62,7 @@ export default class PatientCardView extends React.Component {
 			          		}
 			          </Grid>
 		         </Grid>
-				 <Divider variant="middle" variant='middle' />
+				 <Divider variant="middle" />
 				  { !showLoading && 
 				 <Grid container 
 			      direction="row"
@@ -124,7 +95,7 @@ export default class PatientCardView extends React.Component {
 					   </Grid>  
 				  }
 				 </Paper>
-				 </MuiThemeProvider>
+				 
 		  );
 	}
 }

@@ -19,52 +19,6 @@ export default class PatientCardEdit extends React.Component {
 	    super(props);
 	};
 	
-	getMuiTheme = () => createMuiTheme({
-		overrides: {
-			MuiPaper : {
-				root :{
-					    marginLeft: '-25px',
-					    width: '100%',
-					    padding : '5px',
-					    minHeight: '500px',
-					    fontFamily: 'Helvetica Light',
-					    marginTop: '-14px',
-					  }
-			},
-			MuiSvgIcon :{
-		    	root:{
-		    		fontSize: '2.5rem'
-		    	} 	
-		    },
-		    MuiCircularProgress :{
-		    	root :{
-	    		    top: 5,
-	    		    left: 5,
-	    		    zIndex: 1,
-	    		    position:'absolute'
-		    	}
-			},
-			MuiTypography : {
-				colorPrimary :{
-					color: '#f9f1f1',
-					backgroundColor: 'green',
-			    	borderRadius: '4px',
-			    	height: '30px',
-			    	paddingLeft: '30px',
-			    	paddingTop: '5px'
-				}
-			},
-			MuiTypography:{
-		    	h4:{
-		    		 fontSize:'3.3rem',
-		    		 letterSpacing:'0.03em',
-		    		 fontFamily:'Helvetica Light'		
-			    	}
-			},
-		}
-	});	
-	
-
 	render() {  
 	
 		const {rows,cardTitle, associationKey,config, 
@@ -75,9 +29,7 @@ export default class PatientCardEdit extends React.Component {
 		};	
 			
 		return (
-				<MuiThemeProvider theme={this.getMuiTheme()}>
 				  <Paper elevation='0' >
-				 
 				  <Grid container alignItems="center">
 			          <Grid item xs>
 			            <Typography gutterBottom variant="h4">
@@ -138,7 +90,6 @@ export default class PatientCardEdit extends React.Component {
 		          })}
 				 </Grid> 
 				 </Paper>
-				 </MuiThemeProvider>
 		  );
 	}
 }

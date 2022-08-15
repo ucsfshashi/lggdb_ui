@@ -17,7 +17,7 @@ export default class DemographicView extends React.Component {
 	getRows  = () => {
 		
 		var isNonPhi = (this.props.loginContext && this.props.loginContext.selRole == "NON_PHI" );
-		var rows = this.props.schema.filter(el => el.topic === "Demographics");
+		var rows =this.props.loginContext.schema.filter(el => el.topic === "Demographics");
 		
 		if(isNonPhi) {
 			rows = rows.filter(el => el.phi === false);
@@ -30,7 +30,7 @@ export default class DemographicView extends React.Component {
 	async extractData () {
         const {config,mrn,loginContext} = this.props;
         this.setState({showLoading:true});
-	    var path ='Patient/'+mrn;
+	    var path ='Patient/'+loginContext.mrn;
         var demographicInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',

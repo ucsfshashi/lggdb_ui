@@ -8,13 +8,14 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import { useNavigate } from "react-router-dom";
-//import PatientRouter from '../manual_ui/patient_router';
+import PatientRouter from '../manual_ui/patient_router';
 import { useState } from 'react';
 
 
 // ----------------------------------------------------------------------
 
 export default function PatientApp() {
+
 
   const {loginContext} = useAuth();   
   const navigate = useNavigate();    
@@ -36,9 +37,7 @@ export default function PatientApp() {
           </IconButton>
         </Stack>
         </Box>
-        <Box sx={{ pb: 5 }}>
-        	{loginContext.topic}
-        </Box>
+        <PatientRouter topicName={loginContext.topic} mode='View'  loginContext={loginContext} />
       </Container>
     </Page>
   );
