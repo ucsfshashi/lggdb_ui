@@ -1,15 +1,10 @@
 import React from 'react';
 import {createMuiTheme,MuiThemeProvider} from '@material-ui/core/styles';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import {Button} from '@mui/material';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import MUIDataTable from "mui-datatables";
 import MUIAddButton from '../common/MUIAddButton'
 import ChildMenu from './child_menu'
+import {Paper,Button,Grid,Typography,Divider,LinearProgress,Stack} from '@mui/material';
 
 
 export default class PatientListView extends React.Component {
@@ -140,35 +135,15 @@ export default class PatientListView extends React.Component {
 		
 		
 		return (
-				<Paper elevation='0' >
-				  { !showLoading && 
-					  <MUIDataTable
-					  title={cardTitle}
-					  data={this.getPatientInfo()}
-					  columns={this.getColumns()}
-				      options={this.getOptions()}
-					/> 
-				  }
-				  {
-					  showLoading && 
-					  <Grid container 
-				            direction="row"
-				            	alignContent='center'	
-				            xs={12}	
-				            spacing={10} >
-					  		<Grid item  alignContent='center' xs={9}>
-					  			{"Loading... "}
-					  		</Grid>
-					  		<Grid item  alignContent='center' xs={4}>
-					  		</Grid>
-					  		<Grid item  alignContent='center' xs={2}>
-					           <CircularProgress/>
-					        </Grid>
-					   </Grid>
-					  
-				  }
-				  </Paper>
-				
+				<Stack >    
+				 <MUIDataTable
+				  title={cardTitle}
+				  data={this.getPatientInfo()}
+				  columns={this.getColumns()}
+			      options={this.getOptions()}
+				 /> 
+		        {showLoading  && <LinearProgress />}
+		        </Stack>
 		  );
 	}
 }
