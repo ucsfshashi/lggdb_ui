@@ -29,6 +29,7 @@ export default class DemographicView extends React.Component {
 	
 	async extractData () {
         const {config,mrn,loginContext} = this.props;
+        
         this.setState({showLoading:true});
 	    var path ='Patient/'+loginContext.mrn;
         var demographicInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 

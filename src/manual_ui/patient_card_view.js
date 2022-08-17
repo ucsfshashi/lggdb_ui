@@ -1,26 +1,23 @@
 import React from 'react';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+
+import {Divider,Grid,Paper,Typography} from '@mui/material';
+
 import FileView  from '../common/file_view'
 import TagView  from '../common/tag_view'
 import LinkView  from '../common/link_view'
 import TextField from '@mui/material/TextField';
-
-
+import Stack from '@mui/material/Stack';
 
 function PatientLabelField({field, value,config}) {
 	  value = value || '';
 	  return (
 			<div>
 			   <TextField
-	          id="outlined-read-only-input"
-	          label="HELLO HI HELLO HI HELLO HI"
-	          defaultValue={value}
+	          id={field.id}
+	          label={field.displayName}
+	          defaultValue={value ? value :' '}
 	          InputProps={{
 	            readOnly: true,
 	          }}
@@ -46,8 +43,9 @@ export default class PatientCardView extends React.Component {
 		
 		return (
 				
-				<Paper elevation='0' >
-				 
+			<Paper elevation='1' >
+			  <Stack spacing={2}>
+				
 				  <Grid container alignItems="center">
 			          <Grid item xs>
 			            <Typography gutterBottom variant="h4">
@@ -56,14 +54,12 @@ export default class PatientCardView extends React.Component {
 			          </Grid>
 			          <Grid item>
 			          		{  (loginContext && loginContext.selRole != "NON_PHI")  &&  (
-			          				<IconButton onClick={(event)=>this.props.onEditClick(event, patientInfo[0])} >
-				          			<EditIcon ontSize='large' color='primary' />
-					            </IconButton> )
+			          				<EditIcon ontSize='large' color='primary' />
+						          		 )
 			          		}
 			          </Grid>
 		         </Grid>
-				 <Divider variant="middle" />
-				  { !showLoading && 
+			  { !showLoading && 
 				 <Grid container 
 			      direction="row"
 			      spacing={1}>
@@ -94,7 +90,9 @@ export default class PatientCardView extends React.Component {
 					        </Grid>
 					   </Grid>  
 				  }
-				 </Paper>
+				 
+				 </Stack>	 
+			 </Paper>
 				 
 		  );
 	}
