@@ -18,6 +18,19 @@ import ClinicalEvaluationView from './clinicalEvaluation/view';
 import ImagingEdit from './imaging/view';
 import ImagingView from './imaging/view'; 
 
+
+import LoglioCognitiveEdit from './loglioCognitive/view';
+import LoglioCognitiveView from './loglioCognitive/view';
+
+
+import QOLEdit from './qol/view';
+import QOLView from './qol/view'; 
+
+
+import ChemotherapyEdit from './chemotherapy/view';
+import ChemotherapyView from './chemotherapy/view'; 
+
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -34,6 +47,9 @@ export default class PatientRouter extends React.Component {
 	        		case 'Tumor' : return TumorEdit;
 	        		case 'Imaging' : return ImagingEdit;
 	        		case 'Clinical Evaluation' : return ClinicalEvaluationEdit;
+	        		case 'Loglio cognitive': return LoglioCognitiveEdit;
+	        		case 'QOL': return QOLEdit;
+	        		case 'Chemotherapy' : return ChemotherapyEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -44,6 +60,9 @@ export default class PatientRouter extends React.Component {
 	    			case 'Tumor' : return TumorView;
 	    			case 'Imaging' : return ImagingView;
 	    			case 'Clinical Evaluation' : return ClinicalEvaluationView;
+	    			case 'Loglio cognitive': return LoglioCognitiveView;
+	    			case 'QOL': return QOLView;
+	    			case 'Chemotherapy' : return ChemotherapyView;
 	    			default: return DemographicView;
 	    		}
 	  	}

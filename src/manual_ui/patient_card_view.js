@@ -10,6 +10,7 @@ import LinkView  from '../common/link_view'
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 
+
 function PatientLabelField({field, value,config}) {
 	  value = value || '';
 	  return (

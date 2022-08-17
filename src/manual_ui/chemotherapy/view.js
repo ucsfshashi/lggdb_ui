@@ -3,7 +3,7 @@ import PatientListView from '../patient_list_view';
 import axios from "axios";
 
 
-export default class DiagnosisView extends React.Component {
+export default class ChemotherapyView extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -14,29 +14,16 @@ export default class DiagnosisView extends React.Component {
 	  patientInfo:[],
 	};
 	
-	getRows  = () => {
-		var rows = this.props.loginContext.schema.filter(el => (el.topic === "Diagnosis" 
-			   || (el.className === "Surgery" && el.id ==="surgeryDate")) );
-		
-		if(rows[0].className === 'Surgery') {
-			this.arraymove(rows,0,rows.length-2);
-		}
-		
-		return rows;
-	};
-	
-    arraymove = (arr,fromIndex,toIndex) => {
-	    var element = arr[fromIndex];
-	    arr.splice(fromIndex, 1);
-	    arr.splice(toIndex, 0, element);
+	getRows  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.topic === topicName);
 	};
 	
 	async extractData () {
-       
+        
 		const {config,mrn,loginContext} = this.props;
         
 		this.setState({showLoading:true});
-        var path ='Patient/'+loginContext.mrn+'/Diagnosis';
+		var path ='Patient/'+loginContext.mrn+'/Chemotherapy';
         var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
@@ -53,9 +40,10 @@ export default class DiagnosisView extends React.Component {
         }
         
         
-        if(!patientInfo || !patientInfo[0]["Diagnosis.diagnosisDate"]){
+        if(!patientInfo || !patientInfo[0]["Chemotherapy.chemotherapyStartDate"]){
         	patientInfo =null;
         }
+        
         
         this.setState({showLoading:false,patientInfo:patientInfo});
         
@@ -66,12 +54,12 @@ export default class DiagnosisView extends React.Component {
 	};
 
 	render() {
-		const {schema,onEditClick,successMessage,errorMessage} = this.props;  
+		const {topicName,onEditClick,successMessage,errorMessage} = this.props;  
 		return (  <PatientListView
-				    rows={this.getRows()}
+				    rows={this.getRows(topicName)}
 		            onEditClick={onEditClick}
-		            cardTitle="Diagnosis" 
-		            loginContext={this.props.loginContext}	
+		            cardTitle={topicName} 
+					loginContext={this.props.loginContext}
 				    successMessage={successMessage}
 				    errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}
