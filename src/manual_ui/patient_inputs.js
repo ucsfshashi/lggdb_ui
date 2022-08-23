@@ -1,49 +1,104 @@
 import React from 'react';
-import Select from 'react-select';
 import DateTimeField from 'react-datetime';
 import cx from 'classnames';
 import moment from 'moment';
 import Creatable from 'react-select/creatable';
 import FileUpload from '../common/file_upload'
 
+import {TextField} from '@mui/material';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-class SelectInput extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedOption: this.props.value,
-    };
-  }
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Checkbox from '@mui/material/Checkbox';
 
-  handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
+
+
+function SelectInput(props) {
+
+  const handleChange = (selectedOption) => {
+    this.setSelectedOption(selectedOption);
     this.props.onChange(this.props.field,selectedOption ? selectedOption.value : null)
   }
 
-   render() {
-      const { selectedOption } = this.state;
-      const value = selectedOption && selectedOption.value;
+  const filter = createFilterOptions();
+  const [selectedOption, setSelectedOption] = React.useState(null);
 
-      const {field, disabled, options, onChange,} = this.props;
-      const className = field.id + '-select';
+     
+  const value = selectedOption && selectedOption.value;
 
+  const {field, disabled, options, onChange,} = props;
+  const className = field.id + '-select';
 
       return (
-    		  <div className="loglio-input-div" >	 
-    	  <label className="loglio-input-label">
-          <div className="label-text">{field.displayName}</div>
-          <Creatable
-            value={selectedOption}
-            onChange={this.handleChange}
-            disabled={disabled}
-            onBlurResetsInput={false}
-            onCloseResetsInput={false}
-            options={options}/>
-        </label>
-          </div>
+      
+      
+      <Autocomplete
+      value={props.value}
+      disabled={disabled}
+      onBlurResetsInput={false}
+      onCloseResetsInput={false}
+      onChange={(event, newValue) => {
+        if (typeof newValue === 'string') {
+          setSelectedOption({
+            label: newValue,
+          });
+        } else if (newValue && newValue.inputValue) {
+          // Create a new value from the user input
+          setSelectedOption({
+            label: newValue.inputValue,
+          });
+        } else {
+          setSelectedOption(newValue);
+        }
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+
+        const { inputValue } = params;
+        // Suggest the creation of a new value
+        const isExisting = options.some((option) => inputValue === option.label);
+        if (inputValue !== '' && !isExisting) {
+          filtered.push({
+            inputValue,
+            label: `Add "${inputValue}"`,
+          });
+        }
+
+        return filtered;
+      }}
+      selectOnFocus
+      clearOnBlur
+      handleHomeEndKeys
+      id="free-solo-with-text-demo"
+      options={options}
+      getOptionLabel={(option) => {
+        // Value selected with enter, right from the input
+        if (typeof option === 'string') {
+          return option;
+        }
+        // Add "xxx" option created dynamically
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        // Regular option
+        return option.label;
+      }}
+      renderOption={(props, option) => <li {...props}>{option.label}</li>}
+      sx={{ width: 300 }}
+      freeSolo
+      renderInput={(params) => (
+        <TextField {...params} label={field.displayName} />
+      )}
+    />
       );
-    }
 }
 
 function optionsForMultiSelect(field) {
@@ -131,22 +186,43 @@ class PatientMultiSelectInput extends React.Component {
   
   render() {
     const {field,options,onChange,value} = this.props;
+    
+    const ITEM_HEIGHT = 48;
+	const ITEM_PADDING_TOP = 8;
+	const MenuProps = {
+  			PaperProps: {
+    		style: {
+     		 maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      			width: 250,
+    		},
+  		},
+	};
+	
+	var values= value.split(";");
+    
+    
   	return (
-  	<div className="loglio-input-div" >	
-		  <label className="loglio-input-label">
-	      <div className="label-text">{field.displayName}</div>
-	      <Select
-	        value={value}
-	      	multi
-	        removeSelected={true}
-	        closeOnSelect={true}
-		    isSearchable={true}
-	        onChange={this.handleChange}
-	        disabled={false}
-	        onBlurResetsInput={false}
-	        options={options}/>
-	    </label>
-	   </div>
+  	 
+  	 <div>
+        <InputLabel id="demo-multiple-checkbox-label">{field.displayName}</InputLabel>
+        <Select
+          labelId="demo-multiple-checkbox-label"
+          id="demo-multiple-checkbox"
+          multiple
+          value={values}
+          onChange={this.handleChange}
+          input={<OutlinedInput label={field.displayName} />}
+          renderValue={(values) => values.join(', ')}
+          MenuProps={MenuProps}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.label}>
+              <Checkbox checked={value.indexOf(option.label) > -1} />
+              <ListItemText primary={option.label} />
+            </MenuItem>
+          ))}
+        </Select>
+    </div>
   	);
   }
 }
@@ -180,20 +256,15 @@ class PatientDateTimeInput extends React.Component {
  
   render() {
   	return (
-  	
-  	<div className="loglio-input-div" >	  
-	<label className="loglio-input-label">
-      <div className="label-text">{this.props.field.displayName}</div>
-      <DateTimeField
-        value={this.dateOrNull(this.props.value)}
-        timeFormat={false}
-        inputProps={{
-          disabled:this.props.disabled
-        }}
-        onChange={this.handleChange}
-      />
-    </label>
-    </div>  
+  	 <LocalizationProvider dateAdapter={AdapterDateFns}>
+	  	<DesktopDatePicker
+	          label={this.props.field.displayName}
+	          inputFormat="MM/dd/yyyy"
+	          value={this.dateOrNull(this.props.value)}
+	          onChange={this.handleChange}
+	          renderInput={(params) => <TextField {...params} />}
+	        />
+     </LocalizationProvider>   
   	);
   }
 }
@@ -209,19 +280,15 @@ class PatientTextInput extends React.Component {
   }
   render() {
   	return (
-  	 <div className="loglio-input-div" >	  
-	  <label className="loglio-input-label">
-      <div className="label-text">{this.props.field.displayName}</div>
-      <input
-        type="text"
-        disabled={this.props.disabled}
-        onChange={this.handleChange}
-        value={this.props.value}
-        autoComplete="off"
-      />
-    </label>
-    </div>
-  	);
+  	   <TextField
+	          id={this.props.field.id}
+	          label={this.props.field.displayName}
+	          disabled={this.props.disabled}
+        	  onChange={this.handleChange}
+              defaultValue={this.props.value}
+              autoComplete="off"
+	        />
+   	);
   }
 }
 
@@ -266,18 +333,12 @@ class PatientTextAreaInput extends React.Component {
   }
   render() {
   	return (
-  	 <div className="loglio-input-div" >	
-   		<label className="loglio-input-label">
-      	<div className="label-text">{this.props.field.displayName}</div>
-      	<textarea
-        type={"text"}
-        disabled={this.props.disabled}
-        onChange={this.handleChange}
-        value={this.props.value}
-        autoComplete={"off"}
-       />
-      </label>
-      </div>  
+  	 <TextField
+          label={this.props.field.displayName}
+          value={this.props.value}
+          multiline
+          minRows={2}
+        />
   	);
   }
 }
