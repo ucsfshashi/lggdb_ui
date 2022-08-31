@@ -7,24 +7,11 @@ import FileView  from '../common/file_view'
 import TagView  from '../common/tag_view'
 import LinkView  from '../common/link_view'
 import InputForField from './patient_inputs';
+import MUISaveButton from '../common/MUISaveButton'
+import MUICancelButton from '../common/MUICancelButton'
 
 
 
-function PatientLabelField({field, value,config}) {
-	  value = value || '';
-	  return (
-			<div>
-			   <TextField
-	          id={field.id}
-	          label={field.displayName}
-	          defaultValue={value ? value :' '}
-	          InputProps={{
-	            readOnly: true,
-	          }}
-	        />
-			</div>
-	  );
-}
 
 
 export default class PatientCardView extends React.Component {
@@ -33,13 +20,29 @@ export default class PatientCardView extends React.Component {
 	    super(props);
 	};
 	
-	
+	state = {
+		showSave: false
+	};
+   
 
 	render() {  
 	
-		const { rows,cardTitle,onEditClick,successMessage,errorMessage,showLoading,patientInfo,config,keyColumn,isNewPatient,onChange,data,loginContext} = this.props;
+		const { rows,cardTitle,saveClick,successMessage,errorMessage,showLoading,patientInfo,config,keyColumn,isNewPatient,loginContext} = this.props;
 		
+		const onChange =(field,value) => {
+			this.props.onChange(field.className,field.id,value);
+			this.setState({showSave:true});
+		};	
 		
+		const onCancel =(event) => {
+			this.props.onCancel();
+			this.setState({showSave:false});
+		};	
+		
+		const onSave =(event) => {
+			this.props.saveClick(event);
+			this.setState({showSave:false});
+		};	
 		
 		return (
 				
@@ -50,13 +53,29 @@ export default class PatientCardView extends React.Component {
 				  justifyContent="space-between"
 				  alignItems="center"
 				  spacing={1}>
-		  	  	  	  <Typography  variant="h5">
-		              {cardTitle}
-		            </Typography>
-		  	  	  	{  (loginContext && loginContext.selRole != "NON_PHI")  &&  (
-	          				<EditIcon ontSize='large' color='primary' />
-				          		 )
+			  		  <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
+		  	  	       {cardTitle}
+		             </Typography>
+		             { successMessage &&
+		             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
+		  	  	         {successMessage}
+		             </Typography>
+		             }
+		             { errorMessage &&
+			             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
+			  	  	         {errorMessage}
+			             </Typography>
+			         }
+		             
+		             <Typography  sx={{ paddingTop: '10px',paddingRight: '25px' }} variant="h5">
+		  	  	  	{  (loginContext && loginContext.selRole != "NON_PHI") && this.state.showSave &&  (
+		  	  	  			<div>
+		  	  	  				<MUISaveButton  onSaveClick={(event)=>onSave(event)}   />
+		  	  	  				<MUICancelButton onCancelClick={(event)=>onCancel(event)}    />
+		  	  	  			</div>
+		  	  	  		)
 	          		}
+		  	  	 </Typography>
 	         </Stack>
 			 <Stack >    
 		         {!showLoading &&
@@ -69,7 +88,7 @@ export default class PatientCardView extends React.Component {
 		              field={field}
 		              disabled={(isNewPatient === false && keyColumn && ( field.editable == false || field.id ===keyColumn || keyColumn.indexOf(field.id) != -1) )}
 		              onChange={(field,value) =>onChange(field,value)}
-		              value={patientInfo[0][field.className+'.'+field.id]} 
+		              value={patientInfo[field.className+'.'+field.id]} 
 		              successMessage={successMessage}
 		              isNewPatient={isNewPatient}
 		              errorMessage={errorMessage}

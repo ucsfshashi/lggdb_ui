@@ -24,16 +24,11 @@ import Checkbox from '@mui/material/Checkbox';
 function SelectInput(props) {
 
   const handleChange = (selectedOption) => {
-    this.setSelectedOption(selectedOption);
-    this.props.onChange(this.props.field,selectedOption ? selectedOption.value : null)
+    props.onChange(props.field,selectedOption ? selectedOption.label : null)
   }
 
   const filter = createFilterOptions();
-  const [selectedOption, setSelectedOption] = React.useState(null);
-
-     
-  const value = selectedOption && selectedOption.value;
-
+  
   const {field, disabled, options, onChange,} = props;
   const className = field.id + '-select';
 
@@ -42,21 +37,21 @@ function SelectInput(props) {
       
       <Autocomplete
       value={props.value}
-      disabled={disabled}
+      disabled={props.disabled}
       onBlurResetsInput={false}
       onCloseResetsInput={false}
       onChange={(event, newValue) => {
         if (typeof newValue === 'string') {
-          setSelectedOption({
+          handleChange({
             label: newValue,
           });
         } else if (newValue && newValue.inputValue) {
           // Create a new value from the user input
-          setSelectedOption({
+         handleChange({
             label: newValue.inputValue,
           });
         } else {
-          setSelectedOption(newValue);
+          handleChange(newValue);
         }
       }}
       filterOptions={(options, params) => {
@@ -185,7 +180,7 @@ class PatientMultiSelectInput extends React.Component {
   }
   
   render() {
-    const {field,options,onChange,value} = this.props;
+    const {field,options,onChange,value,disabled} = this.props;
     
     const ITEM_HEIGHT = 48;
 	const ITEM_PADDING_TOP = 8;
@@ -210,6 +205,7 @@ class PatientMultiSelectInput extends React.Component {
           id="demo-multiple-checkbox"
           multiple
           value={values}
+          disabled={disabled}
           onChange={this.handleChange}
           input={<OutlinedInput label={field.displayName} />}
           renderValue={(values) => values.join(', ')}
@@ -244,10 +240,10 @@ class PatientDateTimeInput extends React.Component {
 
   formatDateForServer = (date) => {
     
-    var lDate =date;
+    var lDate =null;
   
     try {
-      lDate = date.format('MM/DD/YYYY');
+      lDate = date.toLocaleDateString("en-US");
     }catch(exp ) {
     
     }
@@ -260,7 +256,9 @@ class PatientDateTimeInput extends React.Component {
 	  	<DesktopDatePicker
 	          label={this.props.field.displayName}
 	          inputFormat="MM/dd/yyyy"
+	          outputFormat="MM/dd/yyyy"
 	          value={this.dateOrNull(this.props.value)}
+	          disabled={this.props.disabled}
 	          onChange={this.handleChange}
 	          renderInput={(params) => <TextField {...params} />}
 	        />
@@ -282,6 +280,7 @@ class PatientTextInput extends React.Component {
   	return (
   	   <TextField
 	          id={this.props.field.id}
+	          disabled={this.props.disabled}
 	          label={this.props.field.displayName}
 	          disabled={this.props.disabled}
         	  onChange={this.handleChange}
