@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import PatientRouter from '../manual_ui/patient_router';
 import { useState } from 'react';
 
-
 // ----------------------------------------------------------------------
 
 export default function PatientApp() {
@@ -24,7 +23,15 @@ export default function PatientApp() {
   const [grandInfo, setGrandInfo] = useState(null);
   const [data, setData] = useState(null);
   
-    
+  const handleEditClick=(event,info) => {
+	   event.preventDefault(); 
+	   setMode('edit');
+	   setData(info);
+  };
+  
+  const goBackToList=(event) => {
+	   setMode('view');
+   };
     
   return (
     <Page title="Patient-{loginContext.mrn}">
@@ -37,7 +44,13 @@ export default function PatientApp() {
           </IconButton>
         </Stack>
         </Box>
-        <PatientRouter topicName={loginContext.topic} mode='View'  loginContext={loginContext} />
+        <PatientRouter 
+          topicName={loginContext.topic} 
+          mode={mode} 
+          data={data} 
+          goBackToList={(event) => goBackToList(event)}
+          onEditClick={(event, data) => handleEditClick(event, data)}	  
+          loginContext={loginContext} />
       </Container>
     </Page>
   );

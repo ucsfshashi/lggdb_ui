@@ -3,7 +3,7 @@ import React from 'react';
 import DemographicEdit from './demographic/view';
 import DemographicView from './demographic/view'; 
 
-import SurgeryEdit from './surgery/view'; 
+import SurgeryEdit from './surgery/edit'; 
 import SurgeryView from './surgery/view'; 
 
 import DiagnosisEdit from './diagnosis/view'; 
