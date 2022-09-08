@@ -294,29 +294,39 @@ class PatientTextInput extends React.Component {
 
 class PatientToggleInput extends React.Component {
 
- 
-
   constructor(props) {
     super(props);
+    this.state = {
+      value: this.props.value,
+    };
   }
 
-  handleChange = (evt) => {
-    this.props.onChange(this.props.field,evt.value ? evt.value:'false')
-  }
+  
+  
   render() {
-   const booleanOptions = [{value:'No',label:'No'},{value:'Yes',label:'Yes'} ];
-  	return (
-  	 <div className="loglio-input-div" >	  
-	  <label className="loglio-input-label">
-	      <div className="label-text">{this.props.field.displayName}</div>
-	      <Select
-		    value={this.props.value}
-	        onChange={this.handleChange}
-	        isClearable={false}
-	        options={booleanOptions}/>
-    </label>
-    </div>
-  	);
+   const {field, disabled, options, onChange,} = this.props;
+ 
+   const handleChange = (event: SelectChangeEvent) => {
+   	  this.setState({ value:event.target.value });
+    };
+    
+   	return (
+  	   <div className="loglio-input-div" >	 
+    	  <label className="loglio-input-label">
+          <div className="label-text">{field.displayName}</div>
+	  	  	  <Select
+	    		labelId="demo-simple-select-label"
+	    		id="demo-simple-select"
+	    		value={this.state.value}
+	    		label={this.props.field.displayName}
+	    		input={<OutlinedInput label={field.displayName} />}
+	    		onChange={handleChange}>
+	    			<MenuItem value={'Yes'}>Yes</MenuItem>
+	    			<MenuItem value={'No'}>No</MenuItem>
+	  		  </Select>
+	  	</label>	  
+     </div>
+    );
   }
 }
 
@@ -394,34 +404,27 @@ class PatientLinkInput extends React.Component {
 
 class PatientNumberInput extends React.Component {
 
+
   constructor(props) {
     super(props);
   }
 
   handleChange = (evt) => {
-    this.props.onChange(this.props.field,evt.currentTarget.value ? evt.currentTarget.value:'')
+    this.props.onChange(this.props.field,evt.target.value ? evt.target.value:'')
   }
   render() {
-  
-	  let step = 'any';
-	  if (this.props.field.type === 'integer') {
-	    step = 1;
-	  }
-  
   	return (
-  	 <div className="loglio-input-div" >	
-   		<label className="loglio-input-label">
-      	<div className="label-text">{this.props.field.displayName}</div>
-      	<input
-        type="number"
-        disabled={this.props.disabled}
-        onChange={this.handleChange}
-        value={this.props.value}
-        autoComplete="off"
-       />
-      </label>
-      </div>  
-  	);
+  	   <TextField
+	          id={this.props.field.id}
+	          type="number"
+	          disabled={this.props.disabled}
+	          label={this.props.field.displayName}
+	          disabled={this.props.disabled}
+        	  onChange={this.handleChange}
+              defaultValue={this.props.value}
+              autoComplete="off"
+	        />
+   	);
   }
 }
 

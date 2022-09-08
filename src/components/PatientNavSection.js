@@ -66,6 +66,7 @@ function NavItem({ item, active,selTopic,setSelTopic }) {
   const handleClick = () => {
     setSelTopic(topic);
     setLoginContext({topic:topic});
+    setLoginContext({mode:'view'});
   };
 
   const activeRootStyle = {

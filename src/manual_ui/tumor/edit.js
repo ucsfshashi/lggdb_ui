@@ -2,7 +2,7 @@ import React from 'react';
 import PatientCardView from '../patient_card_view';
 import axios from "axios";
 
-export default class SurgeryEdit extends React.Component {
+export default class TumorEdit  extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -10,7 +10,7 @@ export default class SurgeryEdit extends React.Component {
 	    this.state = {
 	       data: this.props.data,
     	   showLoading:false,
-    	   isNewPatient:(this.props.data && this.props.data['Surgery.surgeryDate'] == undefined)
+    	   isNewPatient:(this.props.data && this.props.data['PatientTumor.tumorLabel'] == undefined)
 		};
 	};
 	
@@ -35,11 +35,12 @@ export default class SurgeryEdit extends React.Component {
 	
 	async saveInServer ()  {
 
-		   const {config,mrn,loginContext} = this.props;
+		
+		const {config,mrn,loginContext} = this.props;
 		  
 	       this.setState({showLoading:true});
 		   var tagId= loginContext.selTag.tagId;
-		   var path ='Patient/'+loginContext.mrn+'/Surgery';
+		   var path ='Patient/'+loginContext.mrn+'/PatientTumor';
 		   var data = this.state.data;
 	       
 	       
@@ -54,12 +55,12 @@ export default class SurgeryEdit extends React.Component {
 	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
 	       
 	       if(rInfo && rInfo.data === true) {
-	    	    this.setState({successMessage:'Surgery changes saved successfully'});
+	    	    this.setState({successMessage:'Patient Tumor changes saved successfully'});
 	        	this.setState({errorMessage:null});
 	        	this.props.goBackToList(null);
 	        	
 	       } else {
-	    	   this.setState({errorMessage:'Failed to save Surgery changes'});
+	    	   this.setState({errorMessage:'Failed to save Patient Tumor changes'});
 	           this.setState({successMessage:null});
 	       }
 	
@@ -67,7 +68,7 @@ export default class SurgeryEdit extends React.Component {
 	};
 	
 	getRows  = () => {
-		return this.props.loginContext.schema.filter(el => el.topic === "Surgery");
+		return this.props.loginContext.schema.filter(el => el.topic === "Tumor");
 	};
 	render() {
 		const {onChange,data} = this.props;  
@@ -79,10 +80,10 @@ export default class SurgeryEdit extends React.Component {
 		        onChange={(...args) => this.onChange(...args)}
 			    successMessage={this.state.successMessage}
 			    isNewPatient={this.state.isNewPatient}
-		        keyColumn={'surgeryDate'}
+		        keyColumn={'tumorLabel'}
 			    errorMessage={this.state.errorMessage} 
 		        saveClick={(event)=>this.onSave(event)}
-		        cardTitle="Surgery" 
+		        cardTitle="Tumor" 
 		        showLoading={this.state.showLoading}	
 		        onCancelClick={this.props.onCancelClick}
 		        />);

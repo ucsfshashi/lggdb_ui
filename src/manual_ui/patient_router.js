@@ -6,16 +6,16 @@ import DemographicView from './demographic/view';
 import SurgeryEdit from './surgery/edit'; 
 import SurgeryView from './surgery/view'; 
 
-import DiagnosisEdit from './diagnosis/view'; 
+import DiagnosisEdit from './diagnosis/edit'; 
 import DiagnosisView from './diagnosis/view'; 
 
-import TumorEdit from './tumor/view'; 
+import TumorEdit from './tumor/edit'; 
 import TumorView from './tumor/view'; 
 
 import ClinicalEvaluationEdit from './clinicalEvaluation/view';
 import ClinicalEvaluationView from './clinicalEvaluation/view'; 
 
-import ImagingEdit from './imaging/view';
+import ImagingEdit from './imaging/edit';
 import ImagingView from './imaging/view'; 
 
 import LoglioCognitiveEdit from './loglioCognitive/view';
@@ -38,6 +38,18 @@ import EpidemiologyView from './epidemiology/view';
 
 import ClinicalTrialEdit from './clinicalTrial/view';
 import ClinicalTrialView from './clinicalTrial/view';
+
+import CancerGenePanelEdit from './cancerGenePanel/view';
+import CancerGenePanelView from './cancerGenePanel/view';
+
+
+import TissueEdit from './tissue/edit';
+import TissueView from './tissue/view';
+
+
+import ResearchPathologyView from './researchPathology/view';
+import ResearchPathologyEdit from './researchPathology/view';
+
 
 export default class PatientRouter extends React.Component {
 
@@ -62,6 +74,9 @@ export default class PatientRouter extends React.Component {
 	        		case 'Medication' : return MedicationEdit;
 	        		case 'Epidemiology' : return EpidemiologyEdit;
 	        		case 'Clinical Trial' : return ClinicalTrialEdit;
+	        		case 'CancerGenePanel' : return CancerGenePanelEdit;
+	        		case 'Tissue' : return TissueEdit;
+	        		case 'Research Pathology': return ResearchPathologyEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -79,6 +94,9 @@ export default class PatientRouter extends React.Component {
 	    			case 'Medication' : return MedicationView;
 	    			case 'Epidemiology' : return EpidemiologyView;
 	    			case 'Clinical Trial' : return ClinicalTrialView;
+	    			case 'CancerGenePanel' : return CancerGenePanelView;
+	    			case 'Tissue' : return TissueView;
+	    			case 'Research Pathology': return ResearchPathologyView;
 	    			default: return DemographicView;
 	    		}
 	  	}

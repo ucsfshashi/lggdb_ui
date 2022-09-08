@@ -2,7 +2,7 @@ import React from 'react';
 import PatientCardView from '../patient_card_view';
 import axios from "axios";
 
-export default class SurgeryEdit extends React.Component {
+export default class TissueEdit extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -10,18 +10,18 @@ export default class SurgeryEdit extends React.Component {
 	    this.state = {
 	       data: this.props.data,
     	   showLoading:false,
-    	   isNewPatient:(this.props.data && this.props.data['Surgery.surgeryDate'] == undefined)
+    	   isNewPatient:(this.props.data['Tissue.tissueBankId'] == undefined)
 		};
+	    
 	};
-	
 	
 	/**OnChange specific to Demographic Card
 	 **/
 	onChange = (className,fieldId,value) => {
 		
 		var data = this.state.data;
-		
 		data[className+'.'+fieldId] = value;
+		
 		this.setState({successMessage:null});
 		this.setState({errorMessage:null});
 		this.setState({data:data});
@@ -39,7 +39,7 @@ export default class SurgeryEdit extends React.Component {
 		  
 	       this.setState({showLoading:true});
 		   var tagId= loginContext.selTag.tagId;
-		   var path ='Patient/'+loginContext.mrn+'/Surgery';
+		   var path ='Patient/'+loginContext.mrn+'/Surgery/'+this.props.parentInfo["Surgery.surgeryDate"]+'/Tissue';
 		   var data = this.state.data;
 	       
 	       
@@ -54,37 +54,40 @@ export default class SurgeryEdit extends React.Component {
 	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
 	       
 	       if(rInfo && rInfo.data === true) {
-	    	    this.setState({successMessage:'Surgery changes saved successfully'});
+	    	    this.setState({successMessage:'Tissue changes saved successfully'});
 	        	this.setState({errorMessage:null});
 	        	this.props.goBackToList(null);
 	        	
 	       } else {
-	    	   this.setState({errorMessage:'Failed to save Surgery changes'});
+	    	   this.setState({errorMessage:'Failed to save Tissue changes'});
 	           this.setState({successMessage:null});
 	       }
 	
 	       this.setState({showLoading:false});
+        
+        
 	};
 	
-	getRows  = () => {
-		return this.props.loginContext.schema.filter(el => el.topic === "Surgery");
+	
+	getRows  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.topic === topicName);
 	};
 	render() {
-		const {onChange,data} = this.props;  
-	
+		const {topicName,onChange,data} = this.props;  
+		
 		return (<PatientCardView
-			    rows={this.getRows()}
-			    patientInfo={this.state.data}
-		        loginContext={this.props.loginContext}
+			    rows={this.getRows(topicName)}
+				patientInfo={this.state.data}
+				loginContext={this.props.loginContext}
 		        onChange={(...args) => this.onChange(...args)}
 			    successMessage={this.state.successMessage}
 			    isNewPatient={this.state.isNewPatient}
-		        keyColumn={'surgeryDate'}
+		        keyColumn={'tissueBankId'}
 			    errorMessage={this.state.errorMessage} 
 		        saveClick={(event)=>this.onSave(event)}
-		        cardTitle="Surgery" 
+		        cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName}
 		        showLoading={this.state.showLoading}	
 		        onCancelClick={this.props.onCancelClick}
-		        />);
+		/>);
 	}
 }

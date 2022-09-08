@@ -3,7 +3,7 @@ import PatientListView from '../patient_list_view';
 import axios from "axios";
 
 
-export default class TumorView extends React.Component {
+export default class TissueView extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -14,17 +14,17 @@ export default class TumorView extends React.Component {
 	  patientInfo:[],
 	};
 	
-	getRows  = () => {
-		return this.props.loginContext.schema.filter(el => el.topic === "Tumor");
+	getRows  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.topic === topicName);
 	};
 	
-	
-	getChildTopics  = () => {
-		return this.props.loginContext.schema.filter(el => el.parent === "Tumor");
+	getChildTopics  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.parent === topicName);
 	};
+	
 	
 	fetchDistinctChildTopic = (array) => {
-		      
+	      
 		   const result = [];
 		   const map = new Map();
 		   for (const item of array) {
@@ -41,19 +41,19 @@ export default class TumorView extends React.Component {
 		           }
 		       }
 		   }
-		  
+	
 		   // Sort topic to generate left menu
 		   result.sort((a, b) => (a.topicDisplayPriority > b.topicDisplayPriority) ? 1 : -1);
 		  
 		   return result;
-   };
+    };
+	
 	
 	async extractData () {
-        
+       
 		const {config,mrn,loginContext} = this.props;
-        
-		this.setState({showLoading:true});
-        var path ='Patient/'+loginContext.mrn+'/PatientTumor';
+        this.setState({showLoading:true});
+        var path ='Patient/'+loginContext.mrn+'/Surgery/'+this.props.parentInfo["Surgery.surgeryDate"]+'/Tissue';
         var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
@@ -64,35 +64,39 @@ export default class TumorView extends React.Component {
                                         'Accept': 'application/json',
                                     }}
                                     );
-         
+        
+        
         if(patientInfo) {
         	patientInfo = patientInfo.data;
         }
         
-        
-        if(!patientInfo || !patientInfo[0]["PatientTumor.tumorLabel"]){
+		
+        if(!patientInfo || !patientInfo[0]["Tissue.tissueBankId"]){
         	patientInfo =null;
         }
-        
+         
         this.setState({showLoading:false,patientInfo:patientInfo});
    };
-	
-	componentDidMount(){
+
+   componentDidMount(){
 		this.extractData();
-	};
+		
+   };
 
 	render() {
-		const {onNavigateClick,schema,onEditClick,successMessage,errorMessage} = this.props;  
+		const {topicName,schema,onEditClick,onNavigateClick,successMessage,errorMessage} = this.props;  
 		return (  <PatientListView
-				    rows={this.getRows()}
+				    rows={this.getRows(topicName)}
 		            onEditClick={onEditClick}
-		            cardTitle="Tumor" 
-		            onNavigateClick={onNavigateClick}	
-					loginContext={this.props.loginContext}
+		            onNavigateClick={onNavigateClick}
+					grandInfo={this.props.parentInfo}
+		            cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName} 
+		 			childTopics={this.fetchDistinctChildTopic(this.getChildTopics(topicName))}
 				    successMessage={successMessage}
-		            childTopics={this.fetchDistinctChildTopic(this.getChildTopics())}
-				    errorMessage={errorMessage} 
+					loginContext={this.props.loginContext}
+		            errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}
+					grandInfo={this.props.parentInfo}
 		            showLoading={this.state.showLoading}    
 		       /> );
 	}

@@ -16,21 +16,28 @@ import { useState } from 'react';
 export default function PatientApp() {
 
 
-  const {loginContext} = useAuth();   
+  const {loginContext,setLoginContext} = useAuth();   
   const navigate = useNavigate();    
-  const [mode, setMode] = useState(null);
   const [parentInfo, setParentInfo] = useState(null);
   const [grandInfo, setGrandInfo] = useState(null);
   const [data, setData] = useState(null);
   
   const handleEditClick=(event,info) => {
 	   event.preventDefault(); 
-	   setMode('edit');
+	   setLoginContext({mode:'edit'});
 	   setData(info);
   };
   
   const goBackToList=(event) => {
-	   setMode('view');
+	  setLoginContext({mode:'view'});
+   };
+   
+   const onNavigateClick=(event,parentInfo,topic,grandInfo) => {
+	      setLoginContext({topic:topic});
+	      setLoginContext({mode:'view'});
+		  setParentInfo(parentInfo);
+		  setGrandInfo(grandInfo);
+		  
    };
     
   return (
@@ -46,8 +53,11 @@ export default function PatientApp() {
         </Box>
         <PatientRouter 
           topicName={loginContext.topic} 
-          mode={mode} 
+          mode={loginContext.mode} 
           data={data} 
+          parentInfo={parentInfo}
+          grandInfo={grandInfo}
+          onNavigateClick={(event,parentInfo,topic,grandInfo) => onNavigateClick(event,parentInfo,topic,grandInfo)}
           goBackToList={(event) => goBackToList(event)}
           onEditClick={(event, data) => handleEditClick(event, data)}	  
           loginContext={loginContext} />

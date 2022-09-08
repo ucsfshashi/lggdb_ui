@@ -38,7 +38,7 @@ export default class ChildMenu extends React.Component {
 	        open={Boolean(this.state.anchorEl)}
 	        onClose={this.handleClose}>
 	          { childTopics.map((item, key) =>
-		         <MenuItem onClick={(event)=>onNavigateClick(event,parentInfo,item.topic,grandInfo)}> 
+		         <MenuItem onClick={(event,parentInfo,topic,grandInfo)=>onNavigateClick(event,this.props.parentInfo,item.topic,this.props.grandInfo)}> 
 		         <Iconify icon={'fa:'+item.icon} width={20} height={20} />{item.topic}</MenuItem>
 		         ) 
 		  	  }
