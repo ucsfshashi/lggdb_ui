@@ -3,9 +3,6 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import {Divider,Grid,Paper,Typography,LinearProgress,TextField,Stack,Box} from '@mui/material';
 
-import FileView  from '../common/file_view'
-import TagView  from '../common/tag_view'
-import LinkView  from '../common/link_view'
 import InputForField from './patient_inputs';
 import MUISaveButton from '../common/MUISaveButton'
 import MUICancelButton from '../common/MUICancelButton'
@@ -89,6 +86,7 @@ export default class PatientCardView extends React.Component {
 		              disabled={(isNewPatient === false && keyColumn && ( field.editable == false || field.id ===keyColumn || keyColumn.indexOf(field.id) != -1) )}
 		              onChange={(field,value) =>onChange(field,value)}
 		              value={patientInfo[field.className+'.'+field.id]} 
+		              loginContext={loginContext}
 		              successMessage={successMessage}
 		              isNewPatient={isNewPatient}
 		              errorMessage={errorMessage}

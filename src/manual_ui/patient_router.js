@@ -51,6 +51,21 @@ import ResearchPathologyView from './researchPathology/view';
 import ResearchPathologyEdit from './researchPathology/view';
 
 
+import ClinicalPathologyView from './clinicalPathology/view';
+import ClinicalPathologyEdit from './clinicalPathology/view';
+
+import UCSF500View from './ucsf500/view';
+import UCSF500Edit from './ucsf500/view';
+
+import AlterationRowView from './alterationRow/view';
+import AlterationRowEdit from './alterationRow/edit';
+
+import CopyNumberChangeRowView from './copyNumChangeRow/view';
+import CopyNumberChangeRowEdit from './copyNumChangeRow/edit';
+
+
+
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -77,6 +92,10 @@ export default class PatientRouter extends React.Component {
 	        		case 'CancerGenePanel' : return CancerGenePanelEdit;
 	        		case 'Tissue' : return TissueEdit;
 	        		case 'Research Pathology': return ResearchPathologyEdit;
+	        		case 'Clinical Pathology' : return ClinicalPathologyEdit;
+	        		case 'UCSF500' : return UCSF500Edit;
+	        		case 'Alteration Row' : return AlterationRowEdit;
+	        		case 'Copy Number Change Row' : return CopyNumberChangeRowEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -97,6 +116,10 @@ export default class PatientRouter extends React.Component {
 	    			case 'CancerGenePanel' : return CancerGenePanelView;
 	    			case 'Tissue' : return TissueView;
 	    			case 'Research Pathology': return ResearchPathologyView;
+	    			case 'Clinical Pathology' : return ClinicalPathologyView;
+	    			case 'UCSF500' : return UCSF500View;
+	    			case 'Alteration Row' : return AlterationRowView;
+	    			case 'Copy Number Change Row' : return CopyNumberChangeRowView;
 	    			default: return DemographicView;
 	    		}
 	  	}

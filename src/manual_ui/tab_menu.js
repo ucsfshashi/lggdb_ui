@@ -1,9 +1,6 @@
 import React from 'react';
-import {createMuiTheme,MuiThemeProvider} from '@material-ui/core/styles';
-import {Tabs,Tab,Button,AppBar} from '@mui/material';
-import Iconify from '../components/Iconify';
+import {Tabs,Tab,Box,Paper} from '@mui/material';
 import PatientRouter from './patient_router';
-
 
 export default class TabMenu extends React.Component {
 
@@ -15,47 +12,14 @@ export default class TabMenu extends React.Component {
 		tabIndex:0,
 		mode:'view'
    };
-   
-     
-   getMuiTheme = () => createMuiTheme({
-	   overrides: {
-		   MuiButton :{
-			   root :{
-				   textTransform:'none',
-				   color: '#f5f5f5'  
-			   }
-		   },
-		   MuiAppBar: {
-        	   root:{
-        		   marginLeft:'9px',
-        		   marginTop:'9px',
-        		   width:'95%',
-        		   borderRadius: '3px'
-        	   },
-        	   colorPrimary :{
-        		    backgroundColor: '#007CBE'
-        	   }
-           },
-           MuiTab : {
-        	   selected:{
-        		   backgroundColor:'#092e44'
-        	   }
-           },
-           TabIndicator:{
-        	   colorPrimary :{
-        		   backgroundColor: 'white'
-        	   }
-           }
-	   }
-   });
-   
+  
    handleChange = (event, newValue) => {
 	   this.setState({tabIndex:newValue,mode:'view'});
    };
    
    
    getChildTopics  = (topicName) => {
-		return this.props.schema.filter(el => el.parent === topicName);
+		return this.props.loginContext.schema.filter(el => el.parent === topicName);
 	};
 	
 	fetchDistinctChildTopic = (array) => {
@@ -103,48 +67,42 @@ export default class TabMenu extends React.Component {
 	  const childTopics = this.fetchDistinctChildTopic(this.getChildTopics(topicName));
 	  
 	  return (
-		  <div>
-		     { this.props.parentId && childTopics && childTopics.length >0  && 
-			  <MuiThemeProvider theme={this.getMuiTheme()}>	
-				 	
+		  <Paper sx={{ marginTop: '15px' }} >
+		     { this.props.parentId && childTopics && childTopics.length >0  &&
+		    	  <Box sx={{ borderBottom: 1, borderColor: 'divider' }} >
 		           { childTopics.length > 1 &&
-		        	<AppBar position="static" square='false'>  	
-				  	    <Tabs value={this.state.tabIndex} 
-					  		indicatorColor="primary"
-					        textColor="primary"
-					        onChange={this.handleChange}>
-					  	  
-					     { childTopics.map((item, key) =>
-					      <Tab  icon={
-					     		<Button variant='text'>
-					     		  <Iconify icon={'fa:'+item.icon} width={20} height={20} />{item.topic}
-					     	  </Button>} />   
-						  )}
-					    </Tabs>
-					  </AppBar>   
+		             <Tabs
+		        	   value={this.state.tabIndex} 
+		               onChange={this.handleChange}
+		        	   >
+		           		{ childTopics.map((item, key) =>
+		           				<Tab label={item.topic} />
+		           			)}
+		        	 </Tabs>
+		        	
 		           }
-				    
-				    
-				    <PatientRouter  
-				         topicName={childTopics[this.state.tabIndex].topic} 
-				         mode={this.state.mode}  
-				         grandParentId={this.props.grandParentId}
-				    	 loginContext={this.props.loginContext}
-				    	 parentId={this.props.parentId}
-				         schema={this.props.schema}
-				         onEditClick={(event, info) => this.handleEditClick(event, info)}
-				         successMessage={this.props.successMessage}
-				         errorMessage={this.props.errorMessage}
-				         config={this.props.config}
-				         mrn={this.props.mrn}
-				         parentKey={this.props.parentKey} 
-				         grandParentKey={this.props.grandParentKey} 
-				         data={this.state.data}
-				         onCancelClick={(event) => this.handleCancelClick(event)}
-				    />
-			  </MuiThemeProvider>
+		           <div>
+		           <PatientRouter  
+			         topicName={childTopics[this.state.tabIndex].topic} 
+			         mode={this.state.mode}  
+			         grandParentId={this.props.grandParentId}
+			    	 loginContext={this.props.loginContext}
+			    	 parentId={this.props.parentId}
+			         schema={this.props.schema}
+			         onEditClick={(event, info) => this.handleEditClick(event, info)}
+			         successMessage={this.props.successMessage}
+			         errorMessage={this.props.errorMessage}
+			         config={this.props.config}
+			         mrn={this.props.mrn}
+			         parentKey={this.props.parentKey} 
+			         grandParentKey={this.props.grandParentKey} 
+		             data={this.state.data}
+			         onCancelClick={(event) => this.handleCancelClick(event)}
+			        />
+		           </div>
+		        </Box>
 		     }
-		  </div>	    
+		  </Paper>	    
 	  );
   }
 }

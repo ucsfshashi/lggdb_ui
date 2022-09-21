@@ -3,7 +3,7 @@ import PatientCardView from '../patient_card_view';
 import axios from "axios";
 
 import TabMenu from '../tab_menu';
-import Paper from '@material-ui/core/Paper';
+import {Stack} from '@mui/material';
 
 export default class CancerGenePanelView extends React.Component {
 	
@@ -50,7 +50,10 @@ export default class CancerGenePanelView extends React.Component {
 
 	render() {
 		const {topicName,loginContext,onEditClick,successMessage,errorMessage} = this.props;  
-		return (  <div>
+		return (  <Stack direction="column"
+			  			justifyContent="space-around"
+			  			alignItems="center"
+			  			spacing={2}>
 		            <PatientCardView
 				    rows={this.getRows(topicName)}
 		            loginContext={this.props.loginContext}
@@ -62,8 +65,9 @@ export default class CancerGenePanelView extends React.Component {
 		            patientInfo={this.state.patientInfo}
 		            showLoading={this.state.showLoading}  
 		            />
+		            
 		            {this.state.showLoading == false && <TabMenu topicName={topicName} 
-                     schema={loginContext.schema} 
+                     loginContext={this.props.loginContext}	
                      parentId={this.state.patientInfo["CancerGenePanel.cgpPanelName"]}
                      grandParentId={this.props.parentInfo["Surgery.surgeryDate"]} 
             		 parentKey={"Surgery.surgeryDate"}
@@ -75,7 +79,7 @@ export default class CancerGenePanelView extends React.Component {
 		             config={this.props.config} 
 		            />}
 		            		            
-		         </div>   
+		         </Stack>   
 		        );
 	}
 }

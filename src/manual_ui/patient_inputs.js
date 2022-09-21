@@ -18,6 +18,8 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+
 
 
 
@@ -307,24 +309,24 @@ class PatientToggleInput extends React.Component {
    const {field, disabled, options, onChange,} = this.props;
  
    const handleChange = (event: SelectChangeEvent) => {
-   	  this.setState({ value:event.target.value });
+   	  this.props.onChange(this.props.field,event.target.value ? event.target.value:'No')
     };
     
    	return (
-  	   <div className="loglio-input-div" >	 
-    	  <label className="loglio-input-label">
-          <div className="label-text">{field.displayName}</div>
-	  	  	  <Select
-	    		labelId="demo-simple-select-label"
-	    		id="demo-simple-select"
-	    		value={this.state.value}
-	    		label={this.props.field.displayName}
-	    		input={<OutlinedInput label={field.displayName} />}
-	    		onChange={handleChange}>
-	    			<MenuItem value={'Yes'}>Yes</MenuItem>
-	    			<MenuItem value={'No'}>No</MenuItem>
-	  		  </Select>
-	  	</label>	  
+  	   <div>	
+  	   <FormControl sx={{ m: 1, minWidth: 80 }}>
+  	   <InputLabel id="{field.id}" >{field.displayName}</InputLabel>
+        <Select
+          labelId="{field.id}"
+          id="{field.id}"
+          value={this.state.value}
+          onChange={handleChange}
+          label="{field.displayName}"
+        >
+          <MenuItem value={'Yes'}>Yes</MenuItem>
+	      <MenuItem value={'No'}>No</MenuItem>
+        </Select>
+  	 	</FormControl> 
      </div>
     );
   }
@@ -337,13 +339,17 @@ class PatientTextAreaInput extends React.Component {
     super(props);
   }
 
-  handleChange = (evt) => {
-    this.props.onChange(this.props.field,evt.target.value ? evt.target.value : null)
-  }
+  
   render() {
+  
+    const handleChange = (evt) => {
+      this.props.onChange(this.props.field,evt.target.value ? evt.target.value : null)
+    }
+    
   	return (
   	 <TextField
           label={this.props.field.displayName}
+          onChange={handleChange}
           value={this.props.value}
           multiline
           minRows={2}
@@ -367,7 +373,7 @@ class PatientFileInput extends React.Component {
   	 <div className="loglio-input-div" >	
    		<label className="loglio-input-label">
       	<div className="label-text">{this.props.field.displayName}</div>
-      		<FileUpload {...this.props} handleChange={this.handleChange}/>
+     		<FileUpload {...this.props} handleChange={this.handleChange}/>
         </label>
       </div>  
   	);

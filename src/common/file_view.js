@@ -1,21 +1,22 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-//import {fetchFileJson} from '../../../helpers/fetch_helper';
-import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import MobileStepper from '@material-ui/core/MobileStepper';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
+import AddPhotoAlternateOutlinedIcon from '@mui/icons-material/AddPhotoAlternateOutlined';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import CloseIcon from '@mui/icons-material/Close';
+
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import MobileStepper from '@mui/material/MobileStepper';
+import Typography from '@mui/material/Typography';
+import { withStyles } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import axios from "axios";
 
 const styles = theme => ({
 	title: {
@@ -62,17 +63,21 @@ class FileView extends React.Component {
 	  };
 	  
 	  async onSave(files) {
-	    const {config} = this.props;
+	    const {loginContext} = this.props;
 	    
 	    const formData = new FormData()
 	    for(var x = 0; x<files.length; x++) {
 	    	formData.append('file', files[x])
 	    }
-
-	    const uploadInfo = null; /* await fetchFileJson(`${config.apiUrl}/uploadInfo`, {
-	      method: 'POST',
-	      body: formData
-	    });*/
+	    const headers = { 
+	    		   'Content-Type' :'applicaiton/json',
+	               'X-Requested-With':'XMLHttpRequest', 
+	               'UCSFAUTH-TOKEN':loginContext.token,
+	                'tagId':loginContext.selTag.tagId,
+	                 'selRole':loginContext.selRole,
+	                 'Content-Type': 'application/json'
+	    		};
+	       var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/uploadInfo", formData, { headers })
 	    
 	    this.props.handleChange(uploadInfo.fileDownloadUri);
 	 };

@@ -1,8 +1,11 @@
 import { DropzoneDialog } from 'material-ui-dropzone';
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import axios from "axios";
+
 
 
 export default class FileUpload extends React.Component {
@@ -17,7 +20,7 @@ export default class FileUpload extends React.Component {
 	 }
  	
 	 async onSave(files) {
-	    const {config,value} = this.props;
+	    const {config,value,loginContext} = this.props;
 	    
 	    const formData = new FormData()
 	    for(var x = 0; x<files.length; x++) {
@@ -25,22 +28,38 @@ export default class FileUpload extends React.Component {
 	    }
 	    
 	    if(value) { // update
-		    const uploadInfo = null;  /*await fetchFileJson(`${config.apiUrl}/uploadInfo`, {
-		      method: 'POST',
-		      body: formData
-		    }); */
-		   
+		    const headers = { 
+		    		  "Content-Type": "multipart/form-data",
+		    		  'X-Requested-With':'XMLHttpRequest', 
+		               'UCSFAUTH-TOKEN':loginContext.token,
+		                'tagId':loginContext.selTag.tagId,
+		                 'selRole':loginContext.selRole
+		    		};
+		       var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/uploadInfo/"+value, formData, { headers })
+		    
+		      if(uploadInfo) {
+		    	  uploadInfo = uploadInfo.data; 
+		      }
+		       
 		    if(uploadInfo && uploadInfo.fileDownloadUri) {
 		    	this.props.handleChange(uploadInfo.fileDownloadUri);
 		    	this.setState({ open:false});
 		    }
+		       
 	    } else {   // insert 
-	   
-	    	const uploadInfo = null;  /* await fetchFileJson(`${config.apiUrl}/uploadInfo/${value}`, {
-		      method: 'POST',
-		      body: formData
-		    }); */
+	    	 const headers = { 
+		    		   'X-Requested-With':'XMLHttpRequest', 
+		    		   "Content-Type": "multipart/form-data",
+		               'UCSFAUTH-TOKEN':loginContext.token,
+		                'tagId':loginContext.selTag.tagId,
+		                 'selRole':loginContext.selRole
+		    		};
+		     var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/uploadInfo", formData, { headers })
 		   
+		     if(uploadInfo) {
+		    	  uploadInfo = uploadInfo.data; 
+		      }
+		     
 	    	if(uploadInfo && uploadInfo.fileDownloadUri) {
 		    	this.props.handleChange(uploadInfo.fileDownloadUri);
 		    	this.setState({ open:false});
@@ -49,27 +68,33 @@ export default class FileUpload extends React.Component {
 	 };
 
 	 async setOpen(selectedOption) {
-		 const {config,value} = this.props;
-		 
+		 const {config,value,loginContext} = this.props;
 		 
 		 if(selectedOption === true && value) {
-			
-			 const uploadInfo =null;  /*await fetchFileJson(`${config.apiUrl}/uploadInfo/${value}`, {
-			      method: 'GET'
-			    }); */
-	
+			var uploadInfo = await axios.get("https://btcdb-test.ucsf.edu/api/uploadInfo/"+value, 
+                     {headers:{
+                       'X-Requested-With':'XMLHttpRequest', 
+                       'UCSFAUTH-TOKEN':loginContext.token,
+                        'tagId':loginContext.selTag.tagId,
+                         'selRole':loginContext.selRole,
+                     }}
+                     );
 			 var files = [];
 		 
+			 if(uploadInfo) {
+				 uploadInfo = uploadInfo.data;
+			 }
+			 
 		
 			 if(uploadInfo) {
 				 if(uploadInfo.childDownloadUris 
 					&& uploadInfo.childDownloadUris.length >0) {
 					 
 					 for(var index in uploadInfo.childDownloadUris) {
-						 files.push(config.apiUrl+'/file/'+uploadInfo.childDownloadUris[index].fileDownloadUri);
+						 files.push('https://btcdb-test.ucsf.edu/api'+'/file/'+uploadInfo.childDownloadUris[index].fileDownloadUri);
 					 }
 				 } else {
-					 files.push(config.apiUrl+'/file/'+uploadInfo.fileDownloadUri);
+					 files.push('https://btcdb-test.ucsf.edu/api'+'/file/'+uploadInfo.fileDownloadUri);
 				 }
 			 }
 			 this.setState({ open:selectedOption,files:files }); 
@@ -86,9 +111,9 @@ export default class FileUpload extends React.Component {
 				  <Button
 			        variant="text"
 			        size="medium"		
-			        color="link"
-			        startIcon={<AddPhotoAlternateOutlinedIcon />} onClick={() => this.setOpen(true)} >
-			        	{value?"View/Change Files":"Add Files"} 
+			        startIcon={<AddPhotoAlternateIcon />} 
+				    onClick={() => this.setOpen(true)} >
+			       			{value?"View/Change Files":"Add Files"} 
 			      </Button>
 			      
 			      <DropzoneDialog
