@@ -6,6 +6,8 @@ import {Divider,Grid,Paper,Typography,LinearProgress,TextField,Stack,Box} from '
 import InputForField from './patient_inputs';
 import MUISaveButton from '../common/MUISaveButton'
 import MUICancelButton from '../common/MUICancelButton'
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
 
 
 
@@ -50,10 +52,17 @@ export default class PatientCardView extends React.Component {
 				  justifyContent="space-between"
 				  alignItems="center"
 				  spacing={1}>
-			  		  <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
-		  	  	       {cardTitle}
-		             </Typography>
-		             { successMessage &&
+			  	 { cardTitle.lastIndexOf("/") != -1 ?
+			       <Breadcrumbs aria-label="breadcrumb">
+		             <Link underline="hover" color="inherit" href="/">
+		             {cardTitle.substr(0,cardTitle.lastIndexOf("/"))}
+		             </Link>
+		             <Typography color="text.primary">{cardTitle.split("/")[cardTitle.split("/").length-1]}</Typography>
+		           </Breadcrumbs> :
+		           <Typography color="text.primary">{cardTitle}</Typography>
+			  	 }
+		         
+		          { successMessage &&
 		             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
 		  	  	         {successMessage}
 		             </Typography>
