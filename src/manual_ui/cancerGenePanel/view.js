@@ -43,6 +43,56 @@ export default class CancerGenePanelView extends React.Component {
    
         this.setState({showLoading:false,patientInfo:patientInfo});
    };
+   
+   async saveInServer ()  {
+
+		  const {config,mrn,loginContext} = this.props;
+		  
+	       this.setState({showLoading:true});
+		   var tagId= loginContext.selTag.tagId;
+		   var path ='Patient/'+loginContext.mrn+'/Surgery/'+this.props.parentInfo["Surgery.surgeryDate"]+'/CancerGenePanel';
+	       var data = this.state.patientInfo;
+	       
+	       
+	       const headers = { 
+	    		   'Content-Type' :'applicaiton/json',
+	               'X-Requested-With':'XMLHttpRequest', 
+	               'UCSFAUTH-TOKEN':loginContext.token,
+	                'tagId':loginContext.selTag.tagId,
+	                 'selRole':loginContext.selRole,
+	                 'Content-Type': 'application/json'
+	    		};
+	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+	       
+	       if(rInfo && rInfo.data === true) {
+	       	this.setState({successMessage:'CancerGenePanel changes saved successfully'});
+	       	this.setState({errorMessage:null});
+	       } else {
+	       	this.setState({errorMessage:'Failed to save CancerGenePanel changes'});
+	       	this.setState({successMessage:null});
+	       }
+	       
+	       this.setState({showLoading:false});
+		}
+	    
+	    onChange = (className,fieldId,value) => {
+			
+			var patientInfo = this.state.patientInfo;
+			patientInfo[className+'.'+fieldId] = value;
+			
+			this.setState({successMessage:null});
+			this.setState({errorMessage:null});
+			this.setState({patientInfo:patientInfo});
+		};
+		
+		onSave = (event) => {
+			this.setState({showLoading:true});
+			this.saveInServer();
+	    };
+		
+		onCancel = () => {
+			this.extractData();
+		};
   	
 	componentDidMount(){
 		this.extractData();
@@ -50,36 +100,36 @@ export default class CancerGenePanelView extends React.Component {
 
 	render() {
 		const {topicName,loginContext,onEditClick,successMessage,errorMessage} = this.props;  
-		return (  <Stack direction="column"
-			  			justifyContent="space-around"
-			  			alignItems="center"
-			  			spacing={2}>
+		return (  <div>
 		            <PatientCardView
 				    rows={this.getRows(topicName)}
-		            loginContext={this.props.loginContext}
+		            saveClick={(event)=>this.onSave(event)}
+					onChange={(...args) => this.onChange(...args)}
+					onCancel={() => this.onCancel()}
 		            onEditClick={onEditClick}
+		            loginContext={this.props.loginContext}		
 		            cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName} 
 				    successMessage={successMessage}
 				    errorMessage={errorMessage} 
-		            loginContext={this.props.loginContext}	
 		            patientInfo={this.state.patientInfo}
 		            showLoading={this.state.showLoading}  
+		            config={this.props.config}
 		            />
 		            
 		            {this.state.showLoading == false && <TabMenu topicName={topicName} 
                      loginContext={this.props.loginContext}	
-                     parentId={this.state.patientInfo["CancerGenePanel.cgpPanelName"]}
-                     grandParentId={this.props.parentInfo["Surgery.surgeryDate"]} 
-            		 parentKey={"Surgery.surgeryDate"}
+		             schema={loginContext.schema} 
+		             grandParentId={this.props.parentInfo["Surgery.surgeryDate"]} 
+		             parentId={this.state.patientInfo["CancerGenePanel.cgpPanelName"]}
+		             parentKey={"Surgery.surgeryDate"}
             		 grandParentKey={"CancerGenePanel.cgpPanelName"}
-            		 mrn={this.props.mrn} 
+		             mrn={this.props.mrn} 
         			 onEditClick={this.props.onEditClick}
         			 successMessage={this.props.successMessage}
         			 errorMessage={this.props.errorMessage}
 		             config={this.props.config} 
 		            />}
-		            		            
-		         </Stack>   
+		         </div>   
 		        );
 	}
 }

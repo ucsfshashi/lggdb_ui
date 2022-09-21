@@ -55,9 +55,10 @@ export default class CopyNumberChangeRowEdit extends React.Component {
  	    		};
  	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
  	       
- 	      if(rInfo === true) {
+ 	      if(rInfo && rInfo.data === true) {
  	        	this.setState({successMessage:'CopyNumberChangeRow changes saved successfully'});
  	        	this.setState({errorMessage:null});
+ 	        	this.props.goBackToList(null);
  	        } else {
  	        	this.setState({errorMessage:'Failed to save CopyNumberChangeRow changes'});
  	        	this.setState({successMessage:null});
@@ -76,8 +77,9 @@ export default class CopyNumberChangeRowEdit extends React.Component {
 	
 		return (<PatientCardView
 			    rows={this.getRows(topicName)}
-			    data={this.state.data}
+				patientInfo={this.state.data}
 		        onChange={(...args) => this.onChange(...args)}
+				keyColumn={['chromosome','chromosomeSegment']}
 			    successMessage={this.state.successMessage}
 			    isNewPatient={this.state.isNewPatient}
 		        errorMessage={this.state.errorMessage} 
@@ -85,6 +87,7 @@ export default class CopyNumberChangeRowEdit extends React.Component {
 		        cardTitle={topicName} 
 		        showLoading={this.state.showLoading}	
 		        onCancelClick={this.props.onCancelClick}
+		         loginContext={this.props.loginContext}
 		        />);
 	}
 }

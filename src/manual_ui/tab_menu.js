@@ -60,6 +60,10 @@ export default class TabMenu extends React.Component {
 	   this.setState({mode:'view'});
   };
   
+  goBackToList=(event) => {
+	  this.setState({mode:'view'});
+  };
+  
   
    render() {  
 	  
@@ -98,7 +102,8 @@ export default class TabMenu extends React.Component {
 			         grandParentKey={this.props.grandParentKey} 
 		             data={this.state.data}
 			         onCancelClick={(event) => this.handleCancelClick(event)}
-			        />
+		             goBackToList={(event) => this.goBackToList(event)}
+		            />
 		           </div>
 		        </Box>
 		     }
