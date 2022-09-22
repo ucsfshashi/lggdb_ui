@@ -28,7 +28,12 @@ export default function PatientApp() {
 	   setData(info);
   };
   
-  const goBackToList=(event) => {
+  const goBackToList=(event,topic) => {
+	  
+	  if(topic){
+		  setLoginContext({topic:topic});
+	  }
+	  
 	  setLoginContext({mode:'view'});
    };
    
@@ -58,7 +63,7 @@ export default function PatientApp() {
           parentInfo={parentInfo}
           grandInfo={grandInfo}
           onNavigateClick={(event,parentInfo,topic,grandInfo) => onNavigateClick(event,parentInfo,topic,grandInfo)}
-          goBackToList={(event) => goBackToList(event)}
+          goBackToList={(event,topic) => goBackToList(event,topic)}
           onEditClick={(event, data) => handleEditClick(event, data)}	  
           loginContext={loginContext} />
       </Container>

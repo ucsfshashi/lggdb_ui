@@ -99,16 +99,17 @@ export default class CancerGenePanelView extends React.Component {
 	};
 
 	render() {
-		const {topicName,loginContext,onEditClick,successMessage,errorMessage} = this.props;  
+		const {topicName,loginContext,goBackToList,onEditClick,successMessage,errorMessage} = this.props;  
 		return (  <div>
 		            <PatientCardView
 				    rows={this.getRows(topicName)}
 		            saveClick={(event)=>this.onSave(event)}
 					onChange={(...args) => this.onChange(...args)}
 					onCancel={() => this.onCancel()}
+		            goBackToList={goBackToList}
 		            onEditClick={onEditClick}
-		            loginContext={this.props.loginContext}		
-		            cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName} 
+		            loginContext={this.props.loginContext}	
+		            cardTitle={[{"topic":"Surgery","value":this.props.parentInfo["Surgery.surgeryDate"]},{"topic":topicName}]}
 				    successMessage={successMessage}
 				    errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}

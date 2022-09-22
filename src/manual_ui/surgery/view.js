@@ -81,12 +81,13 @@ export default class SurgeryView extends React.Component {
 	};
 
 	render() {
-		const {schema,onEditClick,onNavigateClick,successMessage,errorMessage} = this.props;  
+		const {schema,onEditClick,onNavigateClick,goBackToList,successMessage,errorMessage} = this.props;  
 		return (  <PatientListView
 				    rows={this.getRows()}
 		            onEditClick={onEditClick}
 		            onNavigateClick={onNavigateClick}
-					loginContext={this.props.loginContext}
+		            goBackToList={goBackToList}
+		            loginContext={this.props.loginContext}
 		            cardTitle="Surgery" 
 				    successMessage={successMessage}
 		            childTopics={this.fetchDistinctChildTopic(this.getChildTopics())}

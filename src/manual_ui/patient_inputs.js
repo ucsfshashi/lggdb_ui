@@ -135,8 +135,7 @@ class PatientSelectInput extends React.Component {
   }
 
   handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    this.props.onChange(this.props.field,selectedOption ? selectedOption.value : null)
+    this.props.onChange(this.props.field,selectedOption.target.value ? selectedOption.target.value:'')
   }
 
    render() {
@@ -148,19 +147,24 @@ class PatientSelectInput extends React.Component {
 
 
       return (
-    		  <div className="loglio-input-div" >	 
-    	  <label className="loglio-input-label">
-          <div className="label-text">{field.displayName}</div>
-          <Select
-          value={value}
-          onChange={this.handleChange}
-          onInputChange={onChange}
-          onBlurResetsInput={false}
-          onCloseResetsInput={false}
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel id="demo-single-select-helper-label">{field.displayName}</InputLabel>
+        <Select
+          labelId="demo-single-select-helper-label"
+          id="demo-single-select-helper"
+          value={this.props.value}
+          label="{field.displayName}"
           disabled={disabled}
-          options={options}/>
-        </label>
-          </div>
+          onChange={this.handleChange}
+        >
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.label}>
+              <ListItemText primary={option.label} />
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    		
       );
     }
 }

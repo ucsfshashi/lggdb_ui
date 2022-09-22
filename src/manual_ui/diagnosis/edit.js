@@ -111,7 +111,7 @@ export default class DiagnosisEdit extends React.Component {
 	};
 	
 	getRows  = () => {
-		var rows = this.props.loginContext.schema.filter(el => (el.topic === this.props.loginContext.topicName
+		var rows = this.props.loginContext.schema.filter(el => (el.topic === this.props.loginContext.topic
 				   || (el.className === "Surgery" && el.id ==="surgeryDate")) );
 			
 			if(rows[0].className === 'Surgery') {
@@ -120,14 +120,13 @@ export default class DiagnosisEdit extends React.Component {
 				if(this.state.surgeryDates)  {
 					rows[0].values=this.state.surgeryDates;
 				}
-				
 				this.arraymove(rows,0,rows.length-2);
 			}
 			
 			return rows;
 	};
 	render() {
-		const {onChange,data} = this.props;  
+		const {onChange} = this.props;  
 	
 		return (<PatientCardView
 			    rows={this.getRows()}
@@ -139,7 +138,7 @@ export default class DiagnosisEdit extends React.Component {
 		        keyColumn={'diagnosisDate'}
 			    errorMessage={this.state.errorMessage} 
 		        saveClick={(event)=>this.onSave(event)}
-		        cardTitle={this.props.loginContext.topicName}
+		        cardTitle={this.props.loginContext.topic}
 		        showLoading={this.state.showLoading}	
 		        onCancelClick={this.props.onCancelClick}
 		        />);

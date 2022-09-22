@@ -52,15 +52,18 @@ export default class PatientCardView extends React.Component {
 				  justifyContent="space-between"
 				  alignItems="center"
 				  spacing={1}>
-			  	 { cardTitle.lastIndexOf("/") != -1 ?
-			       <Breadcrumbs aria-label="breadcrumb">
-		             <Link underline="hover" color="inherit" href="/">
-		             {cardTitle.substr(0,cardTitle.lastIndexOf("/"))}
-		             </Link>
-		             <Typography color="text.primary">{cardTitle.split("/")[cardTitle.split("/").length-1]}</Typography>
-		           </Breadcrumbs> :
-		           <Typography color="text.primary">{cardTitle}</Typography>
+			  
+			  	 { cardTitle instanceof Array &&
+			  		<Breadcrumbs aria-label="breadcrumb">
+			  	  	<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
+			  	        {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
+			  	     </Link>
+			  	   <Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
+			  	</Breadcrumbs>	 	
 			  	 }
+			  	{ !(cardTitle instanceof Array) &&
+			  	 <Typography variant="h5" color="text.primary">{cardTitle}</Typography>
+			  	}
 		         
 		          { successMessage &&
 		             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">

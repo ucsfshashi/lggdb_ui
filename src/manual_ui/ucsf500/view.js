@@ -97,7 +97,7 @@ export default class UCSF500View extends React.Component {
 	};
 
 	render() {
-		const {topicName,loginContext,onEditClick,successMessage,errorMessage} = this.props;  
+		const {topicName,loginContext,onEditClick,goBackToList,successMessage,errorMessage} = this.props;  
 		return (  <div>
 		            <PatientCardView
 				    rows={this.getRows(topicName)}
@@ -105,8 +105,9 @@ export default class UCSF500View extends React.Component {
 					onChange={(...args) => this.onChange(...args)}
 					onCancel={() => this.onCancel()}
 		            onEditClick={onEditClick}
+		            goBackToList={goBackToList}
 		            loginContext={this.props.loginContext}		
-		            cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName} 
+		            cardTitle={[{"topic":"Surgery","value":this.props.parentInfo["Surgery.surgeryDate"]},{"topic":topicName}]}
 				    successMessage={successMessage}
 				    errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}
