@@ -43,7 +43,7 @@ export default class ClinicalEvaluationView extends React.Component {
         	patientInfo =null;
         }
         
-        this.setState({showLoading:false,demographicInfo:patientInfo});
+        this.setState({showLoading:false,patientInfo:patientInfo});
    };
 	
 	componentDidMount(){

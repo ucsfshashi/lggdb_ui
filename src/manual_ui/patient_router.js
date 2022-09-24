@@ -12,7 +12,7 @@ import DiagnosisView from './diagnosis/view';
 import TumorEdit from './tumor/edit'; 
 import TumorView from './tumor/view'; 
 
-import ClinicalEvaluationEdit from './clinicalEvaluation/view';
+import ClinicalEvaluationEdit from './clinicalEvaluation/edit';
 import ClinicalEvaluationView from './clinicalEvaluation/view'; 
 
 import ImagingEdit from './imaging/edit';
@@ -21,7 +21,7 @@ import ImagingView from './imaging/view';
 import LoglioCognitiveEdit from './loglioCognitive/view';
 import LoglioCognitiveView from './loglioCognitive/view';
 
-import QOLEdit from './qol/view';
+import QOLEdit from './qol/edit';
 import QOLView from './qol/view'; 
 
 import ChemotherapyEdit from './chemotherapy/view';

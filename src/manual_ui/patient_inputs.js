@@ -152,7 +152,7 @@ class PatientSelectInput extends React.Component {
         <Select
           labelId="demo-single-select-helper-label"
           id="demo-single-select-helper"
-          value={this.props.value}
+          value={(this.props.value == '')?'None':this.props.value}
           label="{field.displayName}"
           disabled={disabled}
           onChange={this.handleChange}
