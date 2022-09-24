@@ -24,19 +24,19 @@ import LoglioCognitiveView from './loglioCognitive/view';
 import QOLEdit from './qol/edit';
 import QOLView from './qol/view'; 
 
-import ChemotherapyEdit from './chemotherapy/view';
+import ChemotherapyEdit from './chemotherapy/edit';
 import ChemotherapyView from './chemotherapy/view'; 
 
-import RadiotherapyEdit from './radiotherapy/view';
+import RadiotherapyEdit from './radiotherapy/edit';
 import RadiotherapyView from './radiotherapy/view'; 
 
-import MedicationEdit from './medication/view';
+import MedicationEdit from './medication/edit';
 import MedicationView from './medication/view'; 
 
 import EpidemiologyEdit from './epidemiology/view';
 import EpidemiologyView from './epidemiology/view'; 
 
-import ClinicalTrialEdit from './clinicalTrial/view';
+import ClinicalTrialEdit from './clinicalTrial/edit';
 import ClinicalTrialView from './clinicalTrial/view';
 
 import CancerGenePanelEdit from './cancerGenePanel/view';
@@ -71,6 +71,12 @@ import AttentionEdit from './attention/edit';
 import PastMedicalHistoryView from './pastMedicalHistory/view';
 import PastMedicalHistoryEdit from './pastMedicalHistory/view';
 
+import QABEdit from './qab/edit';
+import QABView from './qab/view'; 
+
+
+import WakefulnessEdit from './wakefulness/edit';
+import WakefulnessView from './wakefulness/view'; 
 
 
 export default class PatientRouter extends React.Component {
@@ -105,6 +111,8 @@ export default class PatientRouter extends React.Component {
 	        		case 'Copy Number Change Row' : return CopyNumberChangeRowEdit;
 	        		case 'Attention': return AttentionEdit;
 	        		case 'Past Medical History': return PastMedicalHistoryEdit;
+	        		case 'QAB': return QABEdit;
+	        		case 'Wakefulness': return WakefulnessEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -131,6 +139,8 @@ export default class PatientRouter extends React.Component {
 	    			case 'Copy Number Change Row' : return CopyNumberChangeRowView;
 	    			case 'Attention': return AttentionView;
 	    			case 'Past Medical History': return PastMedicalHistoryView;
+	    			case 'QAB': return QABView;
+	    			case 'Wakefulness': return WakefulnessView;
 	    			default: return DemographicView;
 	    		}
 	  	}
