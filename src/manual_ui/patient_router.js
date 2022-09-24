@@ -18,7 +18,7 @@ import ClinicalEvaluationView from './clinicalEvaluation/view';
 import ImagingEdit from './imaging/edit';
 import ImagingView from './imaging/view'; 
 
-import LoglioCognitiveEdit from './loglioCognitive/view';
+import LoglioCognitiveEdit from './loglioCognitive/edit';
 import LoglioCognitiveView from './loglioCognitive/view';
 
 import QOLEdit from './qol/edit';
@@ -64,6 +64,13 @@ import CopyNumberChangeRowView from './copyNumChangeRow/view';
 import CopyNumberChangeRowEdit from './copyNumChangeRow/edit';
 
 
+import AttentionView from './attention/view';
+import AttentionEdit from './attention/edit';
+
+
+import PastMedicalHistoryView from './pastMedicalHistory/view';
+import PastMedicalHistoryEdit from './pastMedicalHistory/view';
+
 
 
 export default class PatientRouter extends React.Component {
@@ -96,6 +103,8 @@ export default class PatientRouter extends React.Component {
 	        		case 'UCSF500' : return UCSF500Edit;
 	        		case 'Alteration Row' : return AlterationRowEdit;
 	        		case 'Copy Number Change Row' : return CopyNumberChangeRowEdit;
+	        		case 'Attention': return AttentionEdit;
+	        		case 'Past Medical History': return PastMedicalHistoryEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -120,6 +129,8 @@ export default class PatientRouter extends React.Component {
 	    			case 'UCSF500' : return UCSF500View;
 	    			case 'Alteration Row' : return AlterationRowView;
 	    			case 'Copy Number Change Row' : return CopyNumberChangeRowView;
+	    			case 'Attention': return AttentionView;
+	    			case 'Past Medical History': return PastMedicalHistoryView;
 	    			default: return DemographicView;
 	    		}
 	  	}

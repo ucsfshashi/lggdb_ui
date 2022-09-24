@@ -81,7 +81,7 @@ export default class QOLEdit extends React.Component {
 			        onChange={(...args) => this.onChange(...args)}
 				    successMessage={this.state.successMessage}
 				    isNewPatient={this.state.isNewPatient}
-					keyColumn={'clinicalEvaluationDate'}
+					keyColumn={['timeLine','domain']}
 				    errorMessage={this.state.errorMessage} 
 			        saveClick={(event)=>this.onSave(event)}
 					cardTitle={topicName}
