@@ -79,6 +79,20 @@ import WakefulnessEdit from './wakefulness/edit';
 import WakefulnessView from './wakefulness/view'; 
 
 
+import LanguageEdit from './language/edit';
+import LanguageView from './language/view'; 
+
+
+import McGurkEdit from './mcGurk/edit';
+import McGurkView from './mcGurk/view'; 
+
+import SensoryEdit from './sensory/edit';
+import SensoryView from './sensory/view'; 
+
+
+import CognitionEdit from './cognition/edit';
+import CognitionView from './cognition/view'; 
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -113,6 +127,10 @@ export default class PatientRouter extends React.Component {
 	        		case 'Past Medical History': return PastMedicalHistoryEdit;
 	        		case 'QAB': return QABEdit;
 	        		case 'Wakefulness': return WakefulnessEdit;
+	        		case 'Language': return LanguageEdit;
+	        		case 'McGurk': return McGurkEdit;
+	        		case 'Sensory': return SensoryEdit;
+	        		case 'Cognition': return CognitionEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -141,6 +159,10 @@ export default class PatientRouter extends React.Component {
 	    			case 'Past Medical History': return PastMedicalHistoryView;
 	    			case 'QAB': return QABView;
 	    			case 'Wakefulness': return WakefulnessView;
+	    			case 'Language': return LanguageView;
+	    			case 'McGurk': return McGurkView;
+	    			case 'Sensory': return SensoryView;
+	    			case 'Cognition': return CognitionView;
 	    			default: return DemographicView;
 	    		}
 	  	}

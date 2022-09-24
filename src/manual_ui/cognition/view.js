@@ -3,7 +3,7 @@ import PatientListView from '../patient_list_view';
 import axios from "axios";
 
 
-export default class WakefulnessView  extends React.Component {
+export default class CognitionView  extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -26,7 +26,7 @@ export default class WakefulnessView  extends React.Component {
         const {config,mrn,loginContext} = this.props;
         
 		this.setState({showLoading:true});
-		var path ='Patient/'+loginContext.mrn+'/Wakefulness';
+		var path ='Patient/'+loginContext.mrn+'/Cognition';
         var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
@@ -43,7 +43,7 @@ export default class WakefulnessView  extends React.Component {
         }
         
         
-        if(!patientInfo || !patientInfo[0]["Wakefulness.timeLine"]){
+        if(!patientInfo || !patientInfo[0]["Cognition.timeLine"]){
         	patientInfo =null;
         }
         
