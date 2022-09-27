@@ -9,6 +9,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import IconButton from '@mui/material/IconButton';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import Iconify from '../components/Iconify';
 
 export default class PatientCardView extends React.Component {
 	
@@ -20,6 +21,37 @@ export default class PatientCardView extends React.Component {
 		showSave: false
 	};
    
+	
+	getTopicIcon=(topicName) => {
+		const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
+		var icon = this.props.loginContext.schema.filter(el => el.topic == topicName)[0];
+		return icon ? getIcon("fa:"+icon.icon) : null;
+	}
+	
+	getTitle = (cardTitle) => {
+		if(cardTitle instanceof Array) {
+	  		return (<Breadcrumbs aria-label="breadcrumb">
+	  		<Stack direction="row" alignItems="center" gap={1}>	
+	  		{this.getTopicIcon(cardTitle[0].topic)}
+	  		<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
+	  	       {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
+	  	     </Link>
+	  	   </Stack>
+	  	   
+	  	   <Stack direction="row" alignItems="center" gap={1}>
+	  	   	{this.getTopicIcon(cardTitle[1].topic)} 
+	  	   	<Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
+	  	   </Stack>
+	  	   </Breadcrumbs> );	 	
+	  	}
+		else
+		{
+	  	 return (<Stack direction="row" alignItems="center" gap={1}>
+	  	 			{this.getTopicIcon(cardTitle)} 
+	  	 			<Typography variant="h5" color="text.primary">{cardTitle}</Typography>
+	  	 		</Stack>);
+	  	}
+	}
 
 	render() {  
 	
@@ -50,30 +82,8 @@ export default class PatientCardView extends React.Component {
 				  alignItems="center"
 				  spacing={1}>
 			  
-			  	 { cardTitle instanceof Array &&
-			  		<Breadcrumbs aria-label="breadcrumb">
-			  	  	<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
-			  	        {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
-			  	     </Link>
-			  	   <Typography variant="h5" color="text.primary">
-			  	   		{cardTitle[1].topic}
-			  	   		<IconButton aria-label="restart" size="medium"  onClick={() => this.props.onCancel()}>
-			  	   			<LowPriorityIcon color="success"  fontSize="large" />
-			  	   		</IconButton>
-			  	   </Typography>
-			  	</Breadcrumbs>	 	
-			  	 }
-			  	{ !(cardTitle instanceof Array) &&
-			  	   <Typography variant="h5" color="text.primary">
-			  			{cardTitle}
-			  			{this.props.fromList &&
-				  			<IconButton aria-label="restart" size="medium"  onClick={() => this.props.onCancel()}>
-					  			<LowPriorityIcon color="success" fontSize="inherit" />
-					  	    </IconButton>
-			  			}
-			  	   </Typography>
-			  	}
-		          { successMessage &&
+			  	 {this.getTitle(cardTitle)}
+			  	  { successMessage &&
 		             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
 		  	  	         {successMessage}
 		             </Typography>

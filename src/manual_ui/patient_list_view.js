@@ -7,6 +7,7 @@ import ChildMenu from './child_menu'
 import {Paper,Button,Grid,Typography,Divider,LinearProgress,Stack} from '@mui/material';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import Iconify from '../components/Iconify';
 
 
 
@@ -45,6 +46,8 @@ export default class PatientListView extends React.Component {
 	isNonPHI = () => {
 		return (this.props.loginContext && this.props.loginContext.selRole != "NON_PHI");
 	};
+	
+	
 	
 	getColumns = () => {
 		var columns = [];
@@ -133,19 +136,38 @@ export default class PatientListView extends React.Component {
 	  return this.convertPatientInfo(this.props.patientInfo);
 	}
 	
+	getTopicIcon=(topicName) => {
+		const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
+		var icon = this.props.loginContext.schema.filter(el => el.topic == topicName)[0];
+		return icon ? getIcon("fa:"+icon.icon) : null;
+	}
+
+	
 	getTitle = (cardTitle) => {
+		
+		
 		
 		if(cardTitle instanceof Array) {
 	  		return (<Breadcrumbs aria-label="breadcrumb">
-	  	  	<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
-	  	        {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
+	  		<Stack direction="row" alignItems="center" gap={1}>	
+	  		{this.getTopicIcon(cardTitle[0].topic)}
+	  		<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
+	  	       {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
 	  	     </Link>
-	  	   <Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
-	   	    </Breadcrumbs> );	 	
+	  	   </Stack>
+	  	   
+	  	   <Stack direction="row" alignItems="center" gap={1}>
+	  	   	{this.getTopicIcon(cardTitle[1].topic)} 
+	  	   	<Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
+	  	   </Stack>
+	  	   </Breadcrumbs> );	 	
 	  	}
 		else
 		{
-	  	 return (<Typography variant="h5" color="text.primary">{cardTitle}</Typography>);
+	  	 return (<Stack direction="row" alignItems="center" gap={1}>
+	  	 			{this.getTopicIcon(cardTitle)} 
+	  	 			<Typography variant="h5" color="text.primary">{cardTitle}</Typography>
+	  	 		</Stack>);
 	  	}
 	}
 
