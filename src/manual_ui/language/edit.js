@@ -65,6 +65,9 @@ export default class LanguageEdit extends React.Component {
 	       this.setState({showLoading:false});
    };
 	
+	onCancel = () => {
+		this.props.goBackToList(null);
+	};
 	
 	getRows  = (topicName) => {
 		return this.props.loginContext.schema.filter(el => el.topic === topicName);
@@ -76,6 +79,7 @@ export default class LanguageEdit extends React.Component {
 		
 		return (<PatientCardView
 					rows={this.getRows(topicName)}
+					fromList={true}	
 				    patientInfo={this.state.data}
 			        loginContext={this.props.loginContext}
 			        onChange={(...args) => this.onChange(...args)}
@@ -86,6 +90,6 @@ export default class LanguageEdit extends React.Component {
 			        saveClick={(event)=>this.onSave(event)}
 					cardTitle={topicName}
 			        showLoading={this.state.showLoading}	
-			        onCancelClick={this.props.onCancelClick}/>);
+			        onCancel={() => this.onCancel()} />);
 	}
 }

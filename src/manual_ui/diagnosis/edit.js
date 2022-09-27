@@ -110,6 +110,11 @@ export default class DiagnosisEdit extends React.Component {
 		this.extractSurgeryInfo();
 	};
 	
+	
+	 onCancel = () => {
+			this.props.goBackToList(null);
+		};
+	
 	getRows  = () => {
 		var rows = this.props.loginContext.schema.filter(el => (el.topic === this.props.loginContext.topic
 				   || (el.className === "Surgery" && el.id ==="surgeryDate")) );
@@ -130,6 +135,7 @@ export default class DiagnosisEdit extends React.Component {
 	
 		return (<PatientCardView
 			    rows={this.getRows()}
+				fromList={true}
 			    patientInfo={this.state.data}
 		        loginContext={this.props.loginContext}
 		        onChange={(...args) => this.onChange(...args)}
@@ -140,7 +146,7 @@ export default class DiagnosisEdit extends React.Component {
 		        saveClick={(event)=>this.onSave(event)}
 		        cardTitle={this.props.loginContext.topic}
 		        showLoading={this.state.showLoading}	
-		        onCancelClick={this.props.onCancelClick}
+				onCancel={() => this.onCancel()}
 		        />);
 	}
 }

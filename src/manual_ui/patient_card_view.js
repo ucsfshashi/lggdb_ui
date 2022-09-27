@@ -1,5 +1,4 @@
 import React from 'react';
-import EditIcon from '@material-ui/icons/Edit';
 
 import {Divider,Grid,Paper,Typography,LinearProgress,TextField,Stack,Box} from '@mui/material';
 
@@ -8,10 +7,8 @@ import MUISaveButton from '../common/MUISaveButton'
 import MUICancelButton from '../common/MUICancelButton'
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
-
-
-
-
+import IconButton from '@mui/material/IconButton';
+import LowPriorityIcon from '@mui/icons-material/LowPriority';
 
 export default class PatientCardView extends React.Component {
 	
@@ -58,13 +55,24 @@ export default class PatientCardView extends React.Component {
 			  	  	<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
 			  	        {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
 			  	     </Link>
-			  	   <Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
+			  	   <Typography variant="h5" color="text.primary">
+			  	   		{cardTitle[1].topic}
+			  	   		<IconButton aria-label="restart" size="medium"  onClick={() => this.props.onCancel()}>
+			  	   			<LowPriorityIcon color="success"  fontSize="large" />
+			  	   		</IconButton>
+			  	   </Typography>
 			  	</Breadcrumbs>	 	
 			  	 }
 			  	{ !(cardTitle instanceof Array) &&
-			  	 <Typography variant="h5" color="text.primary">{cardTitle}</Typography>
+			  	   <Typography variant="h5" color="text.primary">
+			  			{cardTitle}
+			  			{this.props.fromList &&
+				  			<IconButton aria-label="restart" size="medium"  onClick={() => this.props.onCancel()}>
+					  			<LowPriorityIcon color="success" fontSize="inherit" />
+					  	    </IconButton>
+			  			}
+			  	   </Typography>
 			  	}
-		         
 		          { successMessage &&
 		             <Typography  sx={{ paddingTop: '10px',paddingLeft: '15px' }} variant="h5">
 		  	  	         {successMessage}

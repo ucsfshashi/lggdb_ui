@@ -112,7 +112,7 @@ export default class ClinicalPathologyView extends React.Component {
 				    rows={this.getRows(topicName)}
 		            onEditClick={onEditClick}
 					loginContext={this.props.loginContext}
-		            cardTitle={'Surgery('+this.props.parentInfo["Surgery.surgeryDate"]+')/'+topicName} 
+					cardTitle={[{"topic":"Surgery","value":this.props.parentInfo["Surgery.surgeryDate"]},{"topic":topicName}]}	
 				    successMessage={successMessage}
 				    errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}

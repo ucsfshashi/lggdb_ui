@@ -93,6 +93,10 @@ import SensoryView from './sensory/view';
 import CognitionEdit from './cognition/edit';
 import CognitionView from './cognition/view'; 
 
+import ImageGuidedTissueView from './imageGuidedTissue/view'; 
+import ImageGuidedTissueEdit from './imageGuidedTissue/edit';
+
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -131,6 +135,7 @@ export default class PatientRouter extends React.Component {
 	        		case 'McGurk': return McGurkEdit;
 	        		case 'Sensory': return SensoryEdit;
 	        		case 'Cognition': return CognitionEdit;
+	        		case 'Image Guided Tissue': return ImageGuidedTissueEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -163,6 +168,7 @@ export default class PatientRouter extends React.Component {
 	    			case 'McGurk': return McGurkView;
 	    			case 'Sensory': return SensoryView;
 	    			case 'Cognition': return CognitionView;
+	    			case 'Image Guided Tissue': return ImageGuidedTissueView;
 	    			default: return DemographicView;
 	    		}
 	  	}

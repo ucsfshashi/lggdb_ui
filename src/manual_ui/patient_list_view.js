@@ -5,6 +5,9 @@ import MUIDataTable from "mui-datatables";
 import MUIAddButton from '../common/MUIAddButton'
 import ChildMenu from './child_menu'
 import {Paper,Button,Grid,Typography,Divider,LinearProgress,Stack} from '@mui/material';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+
 
 
 export default class PatientListView extends React.Component {
@@ -77,6 +80,7 @@ export default class PatientListView extends React.Component {
 					  <ChildMenu onNavigateClick={this.props.onNavigateClick} 
 					             parentInfo={this.props.patientInfo[tableMeta.rowIndex]} 
 					  			 grandInfo={this.props.grandInfo} 	
+					  			 goBackToList={this.props.goBackToList}	
 					             childTopics={this.props.childTopics}
 					  			 loginContext={this.props.loginContext} />
 		           );
@@ -128,6 +132,22 @@ export default class PatientListView extends React.Component {
 	getPatientInfo = () => {
 	  return this.convertPatientInfo(this.props.patientInfo);
 	}
+	
+	getTitle = (cardTitle) => {
+		
+		if(cardTitle instanceof Array) {
+	  		return (<Breadcrumbs aria-label="breadcrumb">
+	  	  	<Link variant="h5" underline="hover" color="inherit"  href="#" onClick={(event,topic)=>this.props.goBackToList(null,cardTitle[0].topic)}>
+	  	        {cardTitle[0].topic}{'('+cardTitle[0].value+')'}
+	  	     </Link>
+	  	   <Typography variant="h5" color="text.primary">{cardTitle[1].topic}</Typography>
+	   	    </Breadcrumbs> );	 	
+	  	}
+		else
+		{
+	  	 return (<Typography variant="h5" color="text.primary">{cardTitle}</Typography>);
+	  	}
+	}
 
 	render() {  
 	
@@ -137,7 +157,7 @@ export default class PatientListView extends React.Component {
 		return (
 				<Stack >    
 				 <MUIDataTable
-				  title={cardTitle}
+				  title={this.getTitle(cardTitle)}
 				  data={this.getPatientInfo()}
 				  columns={this.getColumns()}
 			      options={this.getOptions()}

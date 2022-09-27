@@ -2,26 +2,26 @@ import React from 'react';
 import PatientCardView from '../patient_card_view';
 import axios from "axios";
 
-export default class QABEdit extends React.Component {
+export default class ImageGuidedTissueEdit  extends React.Component {
 	
 	constructor(props) {
 	    super(props);
-	   
+	    
 	    this.state = {
 	       data: this.props.data,
     	   showLoading:false,
-    	   isNewPatient:(this.props.data['QAB.timeLine'] == undefined)
+    	   isNewPatient:(this.props.data['ImageGuidedTissue.tissueBankId'] == undefined)
 		};
-	    
 	};
+	
 	
 	/**OnChange specific to Demographic Card
 	 **/
 	onChange = (className,fieldId,value) => {
 		
 		var data = this.state.data;
-		data[className+'.'+fieldId] = value;
 		
+		data[className+'.'+fieldId] = value;
 		this.setState({successMessage:null});
 		this.setState({errorMessage:null});
 		this.setState({data:data});
@@ -34,13 +34,15 @@ export default class QABEdit extends React.Component {
 	};
 	
 	async saveInServer ()  {
-        
-		   const {config,mrn,loginContext} = this.props;
+
+		
+		const {config,mrn,loginContext} = this.props;
 		  
 	       this.setState({showLoading:true});
 		   var tagId= loginContext.selTag.tagId;
-		   var path ='Patient/'+loginContext.mrn+'/QAB';
+		   var path ='Patient/'+loginContext.mrn+'/Imaging/'+this.props.parentInfo["Imaging.imagingDate"]+'/ImageGuidedTissue';
 		   var data = this.state.data;
+	       
 	       
 	       const headers = { 
 	    		   'Content-Type' :'applicaiton/json',
@@ -53,17 +55,17 @@ export default class QABEdit extends React.Component {
 	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
 	       
 	       if(rInfo && rInfo.data === true) {
-	    	    this.setState({successMessage:'Patient QAB changes saved successfully'});
+	    	    this.setState({successMessage:'ImageGuidedTissue changes saved successfully'});
 	        	this.setState({errorMessage:null});
 	        	this.props.goBackToList(null);
 	        	
 	       } else {
-	    	   this.setState({errorMessage:'Failed to save Patient QAB changes'});
+	    	   this.setState({errorMessage:'Failed to save ImageGuidedTissue changes'});
 	           this.setState({successMessage:null});
 	       }
 	
 	       this.setState({showLoading:false});
-   };
+	};
 	
 	onCancel = () => {
 		this.props.goBackToList(null);
@@ -73,23 +75,23 @@ export default class QABEdit extends React.Component {
 		return this.props.loginContext.schema.filter(el => el.topic === topicName);
 	};
 	render() {
-		const {topicName,schema,onChange,data} = this.props;  
-		
-		
-		
+		const {topicName,onChange,goBackToList,data} = this.props;  
+	
 		return (<PatientCardView
-					rows={this.getRows(topicName)}
-				    patientInfo={this.state.data}
-				    fromList={true}
-			        loginContext={this.props.loginContext}
-			        onChange={(...args) => this.onChange(...args)}
-				    successMessage={this.state.successMessage}
-				    isNewPatient={this.state.isNewPatient}
-					keyColumn={'timeLine'}
-				    errorMessage={this.state.errorMessage} 
-			        saveClick={(event)=>this.onSave(event)}
-					cardTitle={topicName}
-			        showLoading={this.state.showLoading}	
-			        onCancel={() => this.onCancel()} />);
+			    rows={this.getRows(topicName)}
+			    patientInfo={this.state.data}
+				fromList={true}
+		        loginContext={this.props.loginContext}
+		        onChange={(...args) => this.onChange(...args)}
+			    successMessage={this.state.successMessage}
+			    isNewPatient={this.state.isNewPatient}
+				goBackToList={goBackToList}
+				keyColumn={'tissueBankId'}
+		        cardTitle={[{"topic":"Imaging","value":this.props.parentInfo["Imaging.imagingDate"]},{"topic":topicName,"value":this.props.data['ImageGuidedTissue.tissueBankId']}]}	
+			    errorMessage={this.state.errorMessage} 
+		        saveClick={(event)=>this.onSave(event)}
+		        showLoading={this.state.showLoading}	
+				onCancel={() => this.onCancel()}
+		        />);
 	}
 }

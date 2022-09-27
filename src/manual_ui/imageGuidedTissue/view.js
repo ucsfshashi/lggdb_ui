@@ -3,7 +3,7 @@ import PatientListView from '../patient_list_view';
 import axios from "axios";
 
 
-export default class ImagingView extends React.Component {
+export default class ImageGuidedTissueView extends React.Component {
 	
 	constructor(props) {
 	    super(props);
@@ -14,24 +14,17 @@ export default class ImagingView extends React.Component {
 	  patientInfo:[],
 	};
 	
-	getRows  = () => {
-		var rows = this.props.loginContext.schema.filter(el => (el.topic === "Imaging" 
-			   || (el.className === "Surgery" && el.id ==="surgeryDate")) );
-		
-		if(rows[0].className === 'Surgery') {
-			this.arraymove(rows,0,rows.length-1);
-		}
-		
-		return rows;
-		
+	getRows  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.topic === topicName);
 	};
 	
-	getChildTopics  = () => {
-		return this.props.loginContext.schema.filter(el => el.parent === "Imaging");
+	
+	getChildTopics  = (topicName) => {
+		return this.props.loginContext.schema.filter(el => el.parent === topicName);
 	};
 	
 	fetchDistinctChildTopic = (array) => {
-		      
+	      
 		   const result = [];
 		   const map = new Map();
 		   for (const item of array) {
@@ -48,25 +41,19 @@ export default class ImagingView extends React.Component {
 		           }
 		       }
 		   }
-		  
+	
 		   // Sort topic to generate left menu
 		   result.sort((a, b) => (a.topicDisplayPriority > b.topicDisplayPriority) ? 1 : -1);
 		  
 		   return result;
-   };
-	
-	arraymove = (arr,fromIndex,toIndex) => {
-	    var element = arr[fromIndex];
-	    arr.splice(fromIndex, 1);
-	    arr.splice(toIndex, 0, element);
-	};
+    };
 	
 	async extractData () {
         
 		const {config,mrn,loginContext} = this.props;
         
 		this.setState({showLoading:true});
-		var path ='Patient/'+loginContext.mrn+'/Imaging';
+        var path ='Patient/'+loginContext.mrn+'/Imaging/'+this.props.parentInfo["Imaging.imagingDate"]+'/ImageGuidedTissue';
         var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
@@ -83,12 +70,11 @@ export default class ImagingView extends React.Component {
         }
         
         
-        if(!patientInfo || !patientInfo[0]["Imaging.imagingDate"]){
+        if(!patientInfo || !patientInfo[0]["ImageGuidedTissue.tissueBankId"]){
         	patientInfo =null;
         }
         
         this.setState({showLoading:false,patientInfo:patientInfo});
-        
    };
 	
 	componentDidMount(){
@@ -96,16 +82,16 @@ export default class ImagingView extends React.Component {
 	};
 
 	render() {
-		const {onEditClick,onNavigateClick,successMessage,goBackToList,errorMessage} = this.props;  
+		const {topicName,onNavigateClick,goBackToList,schema,onEditClick,successMessage,errorMessage} = this.props;  
 		return (  <PatientListView
-				    rows={this.getRows()}
-					onNavigateClick={onNavigateClick}
+				    rows={this.getRows(topicName)}
 		            onEditClick={onEditClick}
-		            goBackToList={goBackToList}
-		            cardTitle="Imaging" 
-		            loginContext={this.props.loginContext}	
-		            childTopics={this.fetchDistinctChildTopic(this.getChildTopics())}	
+					cardTitle={[{"topic":"Imaging","value":this.props.parentInfo["Imaging.imagingDate"]},{"topic":topicName}]}	
+		            onNavigateClick={onNavigateClick}	
+		   			goBackToList={goBackToList}
+					loginContext={this.props.loginContext}
 				    successMessage={successMessage}
+		            childTopics={this.fetchDistinctChildTopic(this.getChildTopics(topicName))}
 				    errorMessage={errorMessage} 
 		            patientInfo={this.state.patientInfo}
 		            showLoading={this.state.showLoading}    
