@@ -52,7 +52,7 @@ export default function PatientApp() {
         <Stack direction="row" alignItems="center" spacing={0.5}>    
           <Typography variant="h4">{loginContext.mrn}</Typography>
           <IconButton aria-label="restart" size="medium"  onClick={() => navigate("/dashboard/patients")}>
-            <ResetTvIcon fontSize="inherit" />
+            <ResetTvIcon color="success" fontSize="inherit" />
           </IconButton>
         </Stack>
         </Box>

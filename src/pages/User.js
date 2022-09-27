@@ -159,7 +159,7 @@ return (
         <Stack direction="row" alignItems="center" spacing={0.5}>    
           <Typography variant="h4">{loginContext.selTag.tagName}</Typography>
           <IconButton aria-label="restart" size="medium"  onClick={() => navigate("/postLogin")}>
-            <ResetTvIcon fontSize="inherit" />
+            <ResetTvIcon color="success" fontSize="inherit" />
           </IconButton>    
         </Stack>
         </Box>
