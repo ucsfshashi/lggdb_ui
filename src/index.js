@@ -16,7 +16,7 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
   <AuthProvider>
   <HelmetProvider>
-    <BrowserRouter>
+    <BrowserRouter basename={"/newui"}>
       <App />
     </BrowserRouter>
   </HelmetProvider>

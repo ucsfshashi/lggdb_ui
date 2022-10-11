@@ -15,7 +15,7 @@ export default function App() {
       <ScrollToTop />
       <GlobalStyles />
       <BaseOptionChartStyle />
-      <Router  basename={"/newui"} />
+      <Router/>
     </ThemeConfig>
   );
 }
