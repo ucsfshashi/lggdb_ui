@@ -19,7 +19,7 @@ import NotFound from './pages/Page404';
 export default function Router() {
   return useRoutes([
     {
-      path: '/newui/dashboard',
+      path: '/dashboard',
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
@@ -29,14 +29,14 @@ export default function Router() {
       ]
     },
     {
-      path: '/newui/goto',
+      path: '/goto',
       element: <PatientLayout/>,
       children: [
         { path: 'patient', element: <PatientApp /> },
       ]
     },
     {
-      path: '/newui/',
+      path: '/',
       element: <LogoOnlyLayout />,
       children: [
         { path: '/', element: <Navigate to="/dashboard/app" /> },
