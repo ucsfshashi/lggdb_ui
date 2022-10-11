@@ -60,6 +60,10 @@ import UCSF500Edit from './ucsf500/view';
 import AlterationRowView from './alterationRow/view';
 import AlterationRowEdit from './alterationRow/edit';
 
+
+import CgpAlterationRowView from './cgpAlterationRow/view';
+import CgpAlterationRowEdit from './cgpAlterationRow/edit';
+
 import CopyNumberChangeRowView from './copyNumChangeRow/view';
 import CopyNumberChangeRowEdit from './copyNumChangeRow/edit';
 
@@ -97,6 +101,21 @@ import ImageGuidedTissueView from './imageGuidedTissue/view';
 import ImageGuidedTissueEdit from './imageGuidedTissue/edit';
 
 
+import TumorObservationsEdit from './tumorObservations/edit';
+import TumorObservationsView from './tumorObservations/view'; 
+
+import TumorSurgeryEdit from './tumorSurgery/edit';
+import TumorSurgeryView from './tumorSurgery/view'; 
+
+
+import TumorImagingEdit from './tumorImaging/edit';
+import TumorImagingView from './tumorImaging/view'; 
+
+
+import TumorRadiotherapyEdit from './tumorRadiotherapy/edit';
+import TumorRadiotherapyView from './tumorRadiotherapy/view'; 
+
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -108,27 +127,32 @@ export default class PatientRouter extends React.Component {
 	    	case 'edit':
 	    		switch(topicName) {
 	        		case 'Demographics': return DemographicEdit;
-	        		case 'Surgery' : return SurgeryEdit;
-	        		case 'Diagnosis' : return DiagnosisEdit;
 	        		case 'Tumor' : return TumorEdit;
-	        		case 'Imaging' : return ImagingEdit;
-	        		case 'Clinical Evaluation' : return ClinicalEvaluationEdit;
-	        		case 'Loglio cognitive': return LoglioCognitiveEdit;
-	        		case 'QOL': return QOLEdit;
+	        		case 'Surgery' : return SurgeryEdit;
 	        		case 'Chemotherapy' : return ChemotherapyEdit;
+	        		case 'Clinical Evaluation' : return ClinicalEvaluationEdit;
+	        		case 'Imaging' : return ImagingEdit;
 	        		case 'Radiotherapy' : return RadiotherapyEdit;
 	        		case 'Medication' : return MedicationEdit;
-	        		case 'Epidemiology' : return EpidemiologyEdit;
 	        		case 'Clinical Trial' : return ClinicalTrialEdit;
-	        		case 'CancerGenePanel' : return CancerGenePanelEdit;
-	        		case 'Tissue' : return TissueEdit;
-	        		case 'Research Pathology': return ResearchPathologyEdit;
+	        		case 'Epidemiology' : return EpidemiologyEdit;
+	        		case 'Past Medical History': return PastMedicalHistoryEdit;
+	        		case 'Diagnosis' : return DiagnosisEdit;
 	        		case 'Clinical Pathology' : return ClinicalPathologyEdit;
 	        		case 'UCSF500' : return UCSF500Edit;
 	        		case 'Alteration Row' : return AlterationRowEdit;
 	        		case 'Copy Number Change Row' : return CopyNumberChangeRowEdit;
+	        		case 'CancerGenePanel' : return CancerGenePanelEdit;
+	        		case 'CgpAlterationRow' : return CgpAlterationRowEdit;
+	        		case 'Tumor Observation': return TumorObservationsEdit;
+	        		case 'Tumor Surgery': return TumorSurgeryEdit;
+	        		case 'Tumor Imaging': return TumorImagingEdit;
+	        		case 'Tumor Radiotherapy': return TumorRadiotherapyEdit;
+	        		case 'Research Pathology': return ResearchPathologyEdit;
+	        		case 'Tissue' : return TissueEdit;
+	        		case 'Loglio cognitive': return LoglioCognitiveEdit;
+	        		case 'QOL': return QOLEdit;
 	        		case 'Attention': return AttentionEdit;
-	        		case 'Past Medical History': return PastMedicalHistoryEdit;
 	        		case 'QAB': return QABEdit;
 	        		case 'Wakefulness': return WakefulnessEdit;
 	        		case 'Language': return LanguageEdit;
@@ -159,6 +183,7 @@ export default class PatientRouter extends React.Component {
 	    			case 'Clinical Pathology' : return ClinicalPathologyView;
 	    			case 'UCSF500' : return UCSF500View;
 	    			case 'Alteration Row' : return AlterationRowView;
+	    			case 'CgpAlterationRow' : return CgpAlterationRowView;
 	    			case 'Copy Number Change Row' : return CopyNumberChangeRowView;
 	    			case 'Attention': return AttentionView;
 	    			case 'Past Medical History': return PastMedicalHistoryView;
@@ -169,6 +194,10 @@ export default class PatientRouter extends React.Component {
 	    			case 'Sensory': return SensoryView;
 	    			case 'Cognition': return CognitionView;
 	    			case 'Image Guided Tissue': return ImageGuidedTissueView;
+	    			case 'Tumor Observation': return TumorObservationsView;
+	    			case 'Tumor Surgery': return TumorSurgeryView;
+	    			case 'Tumor Imaging': return TumorImagingView;
+	    			case 'Tumor Radiotherapy': return TumorRadiotherapyView;
 	    			default: return DemographicView;
 	    		}
 	  	}
