@@ -116,6 +116,30 @@ import TumorRadiotherapyEdit from './tumorRadiotherapy/edit';
 import TumorRadiotherapyView from './tumorRadiotherapy/view'; 
 
 
+import ExecutiveFrontalEdit from './executiveFrontal/view';
+import ExecutiveFrontalView from './executiveFrontal/view'; 
+
+import EmotionalCopingEdit from './emotionalCoping/view';
+import EmotionalCopingView from './emotionalCoping/view'; 
+
+import AuditoryAttentionEdit from './auditoryAttention/view';
+import AuditoryAttentionView from './auditoryAttention/view'; 
+
+import ProcessingSpeedEdit from './processingSpeed/view';
+import ProcessingSpeedView from './processingSpeed/view'; 
+
+import LearningMemoryEdit from './learningMemory/view';
+import LearningMemoryView from './learningMemory/view'; 
+
+
+import BloodDrawEdit from './bloodDraw/edit';
+import BloodDrawView from './bloodDraw/view'; 
+
+
+import MRIEdit from './mri/edit';
+import MRIView from './mri/view'; 
+
+
 export default class PatientRouter extends React.Component {
 
 	constructor(props) {
@@ -160,6 +184,13 @@ export default class PatientRouter extends React.Component {
 	        		case 'Sensory': return SensoryEdit;
 	        		case 'Cognition': return CognitionEdit;
 	        		case 'Image Guided Tissue': return ImageGuidedTissueEdit;
+	        		case 'Executive and Frontal systems': return ExecutiveFrontalEdit;
+	        		case 'Emotional coping': return EmotionalCopingEdit;
+	        		case 'Auditory Attention and Concentration': return AuditoryAttentionEdit;
+	        		case 'Processing speed and Language': return ProcessingSpeedEdit;
+	        		case 'Verbal and Visual Learning memory': return LearningMemoryEdit;
+	        		case 'BloodDraw': return BloodDrawEdit;
+	        		case 'MRI': return MRIEdit;
 	        		default: return DemographicView;
 	        	}
 	    	default:
@@ -198,6 +229,13 @@ export default class PatientRouter extends React.Component {
 	    			case 'Tumor Surgery': return TumorSurgeryView;
 	    			case 'Tumor Imaging': return TumorImagingView;
 	    			case 'Tumor Radiotherapy': return TumorRadiotherapyView;
+	    			case 'Executive and Frontal systems': return ExecutiveFrontalView;
+	        		case 'Emotional coping': return EmotionalCopingView;
+	        		case 'Auditory Attention and Concentration': return AuditoryAttentionView;
+	        		case 'Processing speed and Language': return ProcessingSpeedView;
+	        		case 'Verbal and Visual Learning memory': return LearningMemoryView;
+	        		case 'BloodDraw': return BloodDrawView;
+	        		case 'MRI': return MRIView;
 	    			default: return DemographicView;
 	    		}
 	  	}
