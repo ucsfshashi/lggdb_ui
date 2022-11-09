@@ -19,6 +19,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
+import LaunchIcon from '@mui/icons-material/Launch';
+import IconButton from '@mui/material/IconButton';
 
 
 
@@ -386,6 +388,8 @@ class PatientFileInput extends React.Component {
 
 class PatientLinkInput extends React.Component {
 
+  
+  
   constructor(props) {
     super(props);
   }
@@ -393,22 +397,32 @@ class PatientLinkInput extends React.Component {
   handleChange = (evt) => {
     this.props.onChange(this.props.field,evt.target.value ? evt.target.value:'')
   }
-
   render() {
+  
+  
+    const openInNewTab = url => {
+       window.open(url, '_blank', 'noopener,noreferrer');
+    };
+  
   	return (
-  	 <div className="loglio-input-div" >	  
-	  <label className="loglio-input-label">
-      <div className="label-text">{this.props.field.displayName}</div>
-      <input
-        type="text"
-        disabled={this.props.disabled}
-        onChange={this.handleChange}
-        value={this.props.value}
-        autoComplete="off"
-      />
-    </label>
-    </div>
-  	);
+  	   <div>
+  	   <TextField
+	          id={this.props.field.id}
+	          disabled={this.props.disabled}
+	          label={this.props.field.displayName}
+	          disabled={this.props.disabled}
+        	  onChange={this.handleChange}
+              defaultValue={this.props.value}
+              autoComplete="off"
+	        />
+	        {
+	        this.props.value &&
+	        <IconButton aria-label="restart" size="large" onClick={() => openInNewTab(this.props.value)}>
+	           <LaunchIcon color="success" fontSize="inherit" />
+	        </IconButton>
+            }
+	   </div>     
+   	);
   }
 }
 
