@@ -50,7 +50,7 @@ const fetchDistinctTopic = (array) => {
 		        	   topic:item.topic,
 		        	   title:item.topic,
 		        	   className:item.className,
-		        	   icon: getIcon('fa:'+item.icon),
+		        	   icon: getIcon(item.icon),
 		        	   path: '/goto/patient',
 		               topicDisplayPriority: item.topicDisplayPriority
 		           });

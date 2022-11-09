@@ -84,7 +84,7 @@ export default class ChildMenu extends React.Component {
 		      { childTopics.map((item, key) =>
 		         <MenuItem onClick={(event,parentInfo,topic,grandInfo)=>onNavigateClick(event,this.props.parentInfo,item.topic,this.props.grandInfo)}> 
 		           <ListItemIcon>
-		         	<Iconify icon={'fa:'+item.icon} /> 
+		         	<Iconify icon={item.icon} /> 
 		          </ListItemIcon>
 		          <ListItemText>{item.topic}</ListItemText>
 		          </MenuItem>

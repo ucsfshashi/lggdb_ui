@@ -25,7 +25,7 @@ export default class PatientCardView extends React.Component {
 	getTopicIcon=(topicName) => {
 		const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 		var icon = this.props.loginContext.schema.filter(el => el.topic == topicName)[0];
-		return icon ? getIcon("fa:"+icon.icon) : null;
+		return icon ? getIcon(icon.icon) : null;
 	}
 	
 	getTitle = (cardTitle) => {
