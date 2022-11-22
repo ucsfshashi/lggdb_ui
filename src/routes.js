@@ -11,7 +11,7 @@ import DashboardApp from './pages/DashboardApp';
 import PatientApp from './pages/PatientApp';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
-import User from './pages/User';
+import Patients from './pages/Patients';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------
@@ -23,7 +23,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'patients', element: <User /> },
+        { path: 'patients', element: <Patients /> },
         { path: 'query', element: <Products /> },
         { path: 'upload', element: <Blog /> }
       ]

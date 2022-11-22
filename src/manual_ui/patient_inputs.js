@@ -201,7 +201,8 @@ class PatientMultiSelectInput extends React.Component {
   		},
 	};
 	
-	var values= value.split(";");
+	
+	var values= value ? value.split(";") : [];
     
     
   	return (
@@ -221,7 +222,7 @@ class PatientMultiSelectInput extends React.Component {
         >
           {options.map((option) => (
             <MenuItem key={option.value} value={option.label}>
-              <Checkbox checked={value.indexOf(option.label) > -1} />
+              <Checkbox checked={value && value.indexOf(option.label) > -1} />
               <ListItemText primary={option.label} />
             </MenuItem>
           ))}

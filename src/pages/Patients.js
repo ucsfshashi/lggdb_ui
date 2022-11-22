@@ -10,7 +10,6 @@ import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
   TableRow,
@@ -29,7 +28,6 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user';
 //
 import USERLIST from '../_mocks_/user';
 
@@ -38,17 +36,28 @@ import IconButton from '@mui/material/IconButton';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import {useAuth} from '../hooks/authContext.js';
 import {CSV2JSON} from '../helper/csv2json_helper';
+import MUIAddButton from '../common/MUIAddButton'
+import PatientCardView from '../manual_ui/patient_card_view';
 
 function descendingComparator(a, b, orderBy) {
 
 }
 
-export default function User() {
+export default function Patients() {
 const navigate = useNavigate();
 const {loginContext, setLoginContext} = useAuth();
 const [data, setData] = useState([]);    
 const [error, setError] = useState([]);  
-const [loading, setLoading] = useState(true);        
+const [loading, setLoading] = useState(true);    
+const [isNewPatient, setIsNewPatient] = useState(false);    
+
+
+const [successMessage, setSuccessMessage] = useState(null);
+const [errorMessage, setErrorMessage] = useState(null);
+const [demographicInfo, setDemographicInfo] = useState({});
+
+
+
 
     
 
@@ -75,9 +84,17 @@ const [loading, setLoading] = useState(true);
             }
             
          };
-    fetchData();
+    if(!isNewPatient) {     
+    	fetchData();
+    }
  }, []);
-    
+
+ const getRows  = () => {
+	var rows =loginContext.schema.filter(el => el.topic === "Demographics");
+	rows = rows.filter(el => el.id != 'tags');
+	return rows;
+ };
+
 const getOptions =() =>{
 		var options = {};
 		
@@ -88,8 +105,23 @@ const getOptions =() =>{
 		options.selectableRows = 'none';
 		options.filterType='multiselect';
         options.download=false;
-    	return options;
+    	
+        
+        
+    	if(!isNonPHI()) {
+			options.customToolbar= () => {
+		        return (
+		         <MUIAddButton onAddClick={(event)=>addOnClick(event,{})}    />
+		        );
+		      };
+		}
+        return options;
 };
+
+const addOnClick=(e) => {
+	setIsNewPatient(true);
+};
+
 
 const getColumns = () => {
 		var columns = [];
@@ -150,7 +182,57 @@ const gotoPatient=(value)=>{
 const isNonPHI=()=>{
     return (loginContext 
             && loginContext.selRole == "NON_PHI" );
-};    
+}; 
+
+const onChange = (className,fieldId,value) => {
+	
+	if(value) {
+		demographicInfo[className+'.'+fieldId] = value;
+	}
+	
+	setSuccessMessage(null);
+	setErrorMessage(null);
+	setDemographicInfo(demographicInfo);
+};
+const saveInServer = async () => {
+	
+	setLoading(true);
+	  
+    var tagId= loginContext.selTag.tagId;
+	var path ='Patient/';
+    var data = demographicInfo;
+    
+    
+    const headers = { 
+ 		   'Content-Type' :'applicaiton/json',
+            'X-Requested-With':'XMLHttpRequest', 
+            'UCSFAUTH-TOKEN':loginContext.token,
+             'tagId':loginContext.selTag.tagId,
+              'selRole':loginContext.selRole,
+              'Content-Type': 'application/json'
+ 		};
+    var rInfo = await axios.put("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+    
+    if(rInfo && rInfo.status == 200 && rInfo.data.result === true) {
+    	setSuccessMessage('Demographic changes saved successfully');
+    	setErrorMessage(null);
+    	setIsNewPatient(false);
+    } else {
+    	setSuccessMessage(rInfo.data.message);
+    	setErrorMessage(null);
+    }
+    
+    setLoading(false);
+};
+
+const onSave = (event) => {
+	saveInServer();
+};
+
+const onCancel = () => {
+	setIsNewPatient(false);
+	setDemographicInfo({});
+};
 
 return (
     <Page title="Patients">
@@ -164,16 +246,36 @@ return (
         </Stack>
         </Box>
 
-        <Stack >    
-        <MUIDataTable
-            title="Patients"
-            options={getOptions()}
-            data={data}
-            columns={getColumns()} 
-            />
-        {loading && <LinearProgress />}
-        </Stack>
-                     
+        
+        { !isNewPatient && 
+        	<Stack >    
+        		<MUIDataTable
+		            title="Patients"
+		            options={getOptions()}
+		            data={data}
+		            columns={getColumns()} 
+		            />
+		        {loading && <LinearProgress />}
+        	</Stack>
+        }
+        { isNewPatient && 
+        	<Stack >
+	        <PatientCardView
+			    rows={getRows()}
+				saveClick={(event)=> onSave(event)}
+				onChange={(...args) => onChange(...args)}
+				onCancel={() => onCancel()}
+		        loginContext={loginContext}
+		        isNewPatient={true}
+		        keyColumn={'mrn'}
+		        cardTitle="Demographics" 
+			    successMessage={successMessage}
+			    errorMessage={errorMessage} 
+		        patientInfo={demographicInfo}
+		        showLoading={loading}    
+	          />
+            </Stack>
+        }
      </Container>
     </Page>
   );

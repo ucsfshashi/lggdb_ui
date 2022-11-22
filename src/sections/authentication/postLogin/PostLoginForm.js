@@ -84,6 +84,7 @@ export default function PostLoginForm() {
             });    
             setUserInfo(response.data.principal);
             
+           
             if(loginContext.selTag && response.data.principal ) {
                 var selTagIndex = response.data.principal.tags.map(object => object.tagId).indexOf(loginContext.selTag.tagId);
                 setSelTagIndex(selTagIndex);
@@ -100,8 +101,8 @@ export default function PostLoginForm() {
         }, []);
 
     const PostLoginSubmit = async (values) => {
-        setLoginContext({authority:roleId,selTag:selTagInfo});
-        
+        setLoginContext({authority:roleId,selTag:selTagInfo,displayName:userInfo.displayName,userName:userInfo.username});
+       
         if(roleId=='PHI_ACCESS' || roleId=='NON_PHI') {
             fetchSchema();
         } else {
@@ -191,7 +192,7 @@ export default function PostLoginForm() {
                     <Alert severity="info"     variant="none"  >
                          <AlertTitle>No Studies associated with your account</AlertTitle>
                          Currently no studies are associated with your account.  
-            			 <a href="mailto: yalan.zhang@ucsf.edu "> Please contact the Administrator.</a> 
+            			 <a href="mailto: lucie.mccoy@ucsf.edu "> Please contact the Administrator.</a> 
                      </Alert>    
             	}
             	
@@ -200,7 +201,7 @@ export default function PostLoginForm() {
             		<Alert severity="info"     variant="none"  >
                          <AlertTitle>No Studies associated with your account</AlertTitle>
                          Currently no studies are associated with your account.  
-            			 <a href="mailto: yalan.zhang@ucsf.edu "> Please contact the Administrator.</a> 
+            			 <a href="mailto: lucie.mccoy@ucsf.edu "> Please contact the Administrator.</a> 
                     </Alert>   
             	}
             	{

@@ -107,7 +107,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <LoadingButton fullWidth color="inherit" variant="contained"  href='/login' >
+          <LoadingButton fullWidth color="inherit" variant="contained"  href='/newui/login' >
             Logout
           </LoadingButton>
         </Box>

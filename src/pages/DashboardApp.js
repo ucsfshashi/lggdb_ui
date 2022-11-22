@@ -3,31 +3,23 @@ import { Box, Grid, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
 import {
-  AppTasks,
-  AppNewUsers,
-  AppBugReports,
-  AppItemOrders,
-  AppNewsUpdate,
-  AppWeeklySales,
-  AppOrderTimeline,
-  AppCurrentVisits,
+  DemographicCount,
   AppWebsiteVisits,
-  AppTrafficBySite,
-  AppCurrentSubject,
+  DemographicAge,
   AppConversionRates
 } from '../sections/@dashboard/app';
 
-import {useAuth} from '../hooks/authContext.js';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import { useNavigate } from "react-router-dom";
+import {useAuth} from '../hooks/authContext.js';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
 
-  const {loginContext, setLoginContext} = useAuth();   
+  const {loginContext } = useAuth();   
   const navigate = useNavigate();    
     
     
@@ -44,19 +36,19 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
+            <AppWebsiteVisits loginContext={loginContext} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits />
+            <DemographicCount loginContext={loginContext} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates />
+            <AppConversionRates loginContext={loginContext} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentSubject />
+            <DemographicAge loginContext={loginContext} />
           </Grid>
         </Grid>
       </Container>

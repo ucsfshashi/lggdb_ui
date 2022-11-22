@@ -14,6 +14,8 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 //
 import sidebarConfig from './SidebarConfig';
+import {useAuth} from '../../hooks/authContext.js';
+
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,12 @@ const AccountStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.grey[500_12]
 }));
 
+const names = {
+    'PHI_ACCESS':'PHI access user',
+    'NON_PHI':'Non-PHI access user',
+    'ADMIN':'Administrator',
+    'STUDY_ADMIN':'Study coordinator' };
+
 // ----------------------------------------------------------------------
 
 DashboardSidebar.propTypes = {
@@ -43,6 +51,7 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const {loginContext} = useAuth();
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -67,13 +76,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar src={'https://ui-avatars.com/api/?name='+loginContext.displayName} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                 {loginContext.displayName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                 {names[loginContext.authority]}
               </Typography>
             </Box>
           </AccountStyle>
