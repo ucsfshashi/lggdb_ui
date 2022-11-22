@@ -9,6 +9,8 @@ import MenuPopover from '../../components/MenuPopover';
 //
 import account from '../../_mocks_/account';
 import { LoadingButton } from '@mui/lab';
+import {useAuth} from '../../hooks/authContext.js';
+
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +37,8 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const {loginContext} = useAuth();
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -65,7 +69,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+      <Avatar src={'https://ui-avatars.com/api/?name='+loginContext.displayName} alt="photoURL" />
       </IconButton>
 
       <MenuPopover
@@ -76,10 +80,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+          {loginContext.displayName}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+          {loginContext.userName}
           </Typography>
         </Box>
 
