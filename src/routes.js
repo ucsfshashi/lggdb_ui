@@ -9,8 +9,8 @@ import PostLogin from './pages/PostLogin';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import PatientApp from './pages/PatientApp';
-import Products from './pages/Products';
-import Blog from './pages/Blog';
+import Query from './pages/Query';
+import Upload from './pages/Upload';
 import Patients from './pages/Patients';
 import NotFound from './pages/Page404';
 
@@ -24,8 +24,8 @@ export default function Router() {
       children: [
         { path: 'app', element: <DashboardApp /> },
         { path: 'patients', element: <Patients /> },
-        { path: 'query', element: <Products /> },
-        { path: 'upload', element: <Blog /> }
+        { path: 'query', element: <Query /> },
+        { path: 'upload', element: <Upload /> }
       ]
     },
     {

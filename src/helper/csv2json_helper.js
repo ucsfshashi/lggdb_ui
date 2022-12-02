@@ -69,3 +69,24 @@ export async function CSV2JSON(csv) {
 
     return jsonObj;
 }
+
+export async function CSVArray2JSON(array,headerObj) {
+	
+	var xyzArray = [];
+	
+    for (var i = 1; i < array.length-1; i++) {
+    	xyzArray[i - 1] = {};
+        for (var k = 0; k < array[0].length && k < array[i].length; k++) {
+            var key = headerObj[array[0][k]];
+            key = key.replace(".","_");
+            
+            xyzArray[i - 1][key] = array[i][k]
+        }
+    }
+
+    var json = JSON.stringify(xyzArray);
+    var str = json.replace(/},/g, "},\r\n");
+    var jsonObj = JSON.parse(str);
+
+    return jsonObj;
+}
