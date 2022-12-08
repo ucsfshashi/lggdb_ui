@@ -44,24 +44,18 @@ function descendingComparator(a, b, orderBy) {
 }
 
 export default function Patients() {
+
 const navigate = useNavigate();
 const {loginContext, setLoginContext} = useAuth();
 const [data, setData] = useState([]);    
 const [error, setError] = useState([]);  
 const [loading, setLoading] = useState(true);    
 const [isNewPatient, setIsNewPatient] = useState(false);    
-
-
 const [successMessage, setSuccessMessage] = useState(null);
 const [errorMessage, setErrorMessage] = useState(null);
 const [demographicInfo, setDemographicInfo] = useState({});
 
-
-
-
-    
-
- useEffect(() => {
+useEffect(() => {
         const fetchData = async () => {
            const response = await axios.get("https://btcdb-test.ucsf.edu/api/patients/list", 
                                     {headers:{

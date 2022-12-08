@@ -1,12 +1,11 @@
 import { useState,useEffect } from 'react';
-import MUIDataTable from "mui-datatables";
 import MUIRefreshButton from '../common/MUIRefreshButton';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-
-
+import ConfirmDialog from '../components/ConfirmDialog'
+import UploadView from '../components/UploadView'
 
 import axios from "axios";
 
@@ -31,33 +30,33 @@ import {LoadingButton} from '@mui/lab';
 import {CSVArray2JSON} from '../helper/csv2json_helper';
 import { useNavigate } from "react-router-dom";
 import IconButton from '@mui/material/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import ResetTvIcon from '@mui/icons-material/ResetTv';
-import {CFB, SSF, parse_xlscfb, parse_zip, read, readFile, readFileSync, set_cptable, set_fs, stream, utils, version, write, writeFile, writeFileAsync, writeFileSync, writeFileXLSX, writeXLSX} from 'xlsx';
+import {CFB, SSF,  read, readFile, stream, utils, version} from 'xlsx';
 
 const EXTENSIONS = ['csv']
 const steps = ['Select Template', 'Upload CSV', 'Verify,correct and upload data',"Upload complete"];
 
-
 export default function Upload() {
-	  const [openFilter, setOpenFilter] = useState(false);
+	
 	  const {loginContext} = useAuth();
 	  const [templates, setTemplates] = useState(null);    
 	  const [error, setError] = useState(null);    
 	  const [templateId, setTemplateId] = useState(null);   
 	  const [templateInfo, setTemplateInfo] = useState(null);   
 	  const [disabled, setDisabled] = useState(true);       
-	  const [loading, setLoading] = useState(false);    
-	  
+	  const [loading, setLoading] = useState(false);   
+	  const [confirmOpen,setConfirmOpen] = useState(false);   
+	  const [rowId, setRowId] = useState(-1);   
 	  const [data, setData] = useState([]);    
 	  const [columns, setColumns] = useState([]); 
-	  const [gridColumns, setGridColumns] = useState([]); 
 	  const [headerObj, setHeaderObj] = useState([]); 
-	  const [options, setOptions] = useState({});
 	  const [labelProps, setLabelProps] = useState({});
-	  
-	  
 	  const [activeStep, setActiveStep] = useState(0);
-	  	  
+
+	  
 	  const getExention = (file) => {
 		    const parts = file.name.split('.')
 		    const extension = parts[parts.length - 1]
@@ -89,13 +88,6 @@ export default function Upload() {
 	      //convert to array
 	      const fileData = utils.sheet_to_json(workSheet, { header: 1 })
 	      
-	      // console.log(fileData)
-	      //const headers = fileData[0]
-	      //const heads = headers.map(head => ({ title: head, field: head }))
-	      //setColumns(heads)
-
-	      //removing header
-	      //fileData.splice(0, 1)
 	      csv2Json(fileData,headerObj);
 	     
 	    }
@@ -129,15 +121,16 @@ export default function Upload() {
 	                                    ).catch((err) => {
 	               if(err && err.response)
 	                  if(err.response.status != 200) 
-	                      setError("User name or Password is invalid");
+	                      setError("Failed to fetch template list");
 	            });    
 	            
 	            setTemplates(response.data);
-	            setOptions(getOptions());
 	        };
 	        fetchData();
 	        }, []);    
-	    
+	 
+	  
+	  
 	  const handleChange = (event: SelectChangeEvent) => {
 	         setTemplateId(event.target.value);
 	         setTemplateInfo(null); 
@@ -145,6 +138,29 @@ export default function Upload() {
 	         fetchTemplateInfo(templates[event.target.value]);
 	         setDisabled(false);
 	  };  
+	  
+	  const handleEdit = (event,rowId) => {
+	        
+	  };
+	  
+	  
+	  const handleDelete = (event,value, tableMeta, updateValue) => {
+		  setRowId(value);
+	      setConfirmOpen(true);
+	  };  
+	  
+	  const deletePost = (event: SelectChangeEvent) => {
+		  if (rowId > -1) { // only splice array when item is found
+			  data.splice(rowId, 1); // 2nd parameter means remove one item only
+			  setData([]);
+			  setData(data);
+			  setRowId(-1);
+		  }
+	  };  
+	  
+	  const setOpen=() => {
+		  setConfirmOpen(!confirmOpen);
+	  }
 
 	  const fetchTemplateInfo = (selTemplateInfo) => {
 	      const fetchData = async () => {
@@ -158,30 +174,55 @@ export default function Upload() {
 	                                    ).catch((err) => {
 	               if(err && err.response)
 	                  if(err.response.status != 200) 
-	                      setError("User name or Password is invalid");
+	                      setError("fail to fetch template info");
 	            });    
 	            
 	           setTemplateInfo(response.data);
-	           setOptions(getOptions());
 	           setColumns(getColumns(response.data));
-	           setGridColumns(getGridColumns(response.data));
-	          };
+	      };
 	      fetchData();
 	 }    
-	    
+	  
+	const getData =() =>{
+		
+		if(activeStep == 2) {
+			return data
+		}
+		
+		return [];
+	}
+
 	const getOptions =() =>{
 			var options = {};
-			
+		
 			options.fixedHeader = true;
 			options.print =false;
 			options.pagination = false;
 			options.responsive='scroll';
+			options.fixedHeader=true;
+
+
 			options.selectableRows = 'none';
 			options.filterType='multiselect';
 			
-			options.download=false;
+			
+			if(activeStep == 2) {
+				options.filter=true;
+				options.search=true;
+				options.download=false;
+			} else {
+				options.filter=false;
+				options.search=false;
+				options.download=true;
+			}
+			
 			options.expandableRows=false;
 			options.viewColumns=false;
+			
+			options.onTableChange = (action, state) => {
+			      console.log(action);
+			      console.dir(state);
+			    }
 		       
 	    	return options;
 		};    
@@ -248,13 +289,41 @@ export default function Upload() {
 			var options = {};
 			var metaHeader =[];
 			
+			var optionsEdit = {};
+			optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
+				return (
+					<Stack direction="row" alignItems="baseline">
+					<Button onClick={(event)=>handleEdit(event,tableMeta.rowIndex)} >
+	            		<EditIcon ontSize='small' />
+	            	</Button>
+	            	<Button onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
+	            		<DeleteIcon ontSize='small' />
+	            	</Button>
+	            	</Stack>	
+	           );
+			};
+			
+			
 			if(selTemplateInfo) {
+				
+				columns.push({
+			    	  name: 'rowAction',
+			    	  label:' ',
+			    	  text: ' ',
+			    	  download:false,
+			    });
+				columns[0].options = optionsEdit;
+				
+				
 				 selTemplateInfo.spreadSheetVariables.map( column => {
 	        		 columns.push({
 				    	  name:column.id.replace('.','_'),
 				    	  label:column.csvLabel,
 				    	  text: column.csvLabel,
 				    	  download:true,
+				    	  options: {
+				    	     sort:false,
+				    	  },
 				    	  phi:column.phi,
 				     	}) ;
 	        		 metaHeader[column.csvLabel] = column.id.replace('.','_');
@@ -295,17 +364,6 @@ export default function Upload() {
 		};
 		
 		
-		const generateRandom = () => {
-		    var length = 8,
-		        charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-		        retVal = "";
-		    for (var i = 0, n = charset.length; i < length; ++i) {
-		        retVal += charset.charAt(Math.floor(Math.random() * n));
-		    }
-		    return retVal;
-		};
-		
-		
 		const handleNext = () => {
 		    let newActiveStep =
 		      isLastStep() && !allStepsCompleted()
@@ -314,15 +372,27 @@ export default function Upload() {
 		          steps.findIndex((step, i) => !false)
 		        : activeStep + 1;
 		    
-		   if(newActiveStep == 1 && !templateId) {
+		   if(newActiveStep == 1 && templateId == null) {
 			   newActiveStep = 0; 
-			   setLabelProps({error:true});
+			   
+			   setLabelProps({error:true,optional:(
+			              <Typography variant="caption" color="error">
+			                Please select template
+			              </Typography>
+			            )});
+		   } else if(newActiveStep == 2 && data && data.length == 0) {
+			   newActiveStep = 1; 
+			   setLabelProps({error:true,optional:(
+			              <Typography variant="caption" color="error">
+			                Please upload valid CSV file
+			              </Typography>
+			            )});
 			   
 		   } else {
 			   setLabelProps({});
-		   }       
-		          
-		    setActiveStep(newActiveStep);
+		   }
+		   
+		   setActiveStep(newActiveStep);
 		  };
 
 		  const handleBack = () => {
@@ -335,7 +405,7 @@ export default function Upload() {
 			    setActiveStep(0);
 			  };
 		  
-		  const totalSteps = () => {
+		     const totalSteps = () => {
 			    return steps.length;
 			  };
 
@@ -428,14 +498,22 @@ export default function Upload() {
           </Stack>
 	      <Stack>
 	            { templateInfo && 
-	            <MUIDataTable
+	            <UploadView
 	                title={templateInfo.name}
-	                options={options}
-	                data={(activeStep == 2 ?data:[])}
+	                options={getOptions()}
+	                data={getData()}
 	                columns={columns} 
 	                />
 	            }
-	            {loading && activeStep == 2 && <LinearProgress />}    
+	            {loading && activeStep == 2 && <LinearProgress />} 
+	            <ConfirmDialog
+        	    title="Delete Record "
+        	    open={confirmOpen}
+        	    setOpen={setOpen}
+        	    onConfirm={deletePost}
+        	    >
+	            Do you want to delete selected row ?
+        	  </ConfirmDialog>	
 	        </Stack>    
 	      </Container>            
 	    </Page>

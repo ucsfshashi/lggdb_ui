@@ -27,7 +27,7 @@ import ResetTvIcon from '@mui/icons-material/ResetTv';
 
 
 // ----------------------------------------------------------------------
-export default function EcommerceShop() {
+export default function Query() {
   const [openFilter, setOpenFilter] = useState(false);
   const {loginContext} = useAuth();
   const [templates, setTemplates] = useState(null);    
