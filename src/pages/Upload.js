@@ -6,6 +6,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import ConfirmDialog from '../components/ConfirmDialog'
 import UploadView from '../components/UploadView'
+import PatientCardView from '../components/PatientCardView';
 
 import axios from "axios";
 
@@ -49,10 +50,13 @@ export default function Upload() {
 	  const [disabled, setDisabled] = useState(true);       
 	  const [loading, setLoading] = useState(false);   
 	  const [confirmOpen,setConfirmOpen] = useState(false);   
+	  const [editMode,setEditMode] = useState(false);   
 	  const [rowId, setRowId] = useState(-1);   
 	  const [data, setData] = useState([]);    
 	  const [columns, setColumns] = useState([]); 
 	  const [headerObj, setHeaderObj] = useState([]); 
+	  const [idsObj, setIdsObj] = useState([]); 
+
 	  const [labelProps, setLabelProps] = useState({});
 	  const [activeStep, setActiveStep] = useState(0);
 
@@ -139,8 +143,9 @@ export default function Upload() {
 	         setDisabled(false);
 	  };  
 	  
-	  const handleEdit = (event,rowId) => {
-	        
+	  const handleEdit = (event,value, tableMeta, updateValue) => {
+		  setRowId(value);
+		  setEditMode(true);
 	  };
 	  
 	  
@@ -183,6 +188,11 @@ export default function Upload() {
 	      fetchData();
 	 }    
 	  
+	const getSelData =(selIndex) => {
+		let selData =  Object.assign({}, data[selIndex]);
+ 		return selData;
+	}
+	
 	const getData =() =>{
 		
 		if(activeStep == 2) {
@@ -243,57 +253,17 @@ export default function Upload() {
 			return dateString;
 		};
 	    
-		const getGridColumns = (selTemplateInfo) => {
+		const getColumns = (selTemplateInfo) => {
 			var columns = [];
 			var options = {};
 			var metaHeader =[];
-			
-			if(selTemplateInfo) {
-				 selTemplateInfo.spreadSheetVariables.map( column => {
-	        		 columns.push({
-	        			  field:column.id.replace('.','_'),
-	        			  headerName:column.csvLabel,
-				    	  editable:true
-				     	}) ;
-	        		 metaHeader[column.csvLabel] = column.id.replace('.','_');
-					
-				});
-				
-			 } else {
-		    	 columns.push({
-		    		  field:'',
-       			      headerName:'',
-			    	  editable:true
-			    	}) ;
-		     } 
-			
-			if(isNonPHI) {
-				options.filter=false;
-				options.searchable=false;
-				columns = columns.filter(el=>!el.phi);
-			}
-
-	        var mrnColumn = columns.filter(el=>el.name==='Patient_mrn')[0];
-			
-	        if(mrnColumn) {
-				mrnColumn.options = options;
-			}
-	        
-	        setHeaderObj(metaHeader);
-	       
-	        return columns;
-		};
-	    
-	    const getColumns = (selTemplateInfo) => {
-			var columns = [];
-			var options = {};
-			var metaHeader =[];
+			var metaIds=[];
 			
 			var optionsEdit = {};
 			optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
 				return (
 					<Stack direction="row" alignItems="baseline">
-					<Button onClick={(event)=>handleEdit(event,tableMeta.rowIndex)} >
+					<Button onClick={(event)=>handleEdit(event,value, tableMeta, updateValue)} >
 	            		<EditIcon ontSize='small' />
 	            	</Button>
 	            	<Button onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
@@ -327,6 +297,7 @@ export default function Upload() {
 				    	  phi:column.phi,
 				     	}) ;
 	        		 metaHeader[column.csvLabel] = column.id.replace('.','_');
+	        		 metaIds.push(column.id.replace('.','_'));
 					
 				});
 				
@@ -352,6 +323,7 @@ export default function Upload() {
 				mrnColumn.options = options;
 			}
 	        
+	        setIdsObj(metaIds)
 	        setHeaderObj(metaHeader);
 	       
 	        return columns;
@@ -397,13 +369,21 @@ export default function Upload() {
 
 		  const handleBack = () => {
 		    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		    setEditMode(false);
 		  };
 		  
+		  const onCancel = () => {
+			    setEditMode(false);
+		  };
 		  
-		 
-			  const handleReset = () => {
+		  const onSave = (datum) => {
+			 data[rowId]=datum;
+			 setEditMode(false);
+		  };
+		  
+		  const handleReset = () => {
 			    setActiveStep(0);
-			  };
+		   };
 		  
 		     const totalSteps = () => {
 			    return steps.length;
@@ -420,7 +400,11 @@ export default function Upload() {
 			  const allStepsCompleted = () => {
 			    return completedSteps() === totalSteps();
 			  };
-
+			  
+			  const getRows  = () => {
+				  return loginContext.schema.filter(el => idsObj.indexOf(el.className+"_"+el.id) > -1);
+			   };
+	
 	  return (
 	    <Page title="Upload">
 	     <Container maxWidth="xl">
@@ -497,13 +481,26 @@ export default function Upload() {
 	         </Box>
           </Stack>
 	      <Stack>
-	            { templateInfo && 
+	            { templateInfo && editMode == false && 
 	            <UploadView
 	                title={templateInfo.name}
 	                options={getOptions()}
 	                data={getData()}
 	                columns={columns} 
 	                />
+	            }
+	            { activeStep == 2 && editMode == true && 
+	            	
+	            	<PatientCardView
+	            	rows={getRows()}
+	                cardTitle={templateInfo.name}
+	                isNewPatient={true}
+	                saveClick={(datum)=>onSave(datum)}
+	                cancelClick={()=>onCancel()}
+	                loginContext={loginContext}
+				    patientInfo={getSelData(rowId)}
+				   />
+	            
 	            }
 	            {loading && activeStep == 2 && <LinearProgress />} 
 	            <ConfirmDialog
