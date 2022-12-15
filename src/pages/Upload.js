@@ -21,6 +21,7 @@ import { Container,
          Box,
          Select,
          LinearProgress,
+         CircularProgress,
          Stack, 
          Typography } from '@mui/material';
 
@@ -105,7 +106,6 @@ export default function Upload() {
 	      }
 	    } else {
 	      setData([])
-	      //setColumns([])
 	    }
 	    
 	    
@@ -183,7 +183,7 @@ export default function Upload() {
 	            });    
 	            
 	           setTemplateInfo(response.data);
-	           setColumns(getColumns(response.data));
+	           loadColumns(response.data);
 	      };
 	      fetchData();
 	 }    
@@ -195,7 +195,7 @@ export default function Upload() {
 	
 	const getData =() =>{
 		
-		if(activeStep == 2) {
+		if(activeStep >= 2) {
 			return data
 		}
 		
@@ -208,7 +208,6 @@ export default function Upload() {
 			options.fixedHeader = true;
 			options.print =false;
 			options.pagination = false;
-			options.responsive='scroll';
 			options.fixedHeader=true;
 
 
@@ -216,14 +215,22 @@ export default function Upload() {
 			options.filterType='multiselect';
 			
 			
-			if(activeStep == 2) {
+			if(activeStep === 2) {
 				options.filter=true;
 				options.search=true;
 				options.download=false;
-			} else {
+				options.responsive='scroll';
+			} else if(activeStep === 3) {
 				options.filter=false;
 				options.search=false;
-				options.download=true;
+				options.download=false;
+				options.responsive='vertical';
+			}
+		    else {
+				options.filter=false;
+				options.search=false;
+				options.download=(data.length == 0);
+				options.responsive='vertical';
 			}
 			
 			options.expandableRows=false;
@@ -237,6 +244,21 @@ export default function Upload() {
 	    	return options;
 		};    
 
+		
+		
+		const getFormattedDate = (excelSerialDate) => {
+		 
+		  var date = new Date(Date.UTC(0, 0, excelSerialDate - 1));	
+		  var year = date.getFullYear();
+
+		  var month = (1 + date.getMonth()).toString();
+		  month = month.length > 1 ? month : '0' + month;
+
+		  var day = date.getDate().toString();
+		  day = day.length > 1 ? day : '0' + day;
+		  
+		  return month + '/' + day + '/' + year;
+		}
 	    
 	   const formateNow = () => {
 		
@@ -252,26 +274,26 @@ export default function Upload() {
 			
 			return dateString;
 		};
+		
+		const loadColumns = (selTemplateInfo) => {
+	
+			var metaHeader =[];
+			var metaIds=[];
+			
+			if(selTemplateInfo) {
+				 selTemplateInfo.spreadSheetVariables.map( column => {
+	        		 metaHeader[column.csvLabel] = column.id;
+	        		 metaIds.push(column.id);
+					
+				});
+			 } 
+			setIdsObj(metaIds)
+	        setHeaderObj(metaHeader);
+		};
 	    
 		const getColumns = (selTemplateInfo) => {
 			var columns = [];
 			var options = {};
-			var metaHeader =[];
-			var metaIds=[];
-			
-			var optionsEdit = {};
-			optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
-				return (
-					<Stack direction="row" alignItems="baseline">
-					<Button onClick={(event)=>handleEdit(event,value, tableMeta, updateValue)} >
-	            		<EditIcon ontSize='small' />
-	            	</Button>
-	            	<Button onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
-	            		<DeleteIcon ontSize='small' />
-	            	</Button>
-	            	</Stack>	
-	           );
-			};
 			
 			
 			if(selTemplateInfo) {
@@ -282,7 +304,39 @@ export default function Upload() {
 			    	  text: ' ',
 			    	  download:false,
 			    });
-				columns[0].options = optionsEdit;
+				
+				
+				if(activeStep === 2) {
+					
+					var optionsEdit = {};
+					optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
+						return (
+							<Stack direction="row" alignItems="baseline">
+							<Button onClick={(event)=>handleEdit(event,value, tableMeta, updateValue)} >
+			            		<EditIcon ontSize='small' />
+			            	</Button>
+			            	<Button onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
+			            		<DeleteIcon ontSize='small' />
+			            	</Button>
+			            	</Stack>	
+			           );
+					};
+					
+					
+					columns[0].options = optionsEdit;
+				}else if(activeStep === 3) {
+					var optionsEdit = {};
+					optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
+						return (
+							<Stack direction="row" alignItems="baseline">
+								<CircularProgress color="inherit" size={15} />
+							</Stack>	
+			           );
+					};
+					columns[0].options = optionsEdit;
+				} else {
+					columns[0].options = {};
+				}
 				
 				
 				 selTemplateInfo.spreadSheetVariables.map( column => {
@@ -296,10 +350,7 @@ export default function Upload() {
 				    	  },
 				    	  phi:column.phi,
 				     	}) ;
-	        		 metaHeader[column.csvLabel] = column.id.replace('.','_');
-	        		 metaIds.push(column.id.replace('.','_'));
-					
-				});
+				 });
 				
 			 } else {
 		    	 columns.push({
@@ -323,9 +374,6 @@ export default function Upload() {
 				mrnColumn.options = options;
 			}
 	        
-	        setIdsObj(metaIds)
-	        setHeaderObj(metaHeader);
-	       
 	        return columns;
 		};
 	    
@@ -390,7 +438,7 @@ export default function Upload() {
 			  };
 
 			  const completedSteps = () => {
-			    return 1;
+			    return activeStep;
 			  };
 
 			  const isLastStep = () => {
@@ -402,7 +450,7 @@ export default function Upload() {
 			  };
 			  
 			  const getRows  = () => {
-				  return loginContext.schema.filter(el => idsObj.indexOf(el.className+"_"+el.id) > -1);
+				  return loginContext.schema.filter(el => idsObj.indexOf(el.className+"."+el.id) > -1);
 			   };
 	
 	  return (
@@ -475,7 +523,7 @@ export default function Upload() {
 	             Back
 	           </Button>
 	           <Box sx={{ flex: '1 1 auto' }} />
-	           <Button   disabled={activeStep === 2}  onClick={handleNext} sx={{ mr: 1 }}>
+	           <Button   disabled={activeStep === 3}  onClick={handleNext} sx={{ mr: 1 }}>
 	           		Next
 	           </Button>
 	         </Box>
@@ -486,7 +534,7 @@ export default function Upload() {
 	                title={templateInfo.name}
 	                options={getOptions()}
 	                data={getData()}
-	                columns={columns} 
+	                columns={getColumns(templateInfo)} 
 	                />
 	            }
 	            { activeStep == 2 && editMode == true && 
