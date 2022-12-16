@@ -82,7 +82,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                  {loginContext.displayName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                 {names[loginContext.authority]}
+                 {names[loginContext.selRole]}
               </Typography>
             </Box>
           </AccountStyle>

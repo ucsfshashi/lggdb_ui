@@ -101,7 +101,7 @@ export default function PostLoginForm() {
         }, []);
 
     const PostLoginSubmit = async (values) => {
-        setLoginContext({authority:roleId,selTag:selTagInfo,displayName:userInfo.displayName,userName:userInfo.username});
+        setLoginContext({selRole:roleId,selTag:selTagInfo,displayName:userInfo.displayName,userName:userInfo.username});
        
         if(roleId=='PHI_ACCESS' || roleId=='NON_PHI') {
             fetchSchema();

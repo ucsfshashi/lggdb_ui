@@ -193,19 +193,34 @@ export default function Upload() {
 	  const uploadData = () => {
 	      const uploadInBatch = async () => {
 	    	  let index =0;
+	    	  let failedData=[];
 	    	   do{
 	    		  const headers = { 
-	   	    		   'Content-Type' :'applicaiton/json',
+	   	    		   'Content-Type' :'application/json',
 	   	               'X-Requested-With':'XMLHttpRequest', 
 	   	               'UCSFAUTH-TOKEN':loginContext.token,
 	   	               'tagId':loginContext.selTag.tagId,
-	   	               'selRole':loginContext.authority,
-	   	               'templateId':templateId
+	   	               'selRole':loginContext.selRole,
+	   	               'templateId':templateInfo.id,
 	   	          	};
+	    		    var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.slice(0,2)), { headers });
 	    		   
-	    		   var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.splice(index,5)), { headers });
-	    		   index=index+5;	 
-	    	  }while(index >data.length)
+	    		   	if(response && response.status == 200) {
+	    		   		data.splice(0,2);
+	    		   	    setData([]);
+			  			setData(data);
+			  			setRowId(-1);
+			  			
+			  			if(response.data && response.data.failedRecords && response.data.failedRecords.length >0) {
+			  				for(var i in response.data.failedRecords) {
+			  					failedData.push(response.data.failedRecords[i]);
+			  				}
+			  			}
+			  	   	} 
+	    	  }while(data.length>0)
+	    	  setUploadProgress(false);
+	    	  setActiveStep(4);
+	    	  setData(failedData);
 	      };
 	      uploadInBatch();
 	 }   
@@ -225,8 +240,72 @@ export default function Upload() {
 	}
 
 	const getOptions =() =>{
-			var options = {};
-		
+			var options ={};
+			
+	
+			if(activeStep === 0) {
+			     options = {
+				    textLabels: {
+				      body: {
+				        noMatch: 'Click on next to upload csv file',
+				      }
+				    }
+				  };
+				 
+				 options.filter=false;
+				options.search=false;
+				options.download=(data.length == 0); 
+				  
+			}
+			else if(activeStep === 1) {
+			     options = {
+				    textLabels: {
+				      body: {
+				        noMatch: 'Upload CSV and click on next to validate and change data',
+				      }
+				    }
+				  };
+				  
+				  options.filter=false;
+				options.search=false;
+				options.download=(data.length == 0);
+			}
+			else if(activeStep === 2) {
+				options.filter=true;
+				options.search=true;
+				options.download=false;
+				options.responsive='scroll';
+				
+			} else if(activeStep === 3 || activeStep === 4) {
+			
+			     options = {
+				    textLabels: {
+				      body: {
+				        noMatch: 'All rows are uploaded successfully',
+				      }
+				    }
+				  };
+			
+				options.filter=false;
+				options.search=false;
+				options.download=false;
+				options.responsive='vertical';
+				
+				if(activeStep === 4) {
+				   options.download=(data.length > 0);
+				}
+			}
+		    else {
+				options.filter=false;
+				options.search=false;
+				options.download=(data.length == 0);
+				options.responsive='vertical';
+			}
+			
+			
+			
+			
+			
 			options.fixedHeader = true;
 			options.print =false;
 			options.pagination = false;
@@ -236,24 +315,6 @@ export default function Upload() {
 			options.selectableRows = 'none';
 			options.filterType='multiselect';
 			
-			
-			if(activeStep === 2) {
-				options.filter=true;
-				options.search=true;
-				options.download=false;
-				options.responsive='scroll';
-			} else if(activeStep === 3) {
-				options.filter=false;
-				options.search=false;
-				options.download=false;
-				options.responsive='vertical';
-			}
-		    else {
-				options.filter=false;
-				options.search=false;
-				options.download=(data.length == 0);
-				options.responsive='vertical';
-			}
 			
 			options.expandableRows=false;
 			options.viewColumns=false;
@@ -343,7 +404,12 @@ export default function Upload() {
 			           );
 					};
 					columns[0].options = optionsEdit;
-				} else {
+				} else if(activeStep === 4) {
+				       columns[0].name='errorMsg';
+				       columns[0].label='errorMsg';
+				       columns[0].text='errorMsg';
+				       
+				}else {
 					columns[0].options = {};
 				}
 				
@@ -417,7 +483,14 @@ export default function Upload() {
 			              </Typography>
 			            )});
 			   
-		   } else {
+		   } else if(newActiveStep >= 3) {
+			   setLabelProps({error:false,optional:(
+			              <Typography variant="caption" color="info">
+			                Total {data.length} records uploaded
+			              </Typography>
+			            )});
+			   
+		   }else {
 			   setLabelProps({});
 		   }
 		   
@@ -485,7 +558,7 @@ export default function Upload() {
 		          const stepProps: { completed?: boolean } = {};
 		          
 		          return (
-		            <Step key={label} {...stepProps}>
+		            <Step key={label} {...stepProps}  >
 		              {activeStep==index && 
 		                <StepLabel {...labelProps} >{label}</StepLabel> 
 		              } 
@@ -527,8 +600,8 @@ export default function Upload() {
 	           }
 	         
 	         </Typography>
+	         { activeStep < 3 && 
 	         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-	           
 	          <Button
 	             color="inherit"
 	             disabled={activeStep === 0}
@@ -537,15 +610,13 @@ export default function Upload() {
 	           >
 	             Back
 	           </Button>
-	             
 	           <Box sx={{ flex: '1 1 auto' }} />
-	          
-	           <Button   disabled={activeStep === 3}  onClick={handleNext} sx={{ mr: 1 }}>
-	            { uploadProgress && "Uploading..."}
-	            { !uploadProgress && "Next" }
-	           </Button>
-	           		
+          	   <Button   disabled={activeStep === 3}  onClick={handleNext} sx={{ mr: 1 }}>
+          		 Next
+          	   </Button>
 	         </Box>
+	         }
+	         	
           </Stack>
 	      <Stack>
 	            { templateInfo && editMode == false && 

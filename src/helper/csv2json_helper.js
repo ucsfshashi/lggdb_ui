@@ -83,8 +83,7 @@ export async function CSVArray2JSON(array,headerObj,typesObj) {
             if(val && typesObj[key] == 'DATE') {
             	val = getFormattedDate(val);
             } 
-            
-            xyzArray[i - 1][key] = val;
+            xyzArray[i - 1][key] = (val?String(val):val);
         }
     }
 

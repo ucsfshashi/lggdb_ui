@@ -124,7 +124,7 @@ export default function PatientSidebar({ isOpenSidebar, onCloseSidebar,selTopic,
               {loginContext.displayName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-               {names[loginContext.authority]}
+               {names[loginContext.selRole]}
               </Typography>
             </Box>
           </AccountStyle>
