@@ -1,4 +1,4 @@
-import { useState,useEffect,Fragment } from 'react';
+import { useState,useEffect } from 'react';
 import MUIRefreshButton from '../common/MUIRefreshButton';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Stepper from '@mui/material/Stepper';
@@ -46,7 +46,7 @@ import ResetTvIcon from '@mui/icons-material/ResetTv';
 import {CFB, SSF,  read, readFile, stream, utils, version} from 'xlsx';
 
 const EXTENSIONS = ['csv']
-const steps = ['Select Template', 'Upload CSV', 'Verify,correct and upload data',"Upload complete"];
+const steps = ['Select Template', 'Upload CSV', 'Verify,correct and upload data',"Uploading..."];
 
 export default function Upload() {
 	
@@ -303,7 +303,7 @@ export default function Upload() {
 				options.search=false;
 				options.download=false;
 				options.responsive='vertical';
-				options.download=(failedData.length > 0);
+				options.download=false;
 				
 			}
 		    else {
@@ -378,7 +378,7 @@ export default function Upload() {
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: 'white',
     color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
+    maxWidth: 1000,
     fontSize: theme.typography.pxToRem(12),
   },
 }));
@@ -416,12 +416,10 @@ export default function Upload() {
 			            	
 							<HtmlTooltip
 					        title={
-					          <Fragment>
 					            <Alert severity="error">
   									<AlertTitle>Error</AlertTitle>
   									{failedData[value].errorMsg}
 								</Alert>
-					          </Fragment>
 					        }
 					      >
 					   		<Button color="error" onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
@@ -603,9 +601,17 @@ export default function Upload() {
 		              {activeStep==index && 
 		                <StepLabel {...labelProps} >{label}</StepLabel> 
 		              } 
-		              {activeStep!=index && 
+		              {activeStep!=index && index < 3 &&
 			                <StepLabel>{label}</StepLabel> 
 			          }
+			           {activeStep!=index && index === 3 && activeStep !=4 &&
+			                <StepLabel>{label}</StepLabel> 
+			          }
+			          {activeStep!=index && activeStep ===4 && index ===3 &&
+			                <StepLabel>Upload Complete</StepLabel> 
+			          }
+			          
+			          
 		            </Step>
 		          );
 		        })}
