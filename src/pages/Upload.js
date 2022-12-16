@@ -210,10 +210,10 @@ export default function Upload() {
 	   	               'selRole':loginContext.selRole,
 	   	               'templateId':templateInfo.id,
 	   	          	};
-	    		    var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.slice(0,2)), { headers });
+	    		    var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.slice(0,5)), { headers });
 	    		   
 	    		   	if(response && response.status == 200) {
-	    		   		data.splice(0,2);
+	    		   		data.splice(0,5);
 	    		   	    setData([]);
 			  			setData(data);
 			  			setRowId(-1);
