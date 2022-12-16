@@ -191,35 +191,23 @@ export default function Upload() {
 	 }  
 	  
 	  const uploadData = () => {
-	      const fetchData = async () => {
-
-	    	  let indx =0;
-	    	  let newIndx=0;
-	    	  
-	    	  while(indx<data.length) {
-	    		  
-	    		  newIndx=indx+5;
-	    		  
-	    		  const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/data/", 
-                          {headers:{
-                            'Content-Type' :'applicaiton/json',
-                            'X-Requested-With':'XMLHttpRequest', 
-                            'UCSFAUTH-TOKEN':loginContext.token,
-                             'tagId':loginContext.selTag.tagId    
-                          }}
-                          ).catch((err) => {
-						     if(err && err.response)
-						        if(err.response.status != 200) 
-						            setError("fail to fetch template info");
-						  });    
-	    		  
-	    	  }
-	    	  
-	    	  
-	           
-	           
+	      const uploadInBatch = async () => {
+	    	  let index =0;
+	    	   do{
+	    		  const headers = { 
+	   	    		   'Content-Type' :'applicaiton/json',
+	   	               'X-Requested-With':'XMLHttpRequest', 
+	   	               'UCSFAUTH-TOKEN':loginContext.token,
+	   	               'tagId':loginContext.selTag.tagId,
+	   	               'selRole':loginContext.authority,
+	   	               'templateId':templateId
+	   	          	};
+	    		   
+	    		   var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.splice(index,5)), { headers });
+	    		   index=index+5;	 
+	    	  }while(index >data.length)
 	      };
-	      uploadData();
+	      uploadInBatch();
 	 }   
 	  
 	const getSelData =(selIndex) => {
@@ -543,7 +531,7 @@ export default function Upload() {
 	           
 	          <Button
 	             color="inherit"
-	             disabled={activeStep === 0 || activeStep === 3}
+	             disabled={activeStep === 0}
 	             onClick={handleBack}
 	             sx={{ mr: 1 }}
 	           >
