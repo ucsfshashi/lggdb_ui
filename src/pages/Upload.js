@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState,useEffect,Fragment } from 'react';
 import MUIRefreshButton from '../common/MUIRefreshButton';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Stepper from '@mui/material/Stepper';
@@ -7,6 +7,11 @@ import StepLabel from '@mui/material/StepLabel';
 import ConfirmDialog from '../components/ConfirmDialog'
 import UploadView from '../components/UploadView'
 import PatientCardView from '../components/PatientCardView';
+import ErrorIcon from '@mui/icons-material/Error';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+
+
 
 import axios from "axios";
 
@@ -18,6 +23,8 @@ import { Container,
          FormHelperText,
          Button,
          Paper,
+         Alert,
+         AlertTitle,
          Box,
          Select,
          LinearProgress,
@@ -57,9 +64,9 @@ export default function Upload() {
 	  const [columns, setColumns] = useState([]); 
 	  const [headerObj, setHeaderObj] = useState([]);
 	  const [typesObj, setTypesObj] = useState([]);
-	  const [idsObj, setIdsObj] = useState([]); 
+	  const [idsObj, setIdsObj] = useState([]);
+	  const [failedData, setFailedData] = useState([]); 
 	  const [uploadProgress, setUploadProgress] = useState(false);
-
 	  const [labelProps, setLabelProps] = useState({});
 	  const [activeStep, setActiveStep] = useState(0);
 
@@ -219,8 +226,14 @@ export default function Upload() {
 			  	   	} 
 	    	  }while(data.length>0)
 	    	  setUploadProgress(false);
-	    	  setActiveStep(4);
-	    	  setData(failedData);
+	    	  
+	    	  if(failedData.length >0) {
+	    	    setActiveStep(2);
+	    	    setData(failedData);
+	    	    setFailedData(failedData);
+	    	  } else {
+	    	    setActiveStep(4);
+	    	  }
 	      };
 	      uploadInBatch();
 	 }   
@@ -273,7 +286,7 @@ export default function Upload() {
 			else if(activeStep === 2) {
 				options.filter=true;
 				options.search=true;
-				options.download=false;
+				options.download=(failedData.length > 0);
 				options.responsive='scroll';
 				
 			} else if(activeStep === 3 || activeStep === 4) {
@@ -290,10 +303,8 @@ export default function Upload() {
 				options.search=false;
 				options.download=false;
 				options.responsive='vertical';
+				options.download=(failedData.length > 0);
 				
-				if(activeStep === 4) {
-				   options.download=(data.length > 0);
-				}
 			}
 		    else {
 				options.filter=false;
@@ -360,6 +371,17 @@ export default function Upload() {
 	        setHeaderObj(metaHeader);
 			setTypesObj(typesObj);
 		};
+		
+		const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+  },
+}));
 	    
 		const getColumns = (selTemplateInfo) => {
 			var columns = [];
@@ -388,6 +410,32 @@ export default function Upload() {
 			            	<Button onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
 			            		<DeleteIcon ontSize='small' />
 			            	</Button>
+			            	
+			            	{failedData && failedData.length >0 &&
+			            	
+			            	
+							<HtmlTooltip
+					        title={
+					          <Fragment>
+					            <Alert severity="error">
+  									<AlertTitle>Error</AlertTitle>
+  									{failedData[value].errorMsg}
+								</Alert>
+					          </Fragment>
+					        }
+					      >
+					   		<Button color="error" onClick={(event)=>handleDelete(event,value, tableMeta, updateValue)} >
+			            		<ErrorIcon ontSize='small' />
+			            	</Button>
+					   
+					      </HtmlTooltip>
+			             }
+			            	
+			            	
+			            	
+			            	
+			            	
+			            	
 			            	</Stack>	
 			           );
 					};
@@ -483,14 +531,7 @@ export default function Upload() {
 			              </Typography>
 			            )});
 			   
-		   } else if(newActiveStep >= 3) {
-			   setLabelProps({error:false,optional:(
-			              <Typography variant="caption" color="info">
-			                Total {data.length} records uploaded
-			              </Typography>
-			            )});
-			   
-		   }else {
+		   } else {
 			   setLabelProps({});
 		   }
 		   
@@ -602,6 +643,8 @@ export default function Upload() {
 	         </Typography>
 	         { activeStep < 3 && 
 	         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+	          
+	          { !(failedData && failedData.length >0) &&
 	          <Button
 	             color="inherit"
 	             disabled={activeStep === 0}
@@ -609,7 +652,8 @@ export default function Upload() {
 	             sx={{ mr: 1 }}
 	           >
 	             Back
-	           </Button>
+	           </Button> }
+	          
 	           <Box sx={{ flex: '1 1 auto' }} />
           	   <Button   disabled={activeStep === 3}  onClick={handleNext} sx={{ mr: 1 }}>
           		 Next
