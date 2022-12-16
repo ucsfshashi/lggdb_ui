@@ -55,8 +55,10 @@ export default function Upload() {
 	  const [rowId, setRowId] = useState(-1);   
 	  const [data, setData] = useState([]);    
 	  const [columns, setColumns] = useState([]); 
-	  const [headerObj, setHeaderObj] = useState([]); 
+	  const [headerObj, setHeaderObj] = useState([]);
+	  const [typesObj, setTypesObj] = useState([]);
 	  const [idsObj, setIdsObj] = useState([]); 
+	  const [uploadProgress, setUploadProgress] = useState(false);
 
 	  const [labelProps, setLabelProps] = useState({});
 	  const [activeStep, setActiveStep] = useState(0);
@@ -69,7 +71,7 @@ export default function Upload() {
 		  }
 	  
 	  const csv2Json = async (data,headerObj) => {
-          const queryData = await CSVArray2JSON(data,headerObj); 
+          const queryData = await CSVArray2JSON(data,headerObj,typesObj); 
           setData(queryData);
           setLoading(false);
         }
@@ -186,7 +188,39 @@ export default function Upload() {
 	           loadColumns(response.data);
 	      };
 	      fetchData();
-	 }    
+	 }  
+	  
+	  const uploadData = () => {
+	      const fetchData = async () => {
+
+	    	  let indx =0;
+	    	  let newIndx=0;
+	    	  
+	    	  while(indx<data.length) {
+	    		  
+	    		  newIndx=indx+5;
+	    		  
+	    		  const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/data/", 
+                          {headers:{
+                            'Content-Type' :'applicaiton/json',
+                            'X-Requested-With':'XMLHttpRequest', 
+                            'UCSFAUTH-TOKEN':loginContext.token,
+                             'tagId':loginContext.selTag.tagId    
+                          }}
+                          ).catch((err) => {
+						     if(err && err.response)
+						        if(err.response.status != 200) 
+						            setError("fail to fetch template info");
+						  });    
+	    		  
+	    	  }
+	    	  
+	    	  
+	           
+	           
+	      };
+	      uploadData();
+	 }   
 	  
 	const getSelData =(selIndex) => {
 		let selData =  Object.assign({}, data[selIndex]);
@@ -243,22 +277,6 @@ export default function Upload() {
 		       
 	    	return options;
 		};    
-
-		
-		
-		const getFormattedDate = (excelSerialDate) => {
-		 
-		  var date = new Date(Date.UTC(0, 0, excelSerialDate - 1));	
-		  var year = date.getFullYear();
-
-		  var month = (1 + date.getMonth()).toString();
-		  month = month.length > 1 ? month : '0' + month;
-
-		  var day = date.getDate().toString();
-		  day = day.length > 1 ? day : '0' + day;
-		  
-		  return month + '/' + day + '/' + year;
-		}
 	    
 	   const formateNow = () => {
 		
@@ -279,16 +297,19 @@ export default function Upload() {
 	
 			var metaHeader =[];
 			var metaIds=[];
+			var typesObj=[];
 			
 			if(selTemplateInfo) {
 				 selTemplateInfo.spreadSheetVariables.map( column => {
-	        		 metaHeader[column.csvLabel] = column.id;
-	        		 metaIds.push(column.id);
+	        		 metaHeader[column.csvLabel] = column.columnName;
+	        		 typesObj[column.columnName]=column.type;
+	        		 metaIds.push(column.columnName);
 					
 				});
 			 } 
 			setIdsObj(metaIds)
 	        setHeaderObj(metaHeader);
+			setTypesObj(typesObj);
 		};
 	    
 		const getColumns = (selTemplateInfo) => {
@@ -329,7 +350,7 @@ export default function Upload() {
 					optionsEdit.customBodyRenderLite = (value, tableMeta, updateValue) => {
 						return (
 							<Stack direction="row" alignItems="baseline">
-								<CircularProgress color="inherit" size={15} />
+								 <CircularProgress color="inherit" size={15} />
 							</Stack>	
 			           );
 					};
@@ -341,7 +362,7 @@ export default function Upload() {
 				
 				 selTemplateInfo.spreadSheetVariables.map( column => {
 	        		 columns.push({
-				    	  name:column.id.replace('.','_'),
+				    	  name:column.columnName,
 				    	  label:column.csvLabel,
 				    	  text: column.csvLabel,
 				    	  download:true,
@@ -412,6 +433,11 @@ export default function Upload() {
 			   setLabelProps({});
 		   }
 		   
+		   if(newActiveStep === 3) {
+			   setUploadProgress(true);
+			   uploadData();
+		   }
+		   
 		   setActiveStep(newActiveStep);
 		  };
 
@@ -450,7 +476,7 @@ export default function Upload() {
 			  };
 			  
 			  const getRows  = () => {
-				  return loginContext.schema.filter(el => idsObj.indexOf(el.className+"."+el.id) > -1);
+				  return loginContext.schema.filter(el => idsObj.indexOf(el.id) > -1);
 			   };
 	
 	  return (
@@ -514,18 +540,23 @@ export default function Upload() {
 	         
 	         </Typography>
 	         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-	           <Button
+	           
+	          <Button
 	             color="inherit"
-	             disabled={activeStep === 0}
+	             disabled={activeStep === 0 || activeStep === 3}
 	             onClick={handleBack}
 	             sx={{ mr: 1 }}
 	           >
 	             Back
 	           </Button>
+	             
 	           <Box sx={{ flex: '1 1 auto' }} />
+	          
 	           <Button   disabled={activeStep === 3}  onClick={handleNext} sx={{ mr: 1 }}>
-	           		Next
+	            { uploadProgress && "Uploading..."}
+	            { !uploadProgress && "Next" }
 	           </Button>
+	           		
 	         </Box>
           </Stack>
 	      <Stack>

@@ -53,7 +53,7 @@ export default class PatientCardView extends React.Component {
 		const { rows,cardTitle,saveClick,successMessage,errorMessage,showLoading,patientInfo,config,keyColumn,isNewPatient,loginContext} = this.props;
 		
 		const onChange =(field,value) => {
-			patientInfo[field.className+'_'+field.id] = value;
+			patientInfo[field.id] = value;
 			this.setState({showSave:true});
 		};	
 		
@@ -108,7 +108,7 @@ export default class PatientCardView extends React.Component {
 		              field={field}
 		              disabled={(isNewPatient === false && keyColumn && ( field.editable == false || field.id ===keyColumn || keyColumn.indexOf(field.id) != -1) )}
 		              onChange={(field,value) =>onChange(field,value)}
-		              value={patientInfo[field.className+'_'+field.id]} 
+		              value={patientInfo[field.id]} 
 		              loginContext={loginContext}
 		              successMessage={successMessage}
 		              isNewPatient={isNewPatient}

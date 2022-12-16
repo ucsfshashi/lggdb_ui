@@ -70,17 +70,21 @@ export async function CSV2JSON(csv) {
     return jsonObj;
 }
 
-export async function CSVArray2JSON(array,headerObj) {
+export async function CSVArray2JSON(array,headerObj,typesObj) {
 	
 	var xyzArray = [];
 	
-    for (var i = 1; i < array.length-1; i++) {
+    for (var i = 0; i < array.length-1; i++) {
     	xyzArray[i - 1] = {};
         for (var k = 0; k < array[0].length && k < array[i].length; k++) {
             var key = headerObj[array[0][k]];
-            key = key.replace(".","_");
+            var val = array[i][k];
             
-            xyzArray[i - 1][key] = array[i][k]
+            if(val && typesObj[key] == 'DATE') {
+            	val = getFormattedDate(val);
+            } 
+            
+            xyzArray[i - 1][key] = val;
         }
     }
 
@@ -89,4 +93,20 @@ export async function CSVArray2JSON(array,headerObj) {
     var jsonObj = JSON.parse(str);
 
     return jsonObj;
+}
+
+
+
+function getFormattedDate(excelSerialDate) {
+	 
+	  var date = new Date(Date.UTC(0, 0, excelSerialDate - 1));	
+	  var year = date.getFullYear();
+
+	  var month = (1 + date.getMonth()).toString();
+	  month = month.length > 1 ? month : '0' + month;
+
+	  var day = date.getDate().toString();
+	  day = day.length > 1 ? day : '0' + day;
+	  
+	  return month + '/' + day + '/' + year;
 }
