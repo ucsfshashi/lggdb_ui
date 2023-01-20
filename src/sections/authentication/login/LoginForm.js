@@ -49,8 +49,14 @@ export default function LoginForm() {
   const LoginSubmit = async (values) => {
      const res = await axios.post("https://btcdb-test.ucsf.edu/api/auth", {"username":values.email,"password":values.password}).catch((err) => {
        if(err && err.response)
-          if(err.response.status != 200) 
-              setError("User name or Password is invalid");
+          if(err.response.status != 200) {
+              if(err.response.status == 412){
+            	  setLoginContext({username:values.email})
+                  navigate('/pwdChange');
+              } else {
+            	  setError("User name or Password is invalid");
+              }
+          }
      });
 
      if(res && res.status == 200) {
@@ -121,7 +127,7 @@ export default function LoginForm() {
             label="Remember me"
           />
 
-          <Link component={RouterLink} variant="subtitle2" to="#" underline="hover">
+          <Link component={RouterLink} variant="subtitle2" to="/forgot" underline="hover">
             Forgot password?
           </Link>
         </Stack>

@@ -1,12 +1,12 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
-import { Box, Card, Link, Container, Typography } from '@mui/material';
+import { Card, Stack, Link, Container, Typography,Box } from '@mui/material';
 // layouts
 import AuthLayout from '../layouts/AuthLayout';
 // components
 import Page from '../components/Page';
-import { RegisterForm } from '../sections/authentication/register';
+import { PwdChangeForm } from '../sections/authentication/pwdChange';
 import AuthSocial from '../sections/authentication/AuthSocial';
 
 // ----------------------------------------------------------------------
@@ -38,45 +38,25 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Register() {
+export default function Login() {
+
   return (
-    <RootStyle title="Register | Minimal-UI">
+    <RootStyle title="Login | Minimal-UI">
       <AuthLayout>
-        Already have an account? &nbsp;
+        Remember your Password ? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
+          Login 
         </Link>
       </AuthLayout>
 
-      <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
-        <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-          Manage the research data more effectively with UCSF Health
-        </Typography>
-      </SectionStyle>
-
-      <Container>
+      <Container maxWidth="sm">
         <ContentStyle>
-          <Box sx={{ mb: 5 }}>
-            <Typography variant="h4" gutterBottom>
-              BTCDB user registration
-            </Typography>
-          </Box>
-
-          <RegisterForm />
-
-          <Typography
-            variant="subtitle2"
-            sx={{
-              mt: 3,
-              textAlign: 'center',
-              display: { sm: 'none' }
-            }}
-          >
-            Already have an account?&nbsp;
-            <Link underline="hover" to="/login" component={RouterLink}>
-              Login
-            </Link>
-          </Typography>
+        <Box sx={{ mb: 5 }}>
+        <Typography variant="h4" gutterBottom>
+          Change password
+        </Typography>
+       </Box>
+          <PwdChangeForm />
         </ContentStyle>
       </Container>
     </RootStyle>

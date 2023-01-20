@@ -5,6 +5,8 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import PatientLayout from './layouts/patient';
 //
 import Login from './pages/Login';
+import Forgot from './pages/Forgot';
+import PwdChange from './pages/PwdChange';
 import PostLogin from './pages/PostLogin';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
@@ -41,6 +43,8 @@ export default function Router() {
       children: [
         { path: '/', element: <Navigate to="/login" /> },
         { path: 'login', element: <Login /> },
+        { path: 'forgot', element: <Forgot /> },
+        { path: 'pwdChange', element: <PwdChange /> },
         { path: 'postLogin', element: <PostLogin /> },
         { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },

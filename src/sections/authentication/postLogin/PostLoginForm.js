@@ -172,6 +172,10 @@ export default function PostLoginForm() {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
+        
+        <Typography variant="string" component="h3" sx={{ color: 'green' }}>
+        {loginContext.username}
+       </Typography>
           <FormControl sx={{ m: 1, minWidth: 120 }} >
               <InputLabel id="demo-select-small">Select Role</InputLabel>
               <Select
@@ -208,6 +212,7 @@ export default function PostLoginForm() {
             		(roleId && roleId != 'ADMIN'  && roleId != 'STUDY_ADMIN' && userInfo
             			&&  userInfo.tags &&  userInfo.tags.length >0 && 
         				<FormControl sx={{ m: 1, minWidth: 120 }} >
+            			
                             <InputLabel id="demo-select-study-small">Select Study</InputLabel>
                             <Select
                                 labelId="demo-select-study-small"
