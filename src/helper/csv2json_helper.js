@@ -74,7 +74,7 @@ export async function CSVArray2JSON(array,headerObj,typesObj) {
 	
 	var xyzArray = [];
 	
-    for (var i = 0; i < array.length-1; i++) {
+    for (var i = 0; i < array.length; i++) {
     	xyzArray[i - 1] = {};
         for (var k = 0; k < array[0].length && k < array[i].length; k++) {
             var key = headerObj[array[0][k]];
