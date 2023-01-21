@@ -84,9 +84,9 @@ export default function RegisterForm() {
 						setError("Error while fetching taglist");
 						});    
 	  
-	  if(rInfo.status=208) {
+	  if(rInfo.status==208) {
 		  setCreateResponse("ALREADY_EXIST");
-	  } else if(rInfo.status=200) {
+	  } else if(rInfo.status==200) {
 		  setCreateResponse("SUCESS");
 	  }
 	  
@@ -249,23 +249,36 @@ export default function RegisterForm() {
           </LoadingButton>
          </Stack>
          }
-         {createResponse &&	
+         {createResponse &&	createResponse=="SUCESS" &&
            <Stack spacing={3}>
          		
 	         <Alert severity="error"     variant="none"  >
-	         	<AlertTitle> BTCDB account already exists with the provided email</AlertTitle>
-	         
-	         	BTCDB account already exists with the provided email.     
+	         	<AlertTitle> BTCDB account created successfully</AlertTitle>
+	         	 BTCDB account created successfully.     
 	         	<br/>
-	         	Please try <b> <Link underline="hover" to="/login" component={RouterLink}>
-	              Login
-	              </Link></b> or <b>Forgot password</b> options. 
+	         	Your account needs review and approval from BTCDB core team . Please wait for further instructions in an email. 
 	         	<br/><br/>
-	         	<b> Still have an issue? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+	         	<b>If you don't receive email ? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
 			 </Alert>   
          
          	</Stack>
-         }	
+         }	{createResponse &&	createResponse=="ALREADY_EXIST" && 
+             <Stack spacing={3}>
+  		
+         <Alert severity="error"     variant="none"  >
+         	<AlertTitle> BTCDB account already exists with the provided email</AlertTitle>
+         
+         	BTCDB account already exists with the provided email.     
+         	<br/>
+         	Please try <b> <Link underline="hover" to="/login" component={RouterLink}>
+              Login
+              </Link></b> or <b>Forgot password</b> options. 
+         	<br/><br/>
+         	<b> Still have an issue? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+		 </Alert>   
+     
+     	</Stack>
+     }	
       </Form>
     </FormikProvider>
   );

@@ -50,7 +50,7 @@ export default function Register() {
 
       <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
         <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-          Manage the research data more effectively with UCSF Health
+          Manage your research data more effectively with the UCSF Brain Tumor Center Database (BTCDB)
         </Typography>
       </SectionStyle>
 
