@@ -8,6 +8,7 @@ import styled from 'styled-components';
 // material
 import {
   Alert,
+  AlertTitle,
   Link,
   Stack,
   Checkbox,
@@ -27,6 +28,8 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error,setError] = useState(null);
+  const [forbidden,setForbidden] = useState(false);
+
   const {loginContext, setLoginContext} = useAuth();
 
   useEffect(() => {
@@ -53,7 +56,9 @@ export default function LoginForm() {
               if(err.response.status == 412){
             	  setLoginContext({username:values.email})
                   navigate('/pwdChange');
-              } else {
+              }else if(err.response.status == 403){
+            	  setForbidden(true);
+              }else {
             	  setError("User name or Password is invalid");
               }
           }
@@ -85,6 +90,9 @@ export default function LoginForm() {
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      
+      { forbidden == false && 
+    	<Stack spacing={3}>
         <Stack spacing={3}>
         { error &&
         <ErrorTitle>
@@ -131,7 +139,7 @@ export default function LoginForm() {
             Forgot password?
           </Link>
         </Stack>
-
+        
         <LoadingButton
           fullWidth
           size="large"
@@ -141,6 +149,20 @@ export default function LoginForm() {
         >
           Login
         </LoadingButton>
+       </Stack>  } { forbidden == true && 
+        	  
+        	  <Stack spacing={3}>
+        	  <Alert severity="error" variant="none"  >
+              	<AlertTitle> BTCDB account is locked</AlertTitle>
+                BTCDB account locked now.       
+              	<br/>
+              	If you created account recently and didn't received confirmation please wait for 5 business days. 
+              	<br/><br/>
+              	<b> Account already approved still have issue ? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+     		 </Alert>   
+          	</Stack>
+         }
+          
       </Form>
     </FormikProvider>
   );
