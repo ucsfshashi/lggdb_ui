@@ -36,6 +36,8 @@ export default function RegisterForm() {
   const [tagSelected, setTagSelected] = useState(false);
   const [roleSelected, setRoleSelected] = useState(false);
   const [createResponse, setCreateResponse] = useState(null);
+  const [openTerms, setOpenTerms] = useState(false);
+
 
 
 
@@ -132,6 +134,11 @@ export default function RegisterForm() {
 		     return (str.length > n) ? str.substr(0, n-1) + ' ...': str;
 		  };    
 
+		  const openInNewTab = (url) => {
+			    setOpenTerms(true);
+			    window.open(url, '_blank', 'noreferrer');
+			  };
+		  
   
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
@@ -228,11 +235,9 @@ export default function RegisterForm() {
      
       <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
       By registering, I agree to UCSF Health &nbsp;
-      <Link underline="always" color="textPrimary">
+      <Link   underline="hover" style={{ cursor: 'pointer' }} color="textPrimary" onClick={() => openInNewTab('https://www.ucsfhealth.org/website-privacy-policy#:~:text=We%20may%20collect%20the%20following,symptoms%2C%20health%20conditions%20and%20medications')} >
         Terms of Service
-      </Link>
-      &nbsp;and&nbsp;
-      <Link underline="always" color="textPrimary">
+           &
         Privacy Policy
       </Link>
      </Typography>
@@ -242,7 +247,7 @@ export default function RegisterForm() {
             size="large"
             type="submit"
             variant="contained"
-            disabled={!(formik.isValid && formik.dirty) || !tagSelected || !roleSelected}
+            disabled={!(formik.isValid && formik.dirty) || !tagSelected || !roleSelected ||  !openTerms}
             loading={isSubmitting}
           >
             Register
