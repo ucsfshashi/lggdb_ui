@@ -234,12 +234,14 @@ export default function RegisterForm() {
       </FormControl>
      
       <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
+      <b>	
       By registering, I agree to UCSF Health &nbsp;
       <Link   underline="hover" style={{ cursor: 'pointer' }} color="textPrimary" onClick={() => openInNewTab('https://www.ucsfhealth.org/website-privacy-policy#:~:text=We%20may%20collect%20the%20following,symptoms%2C%20health%20conditions%20and%20medications')} >
         Terms of Service
            &
         Privacy Policy
       </Link>
+     </b>   
      </Typography>
       
       <LoadingButton
