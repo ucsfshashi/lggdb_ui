@@ -109,7 +109,7 @@ export default function ForgotForm() {
     	<br/>
     	You may need to check your spam folder or unblock no-reply@btcd.com
     	<br/><br/>
-    	<b> Still have an issue? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+    	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact administrator.</a> </b>
 	 </Alert> 
        
        

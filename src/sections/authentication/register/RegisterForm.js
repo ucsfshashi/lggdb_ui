@@ -253,12 +253,12 @@ export default function RegisterForm() {
            <Stack spacing={3}>
          		
 	         <Alert severity="error"     variant="none"  >
-	         	<AlertTitle> BTCDB account created successfully</AlertTitle>
-	         	 BTCDB account created successfully.     
+	         	<AlertTitle> BTCDB user registration</AlertTitle>
+	         	 <b>BTCDB account request successfully submitted</b>    
 	         	<br/>
-	         	Your account needs review and approval from BTCDB core team . Please wait for further instructions in an email. 
+	         	Your BTCDB account request was successfully submitted. Please note that your account activation requires review and approval from the BTCDB core team. You will receive an email shortly with further instructions and additional information needed for account approval and activation.
 	         	<br/><br/>
-	         	<b>If you don't receive email ? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+	         	<b>If you didn't receive an email from the BTCDB team? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact BTCDB administrator.</a> </b>
 			 </Alert>   
          
          	</Stack>
@@ -272,9 +272,9 @@ export default function RegisterForm() {
          	<br/>
          	Please try <b> <Link underline="hover" to="/login" component={RouterLink}>
               Login
-              </Link></b> or <b>Forgot password</b> options. 
+              </Link></b> or <b><Link underline="hover" to="/forgot" component={RouterLink}>Forgot password</Link></b> options. 
          	<br/><br/>
-         	<b> Still have an issue? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+         	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact BTCDB administrator.</a> </b>
 		 </Alert>   
      
      	</Stack>

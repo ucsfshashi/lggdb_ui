@@ -110,7 +110,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           </Box>
 
           <Button
-            href="mailto:yalan.zhang@ucsf.edu?subject = Feedback&body = Message"
+            href="mailto:BTCDB-Support@ucsf.edu?subject = Feedback&body = Message"
             target="_blank"
             variant="contained"
           >

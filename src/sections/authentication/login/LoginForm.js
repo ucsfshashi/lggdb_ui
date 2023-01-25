@@ -158,7 +158,7 @@ export default function LoginForm() {
               	<br/>
               	If you created account recently and didn't received confirmation please wait for 5 business days. 
               	<br/><br/>
-              	<b> Account already approved still have issue ? <a href="mailto: shashidhar.gajula@ucsf.edu "> Please contact administrator.</a> </b>
+              	<b> Account already approved still have issue ? <a href="mailto: BTCDB-Support@ucsf.edu"> Please contact administrator.</a> </b>
      		 </Alert>   
           	</Stack>
          }
