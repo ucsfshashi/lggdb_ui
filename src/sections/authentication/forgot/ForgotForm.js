@@ -105,11 +105,11 @@ export default function ForgotForm() {
        { success &&
           <Alert severity="info"     variant="none"  >
     	<AlertTitle> Restore password</AlertTitle>
-    	Detail instructions has been sent to your email to reset your password.   
+    	Detailed instructions have been sent to your email to reset your password.   
     	<br/>
-    	You may need to check your spam folder or unblock no-reply@btcd.com
+    	You may need to check your spam folder or unblock BTCDB-Support@ucsf.edu
     	<br/><br/>
-    	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact administrator.</a> </b>
+    	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact the BTCDB team.</a> </b>
 	 </Alert> 
        
        

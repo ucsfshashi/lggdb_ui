@@ -4,9 +4,9 @@ import { Box, Grid, Container, Typography } from '@mui/material';
 import Page from '../components/Page';
 import {
   DemographicCount,
-  AppWebsiteVisits,
+  SurgeryAccumlation,
   DemographicAge,
-  AppConversionRates
+  StudyCountsChart
 } from '../sections/@dashboard/app';
 
 import Stack from '@mui/material/Stack';
@@ -14,6 +14,9 @@ import IconButton from '@mui/material/IconButton';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import { useNavigate } from "react-router-dom";
 import {useAuth} from '../hooks/authContext.js';
+import React, { useEffect, useState } from 'react';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +39,7 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits loginContext={loginContext} />
+            <SurgeryAccumlation loginContext={loginContext} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
@@ -44,7 +47,7 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppConversionRates loginContext={loginContext} />
+            <StudyCountsChart loginContext={loginContext} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>

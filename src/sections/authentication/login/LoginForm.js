@@ -154,11 +154,9 @@ export default function LoginForm() {
         	  <Stack spacing={3}>
         	  <Alert severity="error" variant="none"  >
               	<AlertTitle> BTCDB account is locked</AlertTitle>
-                BTCDB account locked now.       
-              	<br/>
-              	If you created account recently and didn't received confirmation please wait for 5 business days. 
+                If you created an account recently and did not receive a confirmation email please wait for 5 business days. 
               	<br/><br/>
-              	<b> Account already approved still have issue ? <a href="mailto: BTCDB-Support@ucsf.edu"> Please contact administrator.</a> </b>
+              	<b> If your account was already approved, <a href="mailto: BTCDB-Support@ucsf.edu"> please contact the BTCDB team.</a> </b>
      		 </Alert>   
           	</Stack>
          }

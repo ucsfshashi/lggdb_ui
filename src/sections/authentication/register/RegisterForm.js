@@ -89,7 +89,7 @@ export default function RegisterForm() {
 	  if(rInfo.status==208) {
 		  setCreateResponse("ALREADY_EXIST");
 	  } else if(rInfo.status==200) {
-		  setCreateResponse("SUCESS");
+		  setCreateResponse("SUCCESS");
 	  }
 	  
   };
@@ -256,7 +256,7 @@ export default function RegisterForm() {
           </LoadingButton>
          </Stack>
          }
-         {createResponse &&	createResponse=="SUCESS" &&
+         {createResponse &&	createResponse=="SUCCESS" &&
            <Stack spacing={3}>
          		
 	         <Alert severity="error"     variant="none"  >
@@ -265,7 +265,7 @@ export default function RegisterForm() {
 	         	<br/>
 	         	Your BTCDB account request was successfully submitted. Please note that your account activation requires review and approval from the BTCDB core team. You will receive an email shortly with further instructions and additional information needed for account approval and activation.
 	         	<br/><br/>
-	         	<b>If you didn't receive an email from the BTCDB team? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact BTCDB administrator.</a> </b>
+	         	<b>If you didn't receive an email from the BTCDB team  <a href="mailto: BTCDB-Support@ucsf.edu "> please contact the BTCDB team.</a> </b>
 			 </Alert>   
          
          	</Stack>
@@ -281,7 +281,7 @@ export default function RegisterForm() {
               Login
               </Link></b> or <b><Link underline="hover" to="/forgot" component={RouterLink}>Forgot password</Link></b> options. 
          	<br/><br/>
-         	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact BTCDB administrator.</a> </b>
+         	<b> Still have an issue? <a href="mailto: BTCDB-Support@ucsf.edu "> Please contact the BTCDB team.</a> </b>
 		 </Alert>   
      
      	</Stack>
