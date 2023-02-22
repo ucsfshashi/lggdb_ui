@@ -88,7 +88,7 @@ const extractData = async() => {
 
   return (
     <Card>
-      <CardHeader title="Study patient count" subheader="Number of patients uploaded from each study" />
+      <CardHeader title="BTCDB Patient Accrual by Study" subheader="Number of patients uploaded from each study" />
    
       { chartOptions.xaxis.categories && chartOptions.xaxis.categories.length > 0 &&	  
 	      <Box sx={{ mx: 3 }} dir="ltr">

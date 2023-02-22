@@ -9,19 +9,25 @@ import { BaseOptionChart } from '../../../components/charts';
 
 const CHART_DATA = [
   {
-    name: 'America',
+    name: 'Inital count',
     type: 'column',
-    data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
+    data: [23, 11, 22, 27, 13, 22, 37, 21, 10]
   },
   {
-    name: 'Africa',
-    type: 'area',
-    data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
+	    name: 'Initial accumlation',
+	    type: 'area',
+	    data: [23, 34, 56, 83, 96, 118, 155, 176, 186]
   },
   {
-    name: 'Asia',
+    name: 'Recurrent count',
+    type: 'column',
+    data: [11, 6, 7, 8, 9, 10, 12, 31, 5]
+   },
+  
+  {
+    name: 'Recurrent accumlation',
     type: 'line',
-    data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
+    data: [11, 17, 24, 32,41, 51,63, 94, 99]
   }
 ];
 
@@ -30,23 +36,21 @@ const CHART_DATA = [
 
 export default function SurgeryAccumlation() {
   const chartOptions = merge(BaseOptionChart(), {
-    stroke: { width: [0, 2, 3] },
-    plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
-    fill: { type: ['solid', 'gradient', 'solid'] },
+    stroke: { width: [0, 2, 3,4] },
+    plotOptions: { bar: { columnWidth: '12%', borderRadius: 5 } },
+    fill: { type: ['solid','gradient', 'solid', 'solid']},
     labels: [
-      '01/01/2003',
-      '02/01/2003',
-      '03/01/2003',
-      '04/01/2003',
-      '05/01/2003',
-      '06/01/2003',
-      '07/01/2003',
-      '08/01/2003',
-      '09/01/2003',
-      '10/01/2003',
-      '11/01/2003'
+      '2015',
+      '2016',
+      '2017',
+      '2018',
+      '2019',
+      '2020',
+      '2021',
+      '2022',
+      '2023'
     ],
-    xaxis: { type: 'datetime' },
+    xaxis: { type: 'string' },
     tooltip: {
       shared: true,
       intersect: false,
@@ -63,7 +67,7 @@ export default function SurgeryAccumlation() {
 
   return (
     <Card>
-      <CardHeader title="Bio Virtualization" subheader="" />
+      <CardHeader title="Summary of Initial vs Recurrent Glioma Surgeries (Yearly and Cumulative Accrual), 2015-2023" subheader="" />
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
         <ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={364} />
       </Box>

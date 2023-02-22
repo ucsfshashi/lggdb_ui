@@ -101,7 +101,7 @@ export default function DemographicCount(input) {
 
   return (
     <Card>
-      <CardHeader title="Demographic count" />
+      <CardHeader title="Distribution of Race/Ethnicity" />
     	  <ChartWrapperStyle dir="ltr">
 	      {
 	        loading == true &&  <CircularProgress disableShrink sx={{marginTop:'150px',marginLeft:'150px'}}/>
