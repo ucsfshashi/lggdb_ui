@@ -15,7 +15,8 @@ import axios from "axios";
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import styled from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
-
+import configData from "../../../config.json";
+import {useAuth} from '../../../hooks/authContext.js';
 
 
 
@@ -37,6 +38,7 @@ export default function RegisterForm() {
   const [roleSelected, setRoleSelected] = useState(false);
   const [createResponse, setCreateResponse] = useState(null);
   const [openTerms, setOpenTerms] = useState(false);
+  const {loginContext, setLoginContext} = useAuth();
 
 
 
@@ -44,7 +46,7 @@ export default function RegisterForm() {
 
   useEffect(() => {
       const fetchData = async () => {
-         const response = await axios.get("https://btcdb-test.ucsf.edu/api/nosession/tagList", 
+         const response = await axios.get(loginContext.apiUrl+"/nosession/tagList", 
                                   {headers:{
                                     'Content-Type' :'applicaiton/json',
                                     'X-Requested-With':'XMLHttpRequest' 
@@ -78,8 +80,10 @@ export default function RegisterForm() {
    	  };
 	  
 	  var data=values;
-     
-	  var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/nosession/createUser/"+selRole.id+"/"+selTagInfo.tagId, 
+
+	  setLoginContext({apiUrl:configData.apiUrl})
+	  
+	  var rInfo = await axios.post(loginContext.apiUrl+"/nosession/createUser/"+selRole.id+"/"+selTagInfo.tagId, 
 			  JSON.stringify(data), { headers }).catch((err) => {
 					if(err && err.response)
 						if(err.response.status != 200) 

@@ -68,7 +68,7 @@ export default class DemographicAge extends React.Component {
         const {loginContext} = this.props;
         
          var path ='/patients/diagnosis/age';
-	      var summaryInfo = await axios.get("https://btcdb-test.ucsf.edu/api"+path, 
+	      var summaryInfo = await axios.get(loginContext.apiUrl+""+path, 
 	                                  {headers:{
 	                                    'Content-Type' :'applicaiton/json',
 	                                    'X-Requested-With':'XMLHttpRequest', 

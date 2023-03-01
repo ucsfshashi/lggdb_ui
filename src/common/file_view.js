@@ -77,7 +77,8 @@ class FileView extends React.Component {
 	                 'selRole':loginContext.selRole,
 	                 'Content-Type': 'application/json'
 	    		};
-	       var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/uploadInfo", formData, { headers })
+	    
+	     var uploadInfo = await axios.post(loginContext.apiUrl+"/patientinfo/uploadInfo", formData, { headers })
 	    
 	    this.props.handleChange(uploadInfo.fileDownloadUri);
 	 };

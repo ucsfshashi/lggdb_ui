@@ -53,7 +53,7 @@ export default class CopyNumberChangeRowEdit extends React.Component {
  	                 'selRole':loginContext.selRole,
  	                 'Content-Type': 'application/json'
  	    		};
- 	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
+ 	       var rInfo = await axios.post(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers });
  	       
  	      if(rInfo && rInfo.data === true) {
  	        	this.setState({successMessage:'CopyNumberChangeRow changes saved successfully'});

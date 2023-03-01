@@ -23,7 +23,7 @@ export default class ClinicalTrialView extends React.Component {
         
 		this.setState({showLoading:true});
 		var path ='Patient/'+loginContext.mrn+'/ClinicalTrial';
-        var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+        var patientInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 

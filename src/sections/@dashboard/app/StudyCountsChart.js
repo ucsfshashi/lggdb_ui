@@ -44,7 +44,7 @@ const extractData = async() => {
 	  if(xyz<2) {
 	      setLoading(true);
 	      var path ='/studyTag/list';
-	      var summaryInfo = await axios.get("https://btcdb-test.ucsf.edu/api"+path, 
+	      var summaryInfo = await axios.get(input.loginContext.apiUrl+""+path, 
 	                                  {headers:{
 	                                    'Content-Type' :'applicaiton/json',
 	                                    'X-Requested-With':'XMLHttpRequest', 

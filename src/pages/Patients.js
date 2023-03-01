@@ -57,7 +57,7 @@ const [demographicInfo, setDemographicInfo] = useState({});
 
 useEffect(() => {
         const fetchData = async () => {
-           const response = await axios.get("https://btcdb-test.ucsf.edu/api/patients/list", 
+           const response = await axios.get(loginContext.apiUrl+"/patients/list", 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -205,7 +205,7 @@ const saveInServer = async () => {
               'selRole':loginContext.selRole,
               'Content-Type': 'application/json'
  		};
-    var rInfo = await axios.put("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+    var rInfo = await axios.put(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers })
     
     if(rInfo && rInfo.status == 200 && rInfo.data.result === true) {
     	setSuccessMessage('Demographic changes saved successfully');

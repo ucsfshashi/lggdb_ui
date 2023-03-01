@@ -71,7 +71,9 @@ export default function PostLoginForm() {
     
       useEffect(() => {
         const fetchData = async () => {
-           const response = await axios.get("https://btcdb-test.ucsf.edu/api/user", 
+        	
+        	
+           const response = await axios.get(loginContext.apiUrl+"/user", 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -111,7 +113,7 @@ export default function PostLoginForm() {
     }  
     
     const fetchSchema = async () => {
-       const response = await axios.get("https://btcdb-test.ucsf.edu/api/schema?phi="+roleId+"&requestFor=INPUTUI", 
+       const response = await axios.get(loginContext.apiUrl+"/schema?phi="+roleId+"&requestFor=INPUTUI", 
                                 {headers:{
                                   'Content-Type' :'applicaiton/json',
                                   'X-Requested-With':'XMLHttpRequest', 

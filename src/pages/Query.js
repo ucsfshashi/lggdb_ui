@@ -45,7 +45,7 @@ export default function Query() {
     
   useEffect(() => {
         const fetchData = async () => {
-           const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/template/list/basics", 
+           const response = await axios.get(loginContext.apiUrl+"/import/template/list/basics", 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -74,7 +74,7 @@ export default function Query() {
 
   const fetchTemplateInfo = (selTemplateInfo) => {
       const fetchData = async () => {
-           const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/template/"+selTemplateInfo.id, 
+           const response = await axios.get(loginContext.apiUrl+"/import/template/"+selTemplateInfo.id, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -198,7 +198,7 @@ const getOptions =() =>{
 		setLoading(true);
       
         const fetchData = async () => {
-           const response = await axios.get("https://btcdb-test.ucsf.edu/api/query/v1/"+templateInfo.id, 
+           const response = await axios.get(loginContext.apiUrl+"/query/v1/"+templateInfo.id, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 

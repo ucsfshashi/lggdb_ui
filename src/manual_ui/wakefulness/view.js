@@ -27,7 +27,7 @@ export default class WakefulnessView  extends React.Component {
         
 		this.setState({showLoading:true});
 		var path ='Patient/'+loginContext.mrn+'/Wakefulness';
-        var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+        var patientInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 

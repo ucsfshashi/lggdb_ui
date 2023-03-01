@@ -4,6 +4,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import axios from "axios";
 import styled from 'styled-components';
+import configData from "../../../config.json";
+
+
 
 // material
 import {
@@ -27,6 +30,7 @@ export default function ForgotForm() {
   const navigate = useNavigate();
   const [error,setError] = useState(null);
   const [success,setSuccess] = useState(false);
+  const {loginContext, setLoginContext} = useAuth();
 
 
   useEffect(() => {
@@ -46,7 +50,10 @@ export default function ForgotForm() {
   });
 
   const ForgotSubmit = async (values) => {
-     const res = await axios.post("https://btcdb-test.ucsf.edu/api/auth/restore", {"username":values.email,"password":null,"newPassword":null}).catch((err) => {
+	
+	  setLoginContext({apiUrl:configData.apiUrl})
+	  
+     const res = await axios.post(loginContext.apiUrl+"/auth/restore", {"username":values.email,"password":null,"newPassword":null}).catch((err) => {
        if(err && err.response)
           if(err.response.status != 200) 
               setError("User name is invalid.");

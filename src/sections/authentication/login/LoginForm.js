@@ -4,6 +4,8 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import axios from "axios";
 import styled from 'styled-components';
+import configData from "../../../config.json";
+
 
 // material
 import {
@@ -48,9 +50,15 @@ export default function LoginForm() {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required')
   });
+  
+  
+ 
 
   const LoginSubmit = async (values) => {
-     const res = await axios.post("https://btcdb-test.ucsf.edu/api/auth", {"username":values.email,"password":values.password}).catch((err) => {
+      
+	  setLoginContext({apiUrl:configData.apiUrl})
+	 
+      const res = await axios.post(loginContext.apiUrl+"/auth", {"username":values.email,"password":values.password}).catch((err) => {
        if(err && err.response)
           if(err.response.status != 200) {
               if(err.response.status == 412){

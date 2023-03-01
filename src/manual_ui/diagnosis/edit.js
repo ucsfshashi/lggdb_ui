@@ -55,7 +55,7 @@ export default class DiagnosisEdit extends React.Component {
 	                 'selRole':loginContext.selRole,
 	                 'Content-Type': 'application/json'
 	    		};
-	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers });
+	       var rInfo = await axios.post(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers });
 	       
 	       if(rInfo && rInfo.data === true) {
 	    	    this.setState({successMessage:'Diagnosis changes saved successfully'});
@@ -82,7 +82,7 @@ export default class DiagnosisEdit extends React.Component {
 		const {config,mrn,loginContext} = this.props;
         this.setState({showLoading:true});
         var path ='Patient/'+loginContext.mrn+'/Surgery';
-        var surgeryInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+        var surgeryInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 

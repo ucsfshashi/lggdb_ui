@@ -22,7 +22,7 @@ export default class GenericCardView extends React.Component {
         const {config,mrn,loginContext,path} = this.props;
         
         this.setState({showLoading:true});
-	    var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+	    var patientInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -57,7 +57,7 @@ export default class GenericCardView extends React.Component {
                  'selRole':loginContext.selRole,
                  'Content-Type': 'application/json'
     		};
-       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+       var rInfo = await axios.post(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers })
        
        if(rInfo && rInfo.data === true) {
        	this.setState({successMessage:this.props.successMessage});

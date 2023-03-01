@@ -25,7 +25,7 @@ export default class ResearchPathologyView extends React.Component {
 	    var path ='Patient/'+loginContext.mrn+'/Surgery/'+this.props.grandInfo["Surgery.surgeryDate"]+
         '/Tissue/'+this.props.parentInfo["Tissue.tissueBankId"]+'/ResearchPathology';
 	    
-        var patientInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+        var patientInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -63,7 +63,7 @@ export default class ResearchPathologyView extends React.Component {
 	                 'selRole':loginContext.selRole,
 	                 'Content-Type': 'application/json'
 	    		};
-	       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+	       var rInfo = await axios.post(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers })
 	       
 	       if(rInfo && rInfo.data === true) {
 	       	this.setState({successMessage:'Research Pathology changes saved successfully'});

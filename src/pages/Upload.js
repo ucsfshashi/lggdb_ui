@@ -124,7 +124,7 @@ export default function Upload() {
 	    
 	  useEffect(() => {
 	        const fetchData = async () => {
-	           const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/template/list/basics", 
+	           const response = await axios.get(loginContext.apiUrl+"/import/template/list/basics", 
 	                                    {headers:{
 	                                      'Content-Type' :'applicaiton/json',
 	                                      'X-Requested-With':'XMLHttpRequest', 
@@ -178,7 +178,7 @@ export default function Upload() {
 
 	  const fetchTemplateInfo = (selTemplateInfo) => {
 	      const fetchData = async () => {
-	           const response = await axios.get("https://btcdb-test.ucsf.edu/api/import/template/"+selTemplateInfo.id, 
+	           const response = await axios.get(loginContext.apiUrl+"/import/template/"+selTemplateInfo.id, 
 	                                    {headers:{
 	                                      'Content-Type' :'applicaiton/json',
 	                                      'X-Requested-With':'XMLHttpRequest', 
@@ -210,7 +210,7 @@ export default function Upload() {
 	   	               'selRole':loginContext.selRole,
 	   	               'templateId':templateInfo.id,
 	   	          	};
-	    		    var response = await axios.post("https://btcdb-test.ucsf.edu/api/import/data", JSON.stringify(data.slice(0,5)), { headers });
+	    		    var response = await axios.post(loginContext.apiUrl+"/import/data", JSON.stringify(data.slice(0,5)), { headers });
 	    		   
 	    		   	if(response && response.status == 200) {
 	    		   		data.splice(0,5);

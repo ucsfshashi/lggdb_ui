@@ -35,7 +35,10 @@ export default class FileUpload extends React.Component {
 		                'tagId':loginContext.selTag.tagId,
 		                 'selRole':loginContext.selRole
 		    		};
-		       var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/uploadInfo/"+value, formData, { headers })
+		    
+		    
+		    
+		       var uploadInfo = await axios.post(loginContext.apiUrl+"/uploadInfo/"+value, formData, { headers })
 		    
 		      if(uploadInfo) {
 		    	  uploadInfo = uploadInfo.data; 
@@ -54,7 +57,7 @@ export default class FileUpload extends React.Component {
 		                'tagId':loginContext.selTag.tagId,
 		                 'selRole':loginContext.selRole
 		    		};
-		     var uploadInfo = await axios.post("https://btcdb-test.ucsf.edu/api/uploadInfo", formData, { headers })
+		     var uploadInfo = await axios.post(loginContext.apiUrl+"/uploadInfo", formData, { headers })
 		   
 		     if(uploadInfo) {
 		    	  uploadInfo = uploadInfo.data; 
@@ -71,7 +74,7 @@ export default class FileUpload extends React.Component {
 		 const {config,value,loginContext} = this.props;
 		 
 		 if(selectedOption === true && value) {
-			var uploadInfo = await axios.get("https://btcdb-test.ucsf.edu/api/uploadInfo/"+value, 
+			var uploadInfo = await axios.get(loginContext.apiUrl+"/uploadInfo/"+value, 
                      {headers:{
                        'X-Requested-With':'XMLHttpRequest', 
                        'UCSFAUTH-TOKEN':loginContext.token,
@@ -85,16 +88,17 @@ export default class FileUpload extends React.Component {
 				 uploadInfo = uploadInfo.data;
 			 }
 			 
+			 
 		
 			 if(uploadInfo) {
 				 if(uploadInfo.childDownloadUris 
 					&& uploadInfo.childDownloadUris.length >0) {
 					 
 					 for(var index in uploadInfo.childDownloadUris) {
-						 files.push('https://btcdb-test.ucsf.edu/api'+'/file/'+uploadInfo.childDownloadUris[index].fileDownloadUri);
+						 files.push(loginContext.apiUrl+'/file/'+uploadInfo.childDownloadUris[index].fileDownloadUri);
 					 }
 				 } else {
-					 files.push('https://btcdb-test.ucsf.edu/api'+'/file/'+uploadInfo.fileDownloadUri);
+					 files.push(loginContext.apiUrl+'/file/'+uploadInfo.fileDownloadUri);
 				 }
 			 }
 			 this.setState({ open:selectedOption,files:files }); 

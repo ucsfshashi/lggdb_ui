@@ -4,6 +4,8 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import axios from "axios";
 import styled from 'styled-components';
+import configData from "../../../config.json";
+
 
 // material
 import {
@@ -49,7 +51,10 @@ export default function PwdChangeForm() {
   });
 
   const PwdChangeSubmit = async (values) => {
-     const res = await axios.post("https://btcdb-test.ucsf.edu/api/auth/reset", {"username":loginContext.username,"password":values.password,"newPassword":values.newPassword}).catch((err) => {
+	 
+	 setLoginContext({apiUrl:configData.apiUrl})
+
+	 const res = await axios.post(loginContext.apiUrl+"/auth/reset", {"username":loginContext.username,"password":values.password,"newPassword":values.newPassword}).catch((err) => {
        if(err && err.response)
           if(err.response.status != 200) 
               setError("Unable to change passwword.");

@@ -32,7 +32,7 @@ export default class DemographicView extends React.Component {
         
         this.setState({showLoading:true});
 	    var path ='Patient/'+loginContext.mrn;
-        var demographicInfo = await axios.get("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, 
+        var demographicInfo = await axios.get(loginContext.apiUrl+"/patientinfo/"+path, 
                                     {headers:{
                                       'Content-Type' :'applicaiton/json',
                                       'X-Requested-With':'XMLHttpRequest', 
@@ -68,7 +68,7 @@ export default class DemographicView extends React.Component {
                  'selRole':loginContext.selRole,
                  'Content-Type': 'application/json'
     		};
-       var rInfo = await axios.post("https://btcdb-test.ucsf.edu/api/patientinfo/"+path, JSON.stringify(data), { headers })
+       var rInfo = await axios.post(loginContext.apiUrl+"/patientinfo/"+path, JSON.stringify(data), { headers })
        
        if(rInfo && rInfo.data === true) {
        	this.setState({successMessage:'Demographic changes saved successfully'});

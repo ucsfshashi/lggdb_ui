@@ -74,7 +74,7 @@ export default function DemographicCount(input) {
 	  if(xyz<2) {
 	      setLoading(true);
 	      var path ='/patients/race/summary';
-	      var summaryInfo = await axios.get("https://btcdb-test.ucsf.edu/api"+path, 
+	      var summaryInfo = await axios.get(input.loginContext.apiUrl+""+path, 
 	                                  {headers:{
 	                                    'Content-Type' :'applicaiton/json',
 	                                    'X-Requested-With':'XMLHttpRequest', 
