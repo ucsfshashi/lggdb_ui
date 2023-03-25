@@ -14,15 +14,21 @@ const CHART_DATA = [
     data: [23, 11, 22, 27, 13, 22, 37, 21, 10]
   },
   {
-	    name: 'Initial accumlation',
-	    type: 'area',
-	    data: [23, 34, 56, 83, 96, 118, 155, 176, 186]
+    name: 'Undefined count',
+    type: 'column',
+    data: [124, 115, 117,112,114, 113, 110, 121, 17]
   },
   {
-    name: 'Recurrent count',
-    type: 'column',
-    data: [11, 6, 7, 8, 9, 10, 12, 31, 5]
-   },
+	    name: 'Recurrent count',
+	    type: 'column',
+	    data: [11, 6, 7, 8, 9, 10, 12, 31, 5]
+	   },
+	  
+  {
+    name: 'Initial accumlation',
+    type: 'area',
+    data: [23, 34, 56, 83, 96, 118, 155, 176, 186]
+  },
   
   {
     name: 'Recurrent accumlation',
@@ -38,7 +44,7 @@ export default function SurgeryAccumlation() {
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: [0, 2, 3,4] },
     plotOptions: { bar: { columnWidth: '12%', borderRadius: 5 } },
-    fill: { type: ['solid','gradient', 'solid', 'solid']},
+    fill: { type: ['solid','solid','solid','gradient',  'solid']},
     labels: [
       '2015',
       '2016',
