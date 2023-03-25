@@ -46,7 +46,7 @@ export default function RegisterForm() {
 
   useEffect(() => {
       const fetchData = async () => {
-         const response = await axios.get(loginContext.apiUrl+"/nosession/tagList", 
+         const response = await axios.get(configData.apiUrl+"/nosession/tagList", 
                                   {headers:{
                                     'Content-Type' :'applicaiton/json',
                                     'X-Requested-With':'XMLHttpRequest' 
@@ -83,7 +83,7 @@ export default function RegisterForm() {
 
 	  setLoginContext({apiUrl:configData.apiUrl})
 	  
-	  var rInfo = await axios.post(loginContext.apiUrl+"/nosession/createUser/"+selRole.id+"/"+selTagInfo.tagId, 
+	  var rInfo = await axios.post(configData.apiUrl+"/nosession/createUser/"+selRole.id+"/"+selTagInfo.tagId, 
 			  JSON.stringify(data), { headers }).catch((err) => {
 					if(err && err.response)
 						if(err.response.status != 200) 
