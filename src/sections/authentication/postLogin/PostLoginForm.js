@@ -108,7 +108,7 @@ export default function PostLoginForm() {
         if(roleId=='PHI_ACCESS' || roleId=='NON_PHI') {
             fetchSchema();
         } else {
-            navigate('/dashboard/app');    
+            navigate('/admin/app');    
         }
     }  
     
