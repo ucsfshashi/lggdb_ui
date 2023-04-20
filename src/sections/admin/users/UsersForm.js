@@ -50,6 +50,33 @@ export default function UsersForm() {
   const [isNewStudy, setIsNewStudy] = useState(false);    
 
 
+  useEffect(() => {
+      const fetchData = async () => {
+      
+    	  var url = loginContext.apiUrl+"/lggdbUser/list";
+    	 
+    	  const response = await axios.get(url, 
+                                  {headers:{
+                                    'Content-Type' :'applicaiton/json',
+                                    'X-Requested-With':'XMLHttpRequest', 
+                                    'UCSFAUTH-TOKEN':loginContext.token,
+                                    'selRole':loginContext.selRole,
+                                  }}
+                                  ).catch((err) => {
+             if(err && err.response)
+                if(err.response.status != 200) 
+                    setError("Unable to load studies");
+          });
+    	  
+    	  if(response && response.data) {
+              setData(response.data);
+              setLoading(false);
+           }
+         
+      };
+      fetchData();
+      }, []);
+  
   
   const getOptions =() =>{
 		var options = {};
@@ -62,11 +89,14 @@ export default function UsersForm() {
 		options.filterType='multiselect';
         options.download=false;
 
+        /*
         options.customToolbar= () => {
 	        return (
 	         <MUIAddButton onAddClick={(event)=>addOnClick(event,{})}    />
 	        );
 	      };
+	    */
+        
 	  return options;
    };
    
@@ -77,6 +107,79 @@ export default function UsersForm() {
    
    const getColumns = () => {
 		var columns = [];
+		var options = {};
+		
+		options.customBodyRender = (value, tableMeta, updateValue) => {
+			return (
+					<Link size="small" color="primary" sx={{'cursor':'pointer'}} onClick={(event)=>this.handleStudyClick(data[tableMeta.rowIndex])} >
+					   {value}
+			        </Link>
+	      );
+		};
+		
+		
+		
+		
+		 columns.push({
+	    	   name: 'username',
+	    	   label: 'User Name',
+	    	   options: {
+	    		   filter: true,
+	    		   sort: true
+	    		  }
+	    	});
+		 
+ 
+		 options.filter=false;
+		 options.viewColumns=false;
+		 columns[0].options = options;
+		 
+		 
+		 columns.push({
+	    	   name: 'firstName',
+	    	   label: 'First Name',
+	    	   options: {
+	    		   filter: true,
+	    		   sort: true
+	    		  }
+	    	});
+		 
+		 columns.push({
+	    	   name: 'lastName',
+	    	   label: 'Last Name',
+	    	   options: {
+	    		   filter: true,
+	    		   sort: true
+	    		  }
+	    	});
+		 
+		 
+		 columns.push({
+	    	   name: 'enabled',
+	    	   label: 'Is Active',
+	    	   options: {
+	    		   filter: true,
+	    		   sort: true
+	    		  }
+	    	});
+		 
+		 columns.push({
+	    	   name: 'lastPasswordReset',
+	    	   label: 'Last PasswordReset',
+	    	   options: {
+	    		   filter: false,
+	    		   sort: false
+	    		  }
+	    	});
+		 
+		 columns.push({
+	    	   name: 'lastLocked',
+	    	   label: 'Last Locked',
+	    	   options: {
+	    		   filter: false,
+	    		   sort: false
+	    		  }
+	    	});
 		
 		return columns;
    }
