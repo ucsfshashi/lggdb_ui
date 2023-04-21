@@ -16,7 +16,10 @@ import {
   Checkbox,
   TextField,
   Container,
+  ToggleButton,
+  ToggleButtonGroup,
   Box,
+  Paper,
   IconButton,
   Typography,
   LinearProgress,
@@ -33,6 +36,8 @@ import {useAuth} from '../../../hooks/authContext.js';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import MUIDataTable from "mui-datatables";
 import MUIAddButton from '../../../common/MUIAddButton'
+import SaveUserForm from './SaveUserForm';
+
 
 
 
@@ -47,7 +52,9 @@ export default function UsersForm() {
   const {loginContext, setLoginContext} = useAuth();
   const [loading, setLoading] = useState(true); 
   const [data, setData] = useState([]);    
-  const [isNewStudy, setIsNewStudy] = useState(false);    
+  const [studyAction, setStudyAction] = useState("view");    
+  const [selUserInfo, setSelUserInfo] = useState(null);    
+
 
 
   useEffect(() => {
@@ -88,22 +95,14 @@ export default function UsersForm() {
 		options.selectableRows = 'none';
 		options.filterType='multiselect';
         options.download=false;
-
-        /*
-        options.customToolbar= () => {
-	        return (
-	         <MUIAddButton onAddClick={(event)=>addOnClick(event,{})}    />
-	        );
-	      };
-	    */
-        
-	  return options;
+	  
+        return options;
    };
    
-   
-   const addOnClick=(e) => {
-	   setIsNewStudy(true);
-	};
+   const handleStudyClick=(data) => {
+	   setSelUserInfo(data);
+	   setStudyAction("edit");
+   };
    
    const getColumns = () => {
 		var columns = [];
@@ -111,7 +110,7 @@ export default function UsersForm() {
 		
 		options.customBodyRender = (value, tableMeta, updateValue) => {
 			return (
-					<Link size="small" color="primary" sx={{'cursor':'pointer'}} onClick={(event)=>this.handleStudyClick(data[tableMeta.rowIndex])} >
+					<Link size="small" color="primary" sx={{'cursor':'pointer'}} onClick={(event)=>handleStudyClick(data[tableMeta.rowIndex])} >
 					   {value}
 			        </Link>
 	      );
@@ -156,12 +155,28 @@ export default function UsersForm() {
 		 
 		 columns.push({
 	    	   name: 'enabled',
-	    	   label: 'Is Active',
+	    	   label: 'Status',
 	    	   options: {
 	    		   filter: true,
 	    		   sort: true
 	    		  }
 	    	});
+		 
+		 options = {};
+			
+			options.customBodyRender = (value, tableMeta, updateValue) => {
+				return (
+						<ToggleButtonGroup
+				          color="primary"
+				          value={value}
+			              exclusive
+				          aria-label="Platform">
+				          <ToggleButton disabled={true} value="Yes" selected={value =='Yes'} >Enable</ToggleButton>
+				          <ToggleButton disabled={true} value="No" selected={value =='No'} >Disable</ToggleButton>
+				        </ToggleButtonGroup>
+		      );
+			};
+		columns[3].options = options;	
 		 
 		 columns.push({
 	    	   name: 'lastPasswordReset',
@@ -183,27 +198,52 @@ export default function UsersForm() {
 		
 		return columns;
    }
+   
+	const goBackList=(e) => {
+		   setStudyAction("view");
+	};	
  
   return (
-		  <Page title="Users">
-	        <Box sx={{ pb: 5 }}>
-	        <Stack direction="row" alignItems="center" spacing={0.5}>    
-	          <Typography variant="h4">Studies</Typography>
-	          <IconButton aria-label="restart" size="medium"  onClick={() => navigate("/postLogin")}>
-	            <ResetTvIcon color="success" fontSize="inherit" />
-	          </IconButton>    
-	        </Stack>
-	        </Box>
+		 <Page title="Users">
+	        
 	      
-	        <Stack >    
-    		<MUIDataTable
-	            title="Users"
-	            options={getOptions()}
-	            data={data}
-	            columns={getColumns()} 
-	            />
-	        {loading && <LinearProgress />}
-    		</Stack>
-	       </Page>
+	        { studyAction == "view" && 
+	         <Stack>
+	        	<Box sx={{ pb: 5 }}>
+	        		<Stack direction="row" alignItems="center" spacing={0.5}>    
+	        			<Typography variant="h4">Users</Typography>
+	        			<IconButton aria-label="restart" size="medium"  onClick={() => navigate("/postLogin")}>
+	        				<ResetTvIcon color="success" fontSize="inherit" />
+	        			</IconButton>    
+	        		</Stack>
+	        	</Box>
+		        <Stack >    
+		    		<MUIDataTable
+			            title="Users"
+			            options={getOptions()}
+			            data={data}
+			            columns={getColumns()} 
+			            />
+			        {loading && <LinearProgress />}
+	    		</Stack>
+	    	 </Stack>	
+	        }
+	        
+	        { studyAction == "edit" && 
+	        	 <Stack>
+        	<Box sx={{ pb: 5 }}>
+        		<Stack direction="row" alignItems="center" spacing={0.5}>    
+        			<Typography variant="h4">Users</Typography>
+        			<IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
+        				<ResetTvIcon color="success" fontSize="inherit" />
+        			</IconButton>    
+        		</Stack>
+        	</Box>
+	        	<Paper>
+    				<SaveUserForm goBackList={goBackList}  selUserInfo={selUserInfo} />
+    			</Paper>
+    				</Stack>			
+	        }
+    	 </Page>
   );
 }

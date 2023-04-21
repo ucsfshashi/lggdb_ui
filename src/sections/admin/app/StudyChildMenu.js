@@ -112,10 +112,8 @@ export default class StudyChildMenu extends React.Component {
    }
   
   handleDataTypes = (row) => {
-	  /*
-      let importTempalteURL= '/studytag/'+row.tagId+'/datatypes';
-      Actions.setRoute(importTempalteURL);
-      */
+	  this.props.setStudyAction("dataTypes");
+	  this.props.setSelTagInfo(this.props.tag);
 	}
 
   render() {  

@@ -37,6 +37,8 @@ import ResetTvIcon from '@mui/icons-material/ResetTv';
 import MUIDataTable from "mui-datatables";
 import MUIAddButton from '../../../common/MUIAddButton';
 import SaveStudyForm from './SaveStudyForm';
+import DefineDataTypes from './DefineDataTypes';
+
 
 
 // ----------------------------------------------------------------------
@@ -47,7 +49,7 @@ export default function StudyForm() {
   const {loginContext, setLoginContext} = useAuth();
   const [loading, setLoading] = useState(true); 
   const [data, setData] = useState([]);    
-  const [isNewStudy, setIsNewStudy] = useState(false);    
+  const [studyAction, setStudyAction] = useState("view");    
   const [selTagInfo,setSelTagInfo] = useState(null);
 
 
@@ -130,13 +132,14 @@ export default function StudyForm() {
    
    
    const addOnClick=(e) => {
-	   setIsNewStudy(true);
+	   setStudyAction("edit");
 	   setSelTagInfo(null);
 	};
 	
 	const goBackList=(e) => {
-		   setIsNewStudy(false);
-		};	
+		   setStudyAction("view");
+		  
+	};	
 		
 	const handleStudyClick=(data) => {
 	
@@ -161,7 +164,7 @@ export default function StudyForm() {
 	  	  
 	  	    if(response && response.data) {
 	            setSelTagInfo(response.data);
-	    		setIsNewStudy(true);
+	            setStudyAction("edit");
 	            setLoading(false);
 	        }
       }
@@ -250,7 +253,7 @@ export default function StudyForm() {
 	       options = {};
 	       options.customBodyRender = (value, tableMeta, updateValue) => {
 				return (
-					<StudyChildMenu  config={loginContext} loginContext={loginContext}  tag={data[tableMeta.rowIndex]} />
+					<StudyChildMenu  config={loginContext} loginContext={loginContext} setSelTagInfo={setSelTagInfo} setStudyAction={setStudyAction} tag={data[tableMeta.rowIndex]} />
 	           );
 			};
 	       
@@ -293,7 +296,7 @@ export default function StudyForm() {
   return (
 		  <Page title="Studies">
 	        
-		   { !isNewStudy && 
+		   { studyAction == "view" && 
 			   <Stack > 
 			  	<Box sx={{ pb: 5 }}>
 		        <Stack direction="row" alignItems="center" spacing={0.5}>    
@@ -314,12 +317,12 @@ export default function StudyForm() {
 	    		</Stack>
 	    	 </Stack>	
 		   }
-    	   { isNewStudy && 	
+    	   { studyAction == "edit" && 	
     	    <Stack>
 	    	   <Box sx={{ pb: 5 }}>
 		        <Stack direction="row" alignItems="center" spacing={0.5}>    
 		          <Typography variant="h4">Studies</Typography>
-		          <IconButton aria-label="restart" size="medium"  onClick={() => navigate("/postLogin")}>
+		          <IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
 		            <ResetTvIcon color="success" fontSize="inherit" />
 		          </IconButton>    
 		        </Stack>
@@ -328,6 +331,9 @@ export default function StudyForm() {
     			<SaveStudyForm goBackList={goBackList}  selTagInfo={selTagInfo} />
     			</Paper>	
     	    </Stack>
+    	   }
+    	   { studyAction == "dataTypes" && 	
+    	      <DefineDataTypes goBackList={goBackList} selTagInfo={selTagInfo}  />
     	   }
     	   </Page>
   );
