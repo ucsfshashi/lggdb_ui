@@ -91,17 +91,8 @@ export default class StudyChildMenu extends React.Component {
   }
   
   handleAssignUser = (row,mode) => {
-  	
-	  /*	
-      var destUrl='';
-      
-      if(mode == 'phi') {
-      	destUrl = '/studytag/'+row.tag.tagId+'/phiusers'; 	
-      }  else {
-      	destUrl = '/studytag/'+row.tag.tagId+'/nonphiusers'; 	
-      }
-      Actions.setRoute(destUrl);
-      */
+  	  this.props.setStudyAction("assignUser");
+	  this.props.setSelTagInfo(this.props.tag);
   }
   
   handleUploadTemplates = (row) => {
@@ -135,15 +126,12 @@ export default class StudyChildMenu extends React.Component {
 	        open={Boolean(this.state.anchorEl)}
 	        onClose={this.handleClose}>
 	             <MenuItem  onClick={(event)=>this.handleDataTypes(tag)} >
-	                <Iconify icon={'eva:layers-fill'} width={22} height={22} /> Define data types 
+	                <Iconify icon={'eva:layers-fill'} width={22} height={22} />Define data types 
 		         </MenuItem>
 		         <MenuItem onClick={() => this.handleAssignUser({tag},'phi') } > 
-		           <Iconify icon={'eva:person-done-fill'} width={22} height={22} /> Assign users (PHI)
+		           <Iconify icon={'eva:person-done-fill'} width={22} height={22} />Assign users
 		         </MenuItem>
-		         <MenuItem onClick={() => this.handleAssignUser({tag},'nonphi') } > 
-		         <Iconify icon={'eva:person-done-outline'} width={22} height={22} />Assign users (NON-PHI)
-		         </MenuItem>
-	           {tag.noOfDataTypes >0  && <MenuItem divider />  }
+		       {tag.noOfDataTypes >0  && <MenuItem divider />  }
 		  	      {tag.noOfDataTypes >0  && <MenuItem  eventKey="3"   onClick={() => this.handleUploadTemplates({tag}) } >  <Iconify icon={'eva:file-text-outline'} width={22} height={22} /> Study templates </MenuItem> }
 		  	      {
 		  	    	tag.noOfPatients <=0 && this.props.loginContext.selRole =='ADMIN' && 

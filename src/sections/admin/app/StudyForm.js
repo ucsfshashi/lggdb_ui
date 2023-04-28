@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import configData from "../../../config.json";
 import StudyChildMenu from './StudyChildMenu';
 
-
 // material
 import {
   Alert,
@@ -38,6 +37,7 @@ import MUIDataTable from "mui-datatables";
 import MUIAddButton from '../../../common/MUIAddButton';
 import SaveStudyForm from './SaveStudyForm';
 import DefineDataTypes from './DefineDataTypes';
+import AssignUsers from './AssignUsers';
 
 
 
@@ -333,7 +333,10 @@ export default function StudyForm() {
     	    </Stack>
     	   }
     	   { studyAction == "dataTypes" && 	
-    	      <DefineDataTypes goBackList={goBackList} selTagInfo={selTagInfo}  />
+    	      <DefineDataTypes loginContext={loginContext} goBackList={goBackList} selTagInfo={selTagInfo}  />
+    	   }
+    	   { studyAction == "assignUser" && 	 
+    		   <AssignUsers goBackList={goBackList} selTagInfo={selTagInfo}  />
     	   }
     	   </Page>
   );
