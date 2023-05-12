@@ -38,6 +38,7 @@ import MUIAddButton from '../../../common/MUIAddButton';
 import SaveStudyForm from './SaveStudyForm';
 import DefineDataTypes from './DefineDataTypes';
 import AssignUsers from './AssignUsers';
+import Templates from './Templates';
 
 
 
@@ -337,6 +338,9 @@ export default function StudyForm() {
     	   }
     	   { studyAction == "assignUser" && 	 
     		   <AssignUsers goBackList={goBackList} selTagInfo={selTagInfo}  />
+    	   }
+    	   { studyAction == "templates" && 	 
+    		   <Templates goBackList={goBackList} selTagInfo={selTagInfo}  />
     	   }
     	   </Page>
   );

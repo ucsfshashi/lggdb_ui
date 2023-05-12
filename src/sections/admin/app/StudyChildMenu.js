@@ -96,10 +96,8 @@ export default class StudyChildMenu extends React.Component {
   }
   
   handleUploadTemplates = (row) => {
-	  /*
-      let destUrl= '/studytag/'+row.tag.tagId+'/importTemplates';
-      Actions.setRoute(destUrl);
-      */
+	  this.props.setStudyAction("templates");
+	  this.props.setSelTagInfo(this.props.tag);
    }
   
   handleDataTypes = (row) => {
@@ -115,7 +113,8 @@ export default class StudyChildMenu extends React.Component {
 		<ThemeProvider theme={this.getMuiTheme()}>
 	     <Button
 	        variant="outlined" 
-	        size="small"
+	        size="large"
+	        	color="success" 	
 	        startIcon={<Iconify icon={'eva:list-fill'} width={22} height={22} />} onClick={this.handleClick} >
 	        Action
 	      </Button>
@@ -126,10 +125,10 @@ export default class StudyChildMenu extends React.Component {
 	        open={Boolean(this.state.anchorEl)}
 	        onClose={this.handleClose}>
 	             <MenuItem  onClick={(event)=>this.handleDataTypes(tag)} >
-	                <Iconify icon={'eva:layers-fill'} width={22} height={22} />Define data types 
+	                <Iconify color="success" 	 icon={'eva:layers-fill'} width={22} height={22} />Define data types 
 		         </MenuItem>
 		         <MenuItem onClick={() => this.handleAssignUser({tag},'phi') } > 
-		           <Iconify icon={'eva:person-done-fill'} width={22} height={22} />Assign users
+		           <Iconify color="success" 	 icon={'eva:person-done-fill'} width={22} height={22} />Assign users
 		         </MenuItem>
 		       {tag.noOfDataTypes >0  && <MenuItem divider />  }
 		  	      {tag.noOfDataTypes >0  && <MenuItem  eventKey="3"   onClick={() => this.handleUploadTemplates({tag}) } >  <Iconify icon={'eva:file-text-outline'} width={22} height={22} /> Study templates </MenuItem> }

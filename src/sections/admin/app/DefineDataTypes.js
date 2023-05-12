@@ -9,6 +9,7 @@ import React from 'react';
 // material
 import {
   ListSubheader,
+  Alert,
   List,
   Stack,
   Button,
@@ -193,6 +194,12 @@ export default class AttentionView extends React.Component {
 							this.setState({error:"Error while saving data types"});
 							});    
 		  
+		  
+		    if(rInfo && rInfo.status == 200) {
+		 	 this.setState({successMsg:'Define datatypes is successfully '});	
+	 		}
+		  
+		  
 		  this.setState({saveLoading:false});	
 	}	
 
@@ -266,12 +273,17 @@ export default class AttentionView extends React.Component {
 	        	<AppBar position="static" color='transparent' variant="dense" >
 	        		<Toolbar variant="dense">
 	        			<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-            				Define data types
+            				 <Iconify icon={'eva:layers-fill'} width={22} height={22} /> Define data types
           				</Typography>
-	        		 	 <LoadingButton  sx={{ marginBottom:'5px' }} loading={this.state.saveLoading} loadingPosition="start" variant="contained"  onClick={(e)=>saveDataTypes(e)} size='large' startIcon={<SaveIcon />}>
-        					Save
-      					</LoadingButton>
-	        		</Toolbar>
+	        		 	{this.state.successMsg &&
+      						<Alert severity="success">
+		        				{this.state.successMsg}
+		        			</Alert>
+		        		}
+	        		   <LoadingButton  sx={{ marginBottom:'5px' }} loading={this.state.saveLoading} loadingPosition="start" variant="contained"  onClick={(e)=>saveDataTypes(e)} size='large' startIcon={<SaveIcon />}>
+    					Save
+  					  </LoadingButton>
+      				</Toolbar>
 	        	</AppBar>
 	        	
 	        	{this.state.loading && <LinearProgress /> }
