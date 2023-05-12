@@ -143,7 +143,7 @@ export default function PostLoginForm() {
   
   const handleChange = (event: SelectChangeEvent) => {
     setRoleId(event.target.value);
-    setIsDisabled((event.target.value !='ADMIN'))  
+    setIsDisabled(!(event.target.value =='ADMIN' || event.target.value =='STUDY_ADMIN'))  
     setSelTagInfo(null);
     setSelTagIndex(null);  
       
