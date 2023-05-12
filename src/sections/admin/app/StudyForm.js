@@ -123,11 +123,14 @@ export default function StudyForm() {
 		options.filterType='multiselect';
         options.download=false;
 
-        options.customToolbar= () => {
-	        return (
-	         <MUIAddButton onAddClick={(event)=>addOnClick(event,{})}    />
-	        );
-	      };
+        if(loginContext.selRole != 'STUDY_ADMIN') {
+        	options.customToolbar= () => {
+    	        return (
+    	         <MUIAddButton onAddClick={(event)=>addOnClick(event,{})}    />
+    	        );
+    	      };
+        }
+          
 	  return options;
    };
    

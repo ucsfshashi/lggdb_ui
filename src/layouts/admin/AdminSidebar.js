@@ -14,6 +14,7 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 //
 import sidebarConfig from './SidebarConfig';
+import sidebarConfigStudy from './SidebarConfig_study';
 import {useAuth} from '../../hooks/authContext.js';
 
 
@@ -89,7 +90,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         </Link>
       </Box>
 
-      <NavSection navConfig={sidebarConfig} />
+      <NavSection navConfig={loginContext.selRole == 'ADMIN'?sidebarConfig:sidebarConfigStudy} />
 
       <Box sx={{ flexGrow: 1 }} />
 
