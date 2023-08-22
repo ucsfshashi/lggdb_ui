@@ -24,6 +24,9 @@ import LoglioCognitiveView from './loglioCognitive/view';
 import QOLEdit from './qol/edit';
 import QOLView from './qol/view'; 
 
+import OtherTreatmentEdit from './otherTreatment/edit';
+import OtherTreatmentView from './otherTreatment/view'; 
+
 import ChemotherapyEdit from './chemotherapy/edit';
 import ChemotherapyView from './chemotherapy/view'; 
 
@@ -166,6 +169,7 @@ export default class PatientRouter extends React.Component {
 	        		case 'UCSF500' : return UCSF500Edit;
 	        		case 'Alteration Row' : return AlterationRowEdit;
 	        		case 'Copy Number Change Row' : return CopyNumberChangeRowEdit;
+	        		case 'Other Treatment' : return OtherTreatmentEdit;
 	        		case 'CancerGenePanel' : return CancerGenePanelEdit;
 	        		case 'CgpAlterationRow' : return CgpAlterationRowEdit;
 	        		case 'Tumor Observation': return TumorObservationsEdit;
@@ -216,6 +220,7 @@ export default class PatientRouter extends React.Component {
 	    			case 'Alteration Row' : return AlterationRowView;
 	    			case 'CgpAlterationRow' : return CgpAlterationRowView;
 	    			case 'Copy Number Change Row' : return CopyNumberChangeRowView;
+	    			case 'Other Treatment' : return OtherTreatmentView;
 	    			case 'Attention': return AttentionView;
 	    			case 'Past Medical History': return PastMedicalHistoryView;
 	    			case 'QAB': return QABView;
