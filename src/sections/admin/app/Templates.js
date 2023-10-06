@@ -34,6 +34,8 @@ import ResetTvIcon from '@mui/icons-material/ResetTv';
 import MUIDataTable from "mui-datatables";
 import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import MUIAddButton from '../../../common/MUIAddButton';
+import SaveTemplateForm from './SaveTemplateForm';
+
 
 
 // ----------------------------------------------------------------------
@@ -44,8 +46,11 @@ export default function Templates({selTagInfo,goBackList}) {
   const {loginContext, setLoginContext} = useAuth();
   const [loading, setLoading] = useState(true); 
   const [data, setData] = useState([]);    
-  const [isNewStudy, setIsNewStudy] = useState(false);    
+  const [isNewTemplate, setIsNewTemplate] = useState(false);    
   const [successMsg,setSuccessMsg] = useState(null);
+  const [selTemplateId,setSelTemplateId] = useState(null);
+  const [templateAction, setTemplateAction] = useState("view");    
+  
 
    
   useEffect(() => {
@@ -79,8 +84,10 @@ export default function Templates({selTagInfo,goBackList}) {
   
   const handleTemplateClick=(data) => {
       setLoading(true);	
+      setTemplateAction("edit");
+      setSelTemplateId(data.id);
+      setLoading(false);	
   }
-  
   
   const handlRemoveClick=(data) => {
       setLoading(true);	
@@ -181,39 +188,57 @@ export default function Templates({selTagInfo,goBackList}) {
       
   return (
 		  <Page title="Study templates">
-	       <Stack > 
-		  	<Box sx={{ pb: 5 }}>
-	        <Stack direction="row" alignItems="center" spacing={0.5}>    
-	          <Typography variant="h4">Studies :({selTagInfo.tagName})  </Typography>
-	          <IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
-	            <ResetTvIcon color="success" fontSize="inherit" />
-	          </IconButton>    
-	        </Stack>
-	        </Box>
-	        
-	        
-	        { successMsg && 
-    			<Alert severity="success">
-    				{successMsg}
-    			</Alert>
-    		}
-    		
-    		{ error && 
-    			<Alert severity="error">
-    				{error}
-    			</Alert>
-    		} 
-    		
-	        <Stack>
-	        <MUIDataTable
-	            title="Study templates"
-	            options={getOptions()}
-	            data={data}
-	            columns={getColumns()} 
-            />
-	        {loading && <LinearProgress />}
-	        </Stack>
-	        </Stack>
-    	   </Page>
+		  
+		  { templateAction == "view" && 
+		       <Stack > 
+			  	<Box sx={{ pb: 5 }}>
+		        <Stack direction="row" alignItems="center" spacing={0.5}>    
+		          <Typography variant="h4">Studies :({selTagInfo.tagName})  </Typography>
+		          <IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
+		            <ResetTvIcon color="success" fontSize="inherit" />
+		          </IconButton>    
+		        </Stack>
+		        </Box>
+		        { successMsg && 
+	    			<Alert severity="success">
+	    				{successMsg}
+	    			</Alert>
+	    		}
+	    		
+	    		{ error && 
+	    			<Alert severity="error">
+	    				{error}
+	    			</Alert>
+	    		} 
+	    		
+		        <Stack>
+		        <MUIDataTable
+		            title="Study templates"
+		            options={getOptions()}
+		            data={data}
+		            columns={getColumns()} 
+	            />
+		        {loading && <LinearProgress />}
+		        </Stack>
+		       </Stack>
+		  }
+	       
+	       { templateAction == "edit" && 	
+	    	    <Stack>
+		    	   <Box sx={{ pb: 5 }}>
+			        <Stack direction="row" alignItems="center" spacing={0.5}>    
+			          <Typography variant="h4">Studies</Typography>
+			          <IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
+			            <ResetTvIcon color="success" fontSize="inherit" />
+			          </IconButton>    
+			        </Stack>
+			        </Box>
+	    			<Paper>
+	    			<SaveTemplateForm selTagInfo={selTagInfo}  selTemplateId={selTemplateId}   />
+	    			</Paper>	
+	    	    </Stack>
+	      }
+	      
+	     </Page>
   );
 }
