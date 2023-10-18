@@ -24,8 +24,7 @@ const DRAWER_WIDTH = 280;
 
 const allowedTopics=['Demographics','Tumor','Surgery','Chemotherapy','Clinical Evaluation','Imaging','Radiotherapy',
 	   'Medication','Clinical Trial','Epidemiology','Past Medical History','Diagnosis','Language','Loglio cognitive','Cognition','QAB','QOL','Attention','IPS',
-	   'McGurk','Wakefulness','Sensory'];
-
+	   'McGurk','Wakefulness','Sensory','Other Treatment'];
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
