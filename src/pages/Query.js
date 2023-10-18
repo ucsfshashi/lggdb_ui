@@ -173,7 +173,8 @@ const getOptions =() =>{
 		    	}) ;
 	     } 
 		
-		if(isNonPHI) {
+		if(loginContext 
+		  && loginContext.selRole == "NON_PHI") {
 			options.filter=false;
 			options.searchable=false;
 			columns = columns.filter(el=>!el.phi);
@@ -188,13 +189,7 @@ const getOptions =() =>{
     	return columns;
 	};
     
-    
-    const isNonPHI=()=>{
-		return (loginContext 
-				&& loginContext.selRole == "NON_PHI" );
-	};
-
-  const queryData=()=>{
+    const queryData=()=>{
 		setLoading(true);
       
         const fetchData = async () => {
