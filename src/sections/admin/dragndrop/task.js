@@ -7,8 +7,11 @@ import type { Id, Task as TaskType } from './types';
 import DetailTask from './detailTask';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 
+import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const primaryButton = 0;
@@ -200,24 +203,62 @@ export default class Task extends Component<Props> {
               isSelected={isSelected}
               isGhosting={isGhosting}
             >
+              {this.props.showDetailInfo && 
+	               <Box component="div" sx= {{padding: '14px',
+	                  border: '1px double',
+	                  '&:hover': {
+	                      backgroundColor: 'primary.main',
+	                      opacity: [0.9, 0.8, 0.7],
+	                    },
+	                  margin: '9px',
+	                  borderRadius: '5px',
+	                  fontWeight: '400',
+	                  lineHeight: '1.5714285714285714',
+	                  fontSize: '1.0rem',
+	                  fontFamily: 'Public Sans,sans-serif',
+	                  color: '#212B36'}}>
+                     
+                    <Stack direction="row" spacing={2}>	
+          			<Box sx= {{paddingTop: '10px',
+          		    fontWeight: '700',
+          		    fontSize: 'large' }}><FormatListBulletedOutlinedIcon/>
+          		    </Box>
+          			<Box sx= {{paddingTop: '10px',
+          		    fontWeight: '700',
+          		    fontSize: 'large' }}> {task.entityName} - {task.columnName} </Box>
+          		    </Stack>
+                    <DetailTask task={task} />
+	              </Box>
+              }
               
-               <Box component="div" sx= {{padding: '14px',
-                  border: '1px double',
-                  margin: '9px',
-                  borderRadius: '7px',
-                  fontWeight: '400',
-                  lineHeight: '1.5714285714285714',
-                  fontSize: '1.0rem',
-                  fontFamily: 'Public Sans,sans-serif',
-                  color: '#212B36'}}>
-                
-              
-                {task.entityName} - {task.columnName}
-                <br/>
-                {this.props.showDetailInfo && 
-                  <DetailTask task={task} />
-                }
-              </Box>
+              {!this.props.showDetailInfo && 
+            	  
+            	  <Box component="div" sx= {{
+	                  border: '1px double',
+	                  '&:hover': {
+	                      backgroundColor: 'primary.main',
+	                      opacity: [0.9, 0.8, 0.7],
+	                    },
+	                  margin: '9px',
+	                  borderRadius: '5px',
+	                  fontWeight: '400',
+	                  fontSize: '1.0rem',
+	                  fontFamily: 'Public Sans,sans-serif',
+	                  color: '#212B36'}}>
+              		
+              		<Stack direction="row" spacing={2}>	
+              			<Box sx= {{paddingTop: '10px',
+              		    fontWeight: '700',
+              		    fontSize: 'large' }}><DragIndicatorOutlinedIcon/>
+              		    </Box>
+              			<Box sx= {{paddingTop: '10px',
+              		    fontWeight: '700',
+              		    fontSize: 'large' }}> {task.csvLabel} </Box>
+              		</Stack>
+	                
+	              </Box>
+            	  
+              }	  
               
               {shouldShowSelection ? <Box component="div" >{selectionCount}</Box> : null}
             </Container>

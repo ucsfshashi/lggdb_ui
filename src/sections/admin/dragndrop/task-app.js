@@ -7,6 +7,9 @@ import type { Result as ReorderResult } from './utils';
 import { mutliDragAwareReorder, multiSelectTo as multiSelect } from './utils';
 import TaskInfo from './taskInfo';
 
+import {Stack} from '@mui/material';
+
+
 const Container = styled.div`
   display: flex;
   user-select: none;
@@ -288,7 +291,7 @@ export default class TaskApp extends Component<*, State> {
       <DragDropContext
         onDragStart={this.onDragStart}
         onDragEnd={this.onDragEnd} >
-        <Container>
+        <Stack direction="row" alignItems="center" spacing={1}>  
           <EntityColumn
               column={entities.columns['todo']}
               tasks={getTasks(entities, 'todo')}
@@ -317,7 +320,7 @@ export default class TaskApp extends Component<*, State> {
              selTask= {this.state.selTask}
              onChange={this.handleTaskInfoChange}
             />
-        </Container>
+        </Stack>
       </DragDropContext>
     );
   }

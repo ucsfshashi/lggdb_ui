@@ -4,7 +4,11 @@ import memoizeOne from 'memoize-one';
 import { Droppable } from 'react-beautiful-dnd';
 import { grid, colors, borderRadius } from './constants';
 import Task from './task';
+import LongMenu from './long_menu';
+
 import type { DroppableProvided, DroppableStateSnapshot }  from 'react-beautiful-dnd';
+import {Paper} from '@mui/material';
+
 
 type Props = {|
   column: ColumnType,
@@ -30,7 +34,7 @@ const Container = styled.div`
 `;
 
 const Title = styled.h4`
-  padding-left: ${grid}px;
+  padding-left: 35px;
   font-family: Helvetica Light;
   font-size: 1.5em;
  `;
@@ -55,15 +59,39 @@ const getSelectedMap = memoizeOne((selectedTaskIds: Id[]) =>
     return previous;
   }, {}));
 
+
+
+
+
 export default class EntityColumn extends Component<Props> {
+
+	constructor(props) {
+	    super(props);
+	     
+	    this.state = {
+			 	selEntity: 'Patient',
+		 };
+	}
+	
+	onSelEntity = (lSelEntity) => {
+		 	this.setState({
+		 		selEntity: lSelEntity,
+		     });
+	}
+	
+	
   render() {
     const column: ColumnType = this.props.column;
     const tasks: TaskType[] = this.props.tasks;
     const selectedTaskIds: Id[] = this.props.selectedTaskIds;
     const draggingTaskId: ?Id = this.props.draggingTaskId;
+    const entities =  tasks.map((item) => item.entityName).filter((value, index, self) => self.indexOf(value) === index);
+      
     return (
-      <Container>
-        <Title>hello hi</Title>
+    		<Paper elevation={4}  sx={{paddingLeft:3,
+  		        paddingRight:3,width: '100%',height:'750px' }} >
+
+        <Title> <LongMenu  options={entities} onSelEntity={(entityName)=>this.onSelEntity(entityName)}/>  </Title>
         <Droppable droppableId={column.id}>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <TaskList
@@ -71,7 +99,7 @@ export default class EntityColumn extends Component<Props> {
               isDraggingOver={snapshot.isDraggingOver}
               {...provided.droppableProps}
             >
-              {tasks.map((task: TaskType, index: number) => {
+              {tasks.filter((x) => x.entityName === this.state.selEntity).map((task: TaskType, index: number) => {
                 const isSelected: boolean = Boolean(getSelectedMap(selectedTaskIds)[task.id]);
                 const isGhosting: boolean =
                   isSelected && Boolean(draggingTaskId) && draggingTaskId !== task.id;
@@ -95,7 +123,7 @@ export default class EntityColumn extends Component<Props> {
             </TaskList>
           )}
         </Droppable>
-      </Container>
+      </Paper>
     );
   }
 }

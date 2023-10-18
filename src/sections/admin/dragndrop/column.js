@@ -5,6 +5,10 @@ import { Droppable } from 'react-beautiful-dnd';
 import { grid, colors, borderRadius } from './constants';
 import Task from './task';
 import type { DroppableProvided, DroppableStateSnapshot }  from 'react-beautiful-dnd';
+import {Paper} from '@mui/material';
+import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
 type Props = {|
   column: ColumnType,
@@ -19,7 +23,8 @@ type Props = {|
 |}
 
 const Container = styled.div`
-  width: 500px;
+  width:100%;
+  max-width: 500px;
   margin: ${grid}px;
   border-radius: ${borderRadius}px;
   border: 1px solid ${colors.grey.dark};
@@ -29,10 +34,10 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Title = styled.h3`
-  padding-left: ${grid}px;
+const Title = styled.h4`
+  padding-left: 40px;
   font-family: Helvetica Light;
-  font-size: 1.75em;
+  font-size: 1.5em;
  `;
 
 const TaskList = styled.div`
@@ -62,8 +67,22 @@ export default class Column extends Component<Props> {
     const selectedTaskIds: Id[] = this.props.selectedTaskIds;
     const draggingTaskId: ?Id = this.props.draggingTaskId;
     return (
-      <Container>
-        <Title>{column.title}</Title>
+    		<Paper elevation={4}  sx={{paddingLeft:3,
+  		        paddingRight:3,width: '100%',height:'750px' }} >
+
+       <Stack direction="row" spacing={2}>	
+			<Box sx= {{paddingTop: '10px',
+			paddingLeft:'42px',
+		    fontWeight: '700',
+		    fontSize: '1.5em',
+		     }}><ViewColumnOutlinedIcon/>
+		    </Box>
+			<Box sx= {{paddingTop: '10px',
+		    fontWeight: '700',
+		    fontSize: '1.5em' }}> {column.title} </Box>
+		</Stack>
+        
+        
         <Droppable droppableId={column.id}>
           {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
             <TaskList
@@ -95,7 +114,7 @@ export default class Column extends Component<Props> {
             </TaskList>
           )}
         </Droppable>
-      </Container>
+      </Paper>
     );
   }
 }

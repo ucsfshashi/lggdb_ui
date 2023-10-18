@@ -89,6 +89,13 @@ export default function Templates({selTagInfo,goBackList}) {
       setLoading(false);	
   }
   
+  
+  const goBackTemplates=() => {
+      setLoading(true);	
+      setTemplateAction("view");
+      setLoading(false);	
+  }
+  
   const handlRemoveClick=(data) => {
       setLoading(true);	
   }
@@ -227,8 +234,8 @@ export default function Templates({selTagInfo,goBackList}) {
 	    	    <Stack>
 		    	   <Box sx={{ pb: 5 }}>
 			        <Stack direction="row" alignItems="center" spacing={0.5}>    
-			          <Typography variant="h4">Studies</Typography>
-			          <IconButton aria-label="restart" size="medium"  onClick={() => goBackList()}>
+			          <Typography variant="h4">Studies:({selTagInfo.tagName}):(Templates) </Typography>
+			          <IconButton aria-label="restart" size="medium"  onClick={() => goBackTemplates()}>
 			            <ResetTvIcon color="success" fontSize="inherit" />
 			          </IconButton>    
 			        </Stack>

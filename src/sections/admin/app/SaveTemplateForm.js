@@ -147,7 +147,7 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
       { !createResponse &&	
       <Stack spacing={3}  sx={{ 'paddingLeft':'100px','paddingTop':'50px','paddingBottom':'50px' }}  >
      
-	       <Stack direction={{ xs: 'column', sm: 'row' }}  spacing={2}>
+	       <Stack direction={{ xs: 'column', sm: 'row' }}  spacing={8}>
 	       
 	       <TextField
    		  sx={{ 'width':'450px' }} 
@@ -158,7 +158,7 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
            helperText={touched.tagName && errors.tagName}
          />
    	    <TextField
-         	sx={{ 'width':'600px' }} 
+         	sx={{ 'width':'700px' }} 
            label="Description"
            multiline
            minRows={1}	  
@@ -171,8 +171,17 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
 		            variant="contained"
 		            disabled={!(formik.isValid && formik.dirty) }
 		            loading={isSubmitting}>
-		            Save
+		            Save Template
 		          </LoadingButton>
+		         
+		        <LoadingButton
+		            type="submit"
+		            variant="contained"
+		            disabled={(formik.isValid || formik.dirty) }
+		            loading={isSubmitting}>
+		            Download Template
+		        </LoadingButton>    
+		            
 		   </Stack>
 		   
 		   {templateInfo &&

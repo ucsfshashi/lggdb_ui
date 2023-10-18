@@ -3,22 +3,13 @@ import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 import { grid, colors, borderRadius,dataTypes,overWriteOptions } from './constants';
 import type { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { FormGroup,Form,FormControlLabel,FormControl,Alert} from '@mui/material';
+import {ListItemButton,ListItemIcon,ListItemText,
+	ListItem,IconButton,Switch,Alert,
+	Stack,Typography,TextField,FormControl,InputLabel,Select,MenuItem,Box,Skeleton,Paper} from '@mui/material';
 
-
+	
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const primaryButton = 0;
-
-
-function FieldGroup({ id, label, help, ...props }) {
-	  return (
-	    <FormGroup controlId={id}>
-	      <FormControlLabel>{label}</FormControlLabel>
-	      <FormControl {...props} />
-	    </FormGroup>
-	  );
-	}
-//{help && <HelpBlock>{help}</HelpBlock>}
 
 type Props = {|
   task: TaskType,
@@ -65,25 +56,7 @@ const getColor = ({
   return colors.black;
 };
 
-const Container = styled.div`
-  background-color: ${props => getBackgroundColor(props)};
-  color: ${props => getColor(props)};
-  width: 500px;
-  margin: ${grid}px;
-  align-content:middle;
-  border-radius: ${borderRadius}px;4
-  font-size: 18px;
-  border: 2px solid ${colors.shadow};
-  ${props => (props.isDragging ? `box-shadow: 2px 2px 1px ${colors.shadow};` : '')}
-  ${props => (props.isGhosting ? 'opacity: 0.8;' : '')}
-  /* needed for SelectionCount */
-  position: relative;
-  /* avoid default outline which looks lame with the position: absolute; */
-  &:focus {
-    outline: none;
-    border-color: ${colors.blue.deep};
-  }
-`;
+
 
 const Content = styled.div`
     padding-top: 15px;
@@ -91,12 +64,12 @@ const Content = styled.div`
     padding-right: 25px;
 `;
 
-const Title = styled.h3`
-padding-left: ${grid}px;
+const Title = styled.h4`
+padding-left: 5px;
+padding-bottom: 25px;
 font-family: Helvetica Light;
-font-size: 1.75em;
+font-size: 1.5em;
 `;
-
 
 const size: number = 30;
 
@@ -145,11 +118,12 @@ export default class Task extends Component<Props> {
     );
     
     let loverWriteOptions = Object.entries(overWriteOptions).map((entry) => 
-    	<option value={entry[0]}> {entry[1]} </option>
+    	<MenuItem value={entry[0]}> {entry[1]} </MenuItem>
     );
     
     return (
-            <Container >
+    		 <Paper elevation={4}  sx={{paddingLeft:3,
+  		        paddingRight:3,width: '100%',height:'750px' }} >
 
             {!isShowDetails  &&
                <Content>
@@ -162,48 +136,79 @@ export default class Task extends Component<Props> {
               </Content>
             }
             {isShowDetails  &&
-                <Content>
             		<Title>{selTask.csvLabel}</Title>
-            	</Content>
             }
-            
+          
             {isShowDetails  &&
-              <Content>
-	              <form>
-	              <FormGroup>
-	              	<FormControlLabel>Entity name</FormControlLabel>
-	              	<FormControl.Static>{selTask.entityName}</FormControl.Static>
-	              </FormGroup>
-	             <FormGroup>
-	             	<FormControlLabel>Column name</FormControlLabel>
-	             	<FormControl.Static>{selTask.columnName}</FormControl.Static>
-	             </FormGroup>
-	             <FormGroup>
-	             	<FormControlLabel>Editable</FormControlLabel>
-	             	<FormControl.Static>{selTask.editable==true?"Yes":"No"}</FormControl.Static>
-	             </FormGroup>
-	              <FieldGroup
-	                name="csvLabel"
-	                id="csvLabel"
-	                type="text"
-	                label="Column label"
-	                placeholder="Enter column label"
-	                onChange={this.props.onChange}	
-	                value={selTask.csvLabel}	
-	              />
-            	 <FormGroup controlId="type">
-	              <FormControlLabel>Column DataType</FormControlLabel>
-	               <FormControl.Static>{dataTypes[selTask.type]}</FormControl.Static>
-	            </FormGroup>
-         	    <FormGroup controlId="overWriteOption">
-	              		<FormControlLabel>Overwrite Option</FormControlLabel>
-	              		<FormControl name="overWriteOption" componentClass="select" onChange={this.props.onChange} placeholder="Select OverWrite Option" value={selTask.overWriteOption}>
-	              			{loverWriteOptions}
-	              		</FormControl>
-	              </FormGroup>
-	              </form>	
-              </Content> }
-            </Container>
+            		<Stack spacing={3} >	
+			
+					<TextField
+	          		InputProps={{
+            			readOnly: true,
+          			}}
+	          		id="className"
+	          		label="Entity name"
+	          		value={selTask.entityName}
+					/>
+					
+					
+					<TextField
+	          		InputProps={{
+            			readOnly: true,
+          			}}
+	          		id="className"
+	          		label="Column name"
+	          		value={selTask.columnName}
+					/>
+					
+					<TextField
+	          		InputProps={{
+            			readOnly: true,
+          			}}
+	          		id="className"
+	          		label="Column name"
+	          		value={dataTypes[selTask.type]}
+					/>
+					
+					<FormControl fullWidth>
+					  <InputLabel id="editableSelLabel">Editable</InputLabel>
+					  <Select
+					    labelId="editableSelLabel"
+					    id="editable"
+					    value={selTask.editable?'Y':'N'}
+					    label="Editable"
+					     onChange={(e) => this.props.handleEditable(e)}  
+					    >
+					    <MenuItem value={'Y'}>True</MenuItem>
+					    <MenuItem value={'N'}>False</MenuItem>
+					  </Select>
+					</FormControl>
+				
+					<TextField
+		          		InputProps={{
+	            			readOnly: false,
+	          			}}
+		          		id="csvLabel"
+		          		label="Column Label"
+		          		value={selTask.csvLabel}
+					/>
+					
+					
+					<FormControl fullWidth>
+					  <InputLabel id="overWriteOptionLabel">Select OverWrite Option</InputLabel>
+					  <Select
+					    labelId="overWriteOptionLabel"
+					    id="overWriteOption"
+					    value={selTask.editable?'Y':'N'}
+					    label="Editable"
+					    >
+					  	{loverWriteOptions}
+					  </Select>
+					</FormControl>
+					
+					</Stack>
+	        }
+            </Paper>
     );
   }
 }
