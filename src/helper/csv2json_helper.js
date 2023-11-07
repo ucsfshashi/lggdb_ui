@@ -98,7 +98,7 @@ export async function CSVArray2JSON(array,headerObj,typesObj) {
 
 function getFormattedDate(excelSerialDate) {
 	 
-	  var date = new Date(Date.UTC(0, 0, excelSerialDate - 1));	
+	  var date = new Date(Date.UTC(0, 0, excelSerialDate));	
 	  var year = date.getFullYear();
 
 	  var month = (1 + date.getMonth()).toString();
