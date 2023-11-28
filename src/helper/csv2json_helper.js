@@ -1,8 +1,4 @@
-import moment from 'moment';
-
-moment.parseTwoDigitYear = function (yearStr) {
-    return parseInt(yearStr) + (parseInt(yearStr) > 19 ? 1900 : 2000);
-};
+//import moment from 'moment';
 
 async  function CSVToArray(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
@@ -106,9 +102,9 @@ function getFormattedDate(excelSerialDate) {
 	
 	
 
-	return moment(excelSerialDate, "MM/D/YY").format("MM/DD/YYYY");
+	//return moment(excelSerialDate, "MM/DD/YYYY").format("MM/DD/YYYY");
 	
-	/*
+	
 	  var date = new Date(Date.UTC(0, 0, excelSerialDate));	
 	  var year = date.getFullYear();
 
@@ -119,5 +115,5 @@ function getFormattedDate(excelSerialDate) {
 	  day = day.length > 1 ? day : '0' + day;
 	  
 	  return month + '/' + day + '/' + year;
-	  */
+	  
 }

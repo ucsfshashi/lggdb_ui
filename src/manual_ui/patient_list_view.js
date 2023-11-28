@@ -30,7 +30,6 @@ export default class PatientListView extends React.Component {
 		options.download=false;
 		options.search=false;
 		
-		
 		if(this.isNonPHI()) {
 			options.customToolbar= () => {
 		        return (
@@ -101,11 +100,23 @@ export default class PatientListView extends React.Component {
 		
 		this.props.rows.forEach(
 				function(elem){
+					
 					columns.push({
 				    	  name: elem.className+'_'+elem.id,
 				    	  label:elem.displayName,
-				    	  text: elem.displayName
+				    	  text: elem.displayName,
+				    	  options: {
+				    	        customBodyRender: (val) => {
+					    	          return (
+					    	        	 <div style={{overflow: "hidden", textOverflow: "ellipsis",cursor:'pointer', maxWidth: '200px',whiteSpace:'nowrap'}} title= {val}>
+					    	        		  {val}
+					    	        	</div>	  
+					    	          );
+					    	        }
+					    	      }
 				     	});
+					
+					
 					});
 		return columns;
 	};

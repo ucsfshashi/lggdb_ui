@@ -100,7 +100,7 @@ export default function Upload() {
 	      const workSheetName = workBook.SheetNames[0]
 	      const workSheet = workBook.Sheets[workSheetName]
 	      //convert to array
-	      const fileData = utils.sheet_to_json(workSheet, { header: 1,raw:false })
+	      const fileData = utils.sheet_to_json(workSheet, { header: 1,raw:true })
 	      
 	      csv2Json(fileData,headerObj);
 	     
