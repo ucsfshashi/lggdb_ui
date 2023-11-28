@@ -358,6 +358,9 @@ class PatientTextAreaInput extends React.Component {
           label={this.props.field.displayName}
           onChange={handleChange}
           value={this.props.value}
+          sx={{
+            '& .MuiOutlinedInput-input': {resize: 'auto' },
+          }}
           multiline
           minRows={2}
         />
