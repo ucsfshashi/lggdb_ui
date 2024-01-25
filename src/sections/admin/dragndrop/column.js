@@ -66,6 +66,10 @@ export default class Column extends Component<Props> {
     const tasks: TaskType[] = this.props.tasks;
     const selectedTaskIds: Id[] = this.props.selectedTaskIds;
     const draggingTaskId: ?Id = this.props.draggingTaskId;
+    const entities =  tasks.map((item) => item.entityName).filter((value, index, self) => self.indexOf(value) === index);
+
+  
+  
     return (
     		<Paper elevation={4}  sx={{paddingLeft:3,
   		        paddingRight:3,width: '100%',height:'750px' }} >

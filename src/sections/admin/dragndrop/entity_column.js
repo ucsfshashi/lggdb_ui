@@ -77,6 +77,8 @@ export default class EntityColumn extends Component<Props> {
 		 	this.setState({
 		 		selEntity: lSelEntity,
 		     });
+		 this.props.onSelEntity(lSelEntity);	
+		 	
 	}
 	
 	
@@ -86,6 +88,7 @@ export default class EntityColumn extends Component<Props> {
     const selectedTaskIds: Id[] = this.props.selectedTaskIds;
     const draggingTaskId: ?Id = this.props.draggingTaskId;
     const entities =  tasks.map((item) => item.entityName).filter((value, index, self) => self.indexOf(value) === index);
+    const filteredTasks = tasks.filter((x) => x.entityName === this.state.selEntity);
       
     return (
     		<Paper elevation={4}  sx={{paddingLeft:3,
@@ -99,7 +102,7 @@ export default class EntityColumn extends Component<Props> {
               isDraggingOver={snapshot.isDraggingOver}
               {...provided.droppableProps}
             >
-              {tasks.filter((x) => x.entityName === this.state.selEntity).map((task: TaskType, index: number) => {
+              {filteredTasks.map((task: TaskType, index: number) => {
                 const isSelected: boolean = Boolean(getSelectedMap(selectedTaskIds)[task.id]);
                 const isGhosting: boolean =
                   isSelected && Boolean(draggingTaskId) && draggingTaskId !== task.id;

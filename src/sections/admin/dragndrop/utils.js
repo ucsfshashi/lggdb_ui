@@ -26,6 +26,7 @@ const reorderSingleDrag = ({
   selectedTaskIds,
   source,
   destination,
+  selEntityName
 }: Args): Result => {
   // moving in the same list
   if (source.droppableId === destination.droppableId) {
@@ -55,11 +56,14 @@ const reorderSingleDrag = ({
   const foreign: Column = entities.columns[destination.droppableId];
 
   // the id of the task to be moved
-  const taskId: Id = home.tasks[source.index];
+  const taskId: Id = home.tasks.filter((x) => x.entityName === selEntityName)[source.index];
+  
+  
 
   // remove from home column
   const newHomeTaskIds: Id[] = [...home.tasks];
-  newHomeTaskIds.splice(source.index, 1);
+  const selIndex = newHomeTaskIds.findLastIndex((x) => x.id === taskId.id);
+  newHomeTaskIds.splice(selIndex, 1);
 
   // add to foreign column
   const newForeignTaskIds: Id[] = [...foreign.tasks];

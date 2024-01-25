@@ -97,6 +97,7 @@ export default class TaskApp extends Component<*, State> {
 	    	selectedTaskIds: [],
 	    	draggingTaskId: null,
 	    	isShowDetails : false,
+	    	selEntityName:'Patient',
 	    	selTask: null,
 	    };
 	}
@@ -143,6 +144,7 @@ export default class TaskApp extends Component<*, State> {
       selectedTaskIds: this.state.selectedTaskIds,
       source,
       destination,
+      selEntityName:this.state.selEntityName
     });
 
 	if(this.props.handleTemplateChange) {
@@ -254,6 +256,12 @@ export default class TaskApp extends Component<*, State> {
     
     
   }
+  
+  onSelEntity = (entityName) => {
+     this.setState({
+      selEntityName: entityName,
+    });
+ }
 
   // This behaviour matches the MacOSX finder selection
   multiSelectTo = (newTaskId: Id) => {
@@ -299,10 +307,10 @@ export default class TaskApp extends Component<*, State> {
               key={'todo'}
               draggingTaskId={this.state.draggingTaskId}
               toggleSelection={this.toggleSelection}
+              onSelEntity={this.onSelEntity}
               toggleSelectionInGroup={this.toggleSelectionInGroup}
               multiSelectTo={this.multiSelectTo}
             />
-            
            <Column
               column={entities.columns['done']}
               tasks={getTasks(entities, 'done')}
