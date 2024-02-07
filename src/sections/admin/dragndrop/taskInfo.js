@@ -108,6 +108,10 @@ export default class Task extends Component<Props> {
     event.preventDefault();
   };
   
+  handleChange = (evt) => {
+	 this.props.onChange(evt);
+   }
+  
   render() {
     
 	const isShowDetails = this.props.isShowDetails;
@@ -143,6 +147,7 @@ export default class Task extends Component<Props> {
             		<Stack spacing={3} >	
 			
 					<TextField
+					disabled
 	          		InputProps={{
             			readOnly: true,
           			}}
@@ -153,6 +158,7 @@ export default class Task extends Component<Props> {
 					
 					
 					<TextField
+					disabled
 	          		InputProps={{
             			readOnly: true,
           			}}
@@ -162,11 +168,12 @@ export default class Task extends Component<Props> {
 					/>
 					
 					<TextField
+					disabled
 	          		InputProps={{
             			readOnly: true,
-          			}}
+            		}}
 	          		id="className"
-	          		label="Column name"
+	          		label="Column DataType"
 	          		value={dataTypes[selTask.type]}
 					/>
 					
@@ -175,12 +182,13 @@ export default class Task extends Component<Props> {
 					  <Select
 					    labelId="editableSelLabel"
 					    id="editable"
-					    value={selTask.editable?'Y':'N'}
+					    name="editable"	
+					    value={selTask.editable}
 					    label="Editable"
-					     onChange={(e) => this.props.handleEditable(e)}  
+					     onChange={(e) => this.handleChange(e)}  
 					    >
-					    <MenuItem value={'Y'}>True</MenuItem>
-					    <MenuItem value={'N'}>False</MenuItem>
+					    <MenuItem value={true}>True</MenuItem>
+					    <MenuItem value={false}>False</MenuItem>
 					  </Select>
 					</FormControl>
 				
@@ -189,8 +197,10 @@ export default class Task extends Component<Props> {
 	            			readOnly: false,
 	          			}}
 		          		id="csvLabel"
+		          		name="csvLabel"	
 		          		label="Column Label"
 		          		value={selTask.csvLabel}
+						onChange={this.handleChange}
 					/>
 					
 					
@@ -199,8 +209,10 @@ export default class Task extends Component<Props> {
 					  <Select
 					    labelId="overWriteOptionLabel"
 					    id="overWriteOption"
-					    value={selTask.editable?'Y':'N'}
+					    	name="overWriteOption"		
+					    value={selTask.overWriteOption}
 					    label="Editable"
+					    onChange={(e) => this.handleChange(e)}  	
 					    >
 					  	{loverWriteOptions}
 					  </Select>

@@ -81,14 +81,21 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
 	  const headers = { 
    		   'Content-Type' :'application/json',
            'X-Requested-With':'XMLHttpRequest',
-           'UCSFAUTH-TOKEN':loginContext.token
+           'UCSFAUTH-TOKEN':loginContext.token,
+           'tagId':selTagInfo.tagId
    	  };
+	 
+	  var data={};
 	  
-	  var data=values;
+	  data['id'] = values.id;
+	  data['description'] = values.description;
+	  data['name'] = values.name;
+	  data['spreadSheetVariables'] = templateInfo.spreadSheetVariables;
+	  
 
-	  setLoginContext({apiUrl:configData.apiUrl})
+	  var url = loginContext.apiUrl+"/import/template";
 	  
-	  var rInfo=await axios.post(configData.apiUrl+"/studyTag/save", 
+	  var rInfo=await axios.post(url, 
 			  JSON.stringify(data), { headers }).catch((err) => {
 					if(err && err.response)
 						if(err.response.status != 200) 
@@ -101,14 +108,13 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
 		  window.location.reload(false);
 		  setCreateResponse("SUCCESS");
 	  }
-	  
   };
   
   
   const  handleTemplateChange = (tasks)  => {
       let template = {...templateInfo};
       template['spreadSheetVariables']=tasks;
-      setTemplateInfo(templateInfo);
+      setTemplateInfo(template);
   }
 
   const formik = useFormik({
