@@ -11,6 +11,7 @@ import { Stack, TextField, IconButton, Typography,
 	OutlinedInput,
 	InputAdornment,FormControl,InputLabel,MenuItem,FormHelperText,TextareaAutosize } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { createRef } from 'react';
 // component
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import axios from "axios";
@@ -19,8 +20,8 @@ import styled from 'styled-components';
 import configData from "../../../config.json";
 import {useAuth} from '../../../hooks/authContext.js';
 import TaskApp from '../dragndrop/task-app';
-
-
+import SaveIcon from '@mui/icons-material/Save';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) {
   
@@ -29,45 +30,15 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
   const [templateInfo, setTemplateInfo] = useState(null);
   const [selRole, setSelRole] = useState(null);
   const [createResponse, setCreateResponse] = useState(null);
+  const [lselTemplateId,setLselTemplateId] = useState(selTemplateId);
   const {loginContext, setLoginContext} = useAuth();
   const [loading, setLoading] = useState(true); 
+  const [enableDownload, setEnableDownload] = useState(true); 
+   const refOne=  createRef();
 
 
   useEffect(() => {
-	  const fetchData = async () => {
-	      var url = loginContext.apiUrl+"/import/template/"+selTemplateId;
-	   	 
-          setLoading(true);
-
-	      
-		  const response = await axios.get(url, 
-	                                {headers:{
-	                                  'Content-Type' :'applicaiton/json',
-	                                  'X-Requested-With':'XMLHttpRequest', 
-	                                  'UCSFAUTH-TOKEN':loginContext.token,
-	                                  'selRole':loginContext.selRole,
-	                                  'tagId':selTagInfo.tagId
-	                                }}
-	                                ).catch((err) => {
-	           if(err && err.response)
-	              if(err.response.status != 200) 
-	                  setError("Unable to load templated");
-	        });
-	  	  
-	  	    if(response && response.data) {
-	            setTemplateInfo(response.data);
-	       
-	            formik.setValues({
-	                id:response.data.id,
-	                name:response.data.name,
-	                description:response.data.description
-	              });
-	            
-	        }
-	        setLoading(false);
-
-      }
-      fetchData();
+	  fetchData(lselTemplateId);
       }, []);
 
   const RegisterSchema = Yup.object().shape({
@@ -75,6 +46,60 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
       description: Yup.string().min(20, 'Too Short!').max(2000, 'Too Long!').required('Description is required'),
      
   });
+ 
+ 
+  
+  const exportCSV = () => {
+      axios.get(
+    		  loginContext.apiUrl+"/import/template/sample/"+lselTemplateId,
+              {headers:{
+                  'X-Requested-With':'XMLHttpRequest', 
+                  'UCSFAUTH-TOKEN':loginContext.token,
+                  'selRole':loginContext.selRole
+                }}
+      ).then(response => {
+          let blob = new Blob([response.data], {type: 'application/octet-stream'})
+          let ref = refOne;
+          ref.current.href = URL.createObjectURL(blob)
+          ref.current.download = templateInfo.name+'.csv';
+          ref.current.click()
+      })
+  }
+  
+  
+  const fetchData = async (lTemplateId) => {
+	  
+	  var url = loginContext.apiUrl+"/import/template/"+lTemplateId;
+   	 
+      setLoading(true);
+      
+	  const response = await axios.get(url,
+                                {headers:{
+                                  'Content-Type' :'applicaiton/json',
+                                  'X-Requested-With':'XMLHttpRequest', 
+                                  'UCSFAUTH-TOKEN':loginContext.token,
+                                  'selRole':loginContext.selRole,
+                                  'tagId':selTagInfo.tagId
+                                }}
+                                ).catch((err) => {
+           if(err && err.response)
+              if(err.response.status != 200) 
+                  setError("Unable to load templated");
+        });
+  	  
+  	    if(response && response.data) {
+            setTemplateInfo(response.data);
+       
+            formik.setValues({
+                id:response.data.id,
+                name:response.data.name,
+                description:response.data.description
+              });
+            
+        }
+        setLoading(false);
+
+  }
   
   const registrationSubmit = async (values) => {
       
@@ -105,14 +130,16 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
 	  if(rInfo.status==208) {
 		  setCreateResponse("ALREADY_EXIST");
 	  } else if(rInfo.status==200) {
-		  window.location.reload(false);
 		  setCreateResponse("SUCCESS");
+		  setLselTemplateId(rInfo.data.id);
+		  fetchData(rInfo.data.id);
+		  setEnableDownload(true);
 	  }
   };
   
-  
   const  handleTemplateChange = (tasks)  => {
       let template = {...templateInfo};
+      setEnableDownload(false);
       template['spreadSheetVariables']=tasks;
       setTemplateInfo(template);
   }
@@ -150,43 +177,53 @@ export default function SaveTemplateForm({goBackList,selTagInfo,selTemplateId}) 
     <FormikProvider value={formik} >
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         
-      { !createResponse &&	
-      <Stack spacing={3}  sx={{ 'paddingLeft':'100px','paddingTop':'50px','paddingBottom':'50px' }}  >
+      { <Stack spacing={3}  sx={{ 'paddingLeft':'50px','paddingTop':'20px','paddingBottom':'50px' }}  >
      
 	       <Stack direction={{ xs: 'column', sm: 'row' }}  spacing={8}>
 	       
-	       <TextField
-   		  sx={{ 'width':'450px' }} 
+	       <TextField 
    		  label="Template Name"
-   		  disabled={templateInfo!=null}	  
+   		  disabled={templateInfo && templateInfo.id!=null}	  
            {...getFieldProps('name')}
            error={Boolean(touched.tagName && errors.tagName)}
            helperText={touched.tagName && errors.tagName}
+           inputProps={{style: {fontSize: '1.5rem','width':'500px'}}} // font size of input text
+           InputLabelProps={{style: {fontSize: '1.5rem',color:'black',fontWeight:'bold'}}} // font size of input label	   
          />
-   	    <TextField
-         	sx={{ 'width':'700px' }} 
+   	    
+        <TextField
            label="Description"
            multiline
            minRows={1}	  
            {...getFieldProps('description')}
            error={Boolean(touched.description && errors.description)}
            helperText={touched.description && errors.description}
+           inputProps={{style: {fontSize: '1.5rem','width':'800px'}}} // font size of input text
+           InputLabelProps={{style: {fontSize: '1.5rem',color:'black',fontWeight:'bold'}}} // font size of input label	
          />
-           		<LoadingButton
+          
+           <Stack direction={{ xs: 'column', sm: 'row' }}  spacing={1}>
+           <div>
+           <LoadingButton
 		            type="submit"
 		            variant="contained"
 		            disabled={!(formik.isValid && formik.dirty) }
 		            loading={isSubmitting}>
-		            Save Template
-		          </LoadingButton>
-		         
-		        <LoadingButton
-		            type="submit"
-		            variant="contained"
-		            disabled={(formik.isValid || formik.dirty) }
-		            loading={isSubmitting}>
-		            Download Template
-		        </LoadingButton>    
+           			<SaveIcon fontSize="large" />  <Typography variant="h5" >{" Save"}</Typography>
+		    </LoadingButton>
+		   </div>
+		   <div>
+	        <LoadingButton
+	            variant="contained"
+	            disabled={!(enableDownload)}	
+	            onClick={() => exportCSV()}
+	            loading={isSubmitting}>
+	            <CloudDownloadIcon fontSize="large" /><Typography variant="h5">{" Download"}</Typography>
+	        </LoadingButton>  
+            <a style={{display: 'none'}} href='empty' ref={refOne}>ref</a>
+
+	     </div>  
+	     </Stack>    
 		            
 		   </Stack>
 		   

@@ -54,32 +54,34 @@ export default function Templates({selTagInfo,goBackList}) {
 
    
   useEffect(() => {
-      const fetchData = async () => {
-      
-    	  var url = loginContext.apiUrl+"/import/template/list/basics";
-    	 
-    	  const response = await axios.get(url, 
-                                  {headers:{
-                                    'Content-Type' :'applicaiton/json',
-                                    'X-Requested-With':'XMLHttpRequest', 
-                                    'UCSFAUTH-TOKEN':loginContext.token,
-                                    'selRole':loginContext.selRole,
-                                    'tagId':selTagInfo.tagId
-                                  }}
-                                  ).catch((err) => {
-             if(err && err.response)
-                if(err.response.status != 200) 
-                    setError("Unable to load templates");
-          });
-    	  
-    	  if(response && response.data) {
-              setData(response.data);
-              setLoading(false);
-           }
-         
-      };
       fetchData();
-      }, []);
+  }, []);
+  
+  
+  const fetchData = async () => {
+      
+	  var url = loginContext.apiUrl+"/import/template/list/basics";
+	 
+	  const response = await axios.get(url, 
+                              {headers:{
+                                'Content-Type' :'applicaiton/json',
+                                'X-Requested-With':'XMLHttpRequest', 
+                                'UCSFAUTH-TOKEN':loginContext.token,
+                                'selRole':loginContext.selRole,
+                                'tagId':selTagInfo.tagId
+                              }}
+                              ).catch((err) => {
+         if(err && err.response)
+            if(err.response.status != 200) 
+                setError("Unable to load templates");
+      });
+	  
+	  if(response && response.data) {
+          setData(response.data);
+          setLoading(false);
+       }
+     
+  };
   
   
   const handleTemplateClick=(data) => {
@@ -88,19 +90,42 @@ export default function Templates({selTagInfo,goBackList}) {
       setSelTemplateId(data.id);
       setLoading(false);	
   }
-  
+  	
   
   const goBackTemplates=() => {
       setLoading(true);	
       setTemplateAction("view");
-      setLoading(false);	
+      fetchData();
+      setLoading(false);
+      
   }
   
   const handlRemoveClick=(data) => {
-      setLoading(true);	
+		if (window.confirm('Are you sure you want to delete "'+data.name +' " study template ?')) {
+				removeTemplate(data);
+		}
   }
   
   
+  const removeTemplate = async (data) => {
+	  
+     var url = loginContext.apiUrl+"/import/template/"+data.id;
+
+     var rInfo=await axios.delete(url, 
+			  { headers:{
+				  'Content-Type' :'application/json',
+				  'X-Requested-With':'XMLHttpRequest',
+				  'UCSFAUTH-TOKEN':loginContext.token
+			  },data:{} }).catch((err) => {
+					if(err && err.response)
+						if(err.response.status != 200) 
+							window.alert("Error while deleting Template");
+						});    
+	 
+	  if(rInfo.status==200) {
+		  fetchData();
+	  }
+  }
   
   const getColumns= () =>{
 	
@@ -171,7 +196,10 @@ export default function Templates({selTagInfo,goBackList}) {
   };
   
   const addOnClick=(e) => {
-	 
+	  setLoading(true);	
+	  setTemplateAction("add");
+	  setSelTemplateId(null);
+	  setLoading(false);
   };
   
   const getOptions =() =>{
@@ -245,6 +273,22 @@ export default function Templates({selTagInfo,goBackList}) {
 	    			</Paper>	
 	    	    </Stack>
 	      }
+	      
+	       { templateAction == "add" && 	
+	    	    <Stack>
+		    	   <Box sx={{ pb: 5 }}>
+			        <Stack direction="row" alignItems="center" spacing={0.5}>    
+			          <Typography variant="h4">Studies:({selTagInfo.tagName}):(Templates) </Typography>
+			          <IconButton aria-label="restart" size="medium"  onClick={() => goBackTemplates()}>
+			            <ResetTvIcon color="success" fontSize="inherit" />
+			          </IconButton>    
+			        </Stack>
+			        </Box>
+	    			<Paper>
+	    			<SaveTemplateForm selTagInfo={selTagInfo}  selTemplateId={'empty'}  />
+	    			</Paper>	
+	    	    </Stack>
+	      } 
 	      
 	     </Page>
   );

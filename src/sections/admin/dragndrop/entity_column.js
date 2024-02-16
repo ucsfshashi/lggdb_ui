@@ -91,7 +91,7 @@ export default class EntityColumn extends Component<Props> {
     const filteredTasks = tasks.filter((x) => x.entityName === this.state.selEntity);
       
     return (
-    		<Paper elevation={4}  sx={{paddingLeft:3,
+    		<Paper elevation={6}  sx={{paddingLeft:3,
   		        paddingRight:3,width: '100%',height:'750px' }} >
 
         <Title> <LongMenu  options={entities} onSelEntity={(entityName)=>this.onSelEntity(entityName)}/>  </Title>

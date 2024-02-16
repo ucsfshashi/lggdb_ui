@@ -12,12 +12,16 @@ export default function LongMenu(props) {
   const [selValue, setSelValue] = React.useState('Patient');
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+	if(event.currentTarget) {  
+		setAnchorEl(event.currentTarget);
+	}
   };
   const handleClose = (val) => {
-    setSelValue(val);
-    props.onSelEntity(val);
-    setAnchorEl(null);
+    if(typeof val === 'string') {  
+		setSelValue(val);
+	    props.onSelEntity(val);
+	    setAnchorEl(null);
+	}
   };
 
   return (
@@ -25,6 +29,7 @@ export default function LongMenu(props) {
       <IconButton
         aria-label="more"
         id="long-button"
+        sx={{'color':'black','fontWeight':'bold'}}	
         aria-controls={open ? 'long-menu' : undefined}
         aria-expanded={open ? 'true' : undefined}
         aria-haspopup="true"
@@ -46,7 +51,7 @@ export default function LongMenu(props) {
         }}
       >
         {props.options.map((option) => (
-          <MenuItem key={option} selected={option === selValue} onClick={()=>handleClose(option)}>
+          <MenuItem key={option} sx={{'color':'black','fontWeight':'bold'}} selected={option === selValue} onClick={()=>handleClose(option)}>
             {option}
           </MenuItem>
         ))}
