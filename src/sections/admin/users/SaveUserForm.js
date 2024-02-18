@@ -22,7 +22,7 @@ import {useAuth} from '../../../hooks/authContext.js';
 
 const roles = [{id:"PHI_ACCESS",name:"PHI access user"},
     		  {id:"NON_PHI",name:"Non-PHI access user"},
-    		  {id:"STUDY_NAME",name:"Study co-ordinator"},
+    		  {id:"STUDY_ADMIN",name:"Study co-ordinator"},
     		  {id:"ADMIN",name:"Adminstrator"}];
 
 export default function SaveUserForm({goBackList,selUserInfo}) {
