@@ -1,9 +1,9 @@
 import { merge } from 'lodash';
 import ReactApexChart from 'react-apexcharts';
-// material
 import { Card, CardHeader, Box } from '@mui/material';
-//
 import { BaseOptionChart } from '../../../components/charts';
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
 
 // ----------------------------------------------------------------------
 
@@ -11,36 +11,42 @@ const CHART_DATA = [
   {
     name: 'Inital count',
     type: 'column',
-    data: [23, 11, 22, 27, 13, 22, 37, 21, 10]
+    data: []
   },
   {
     name: 'Undefined count',
     type: 'column',
-    data: [124, 115, 117,112,114, 113, 110, 121, 17]
+    data: []
   },
   {
 	    name: 'Recurrent count',
 	    type: 'column',
-	    data: [11, 6, 7, 8, 9, 10, 12, 31, 5]
+	    data: []
 	   },
 	  
   {
     name: 'Initial accumlation',
     type: 'area',
-    data: [23, 34, 56, 83, 96, 118, 155, 176, 186]
+    data: []
   },
   
   {
     name: 'Recurrent accumlation',
     type: 'line',
-    data: [11, 17, 24, 32,41, 51,63, 94, 99]
+    data: []
   }
 ];
 
 
 
 
-export default function SurgeryAccumlation() {
+export default function SurgeryAccumlation(input) {
+	
+  const [xyz, setXyz] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState(CHART_DATA);
+	
+	
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: [0, 2, 3,4] },
     plotOptions: { bar: { columnWidth: '12%', borderRadius: 5 } },
@@ -54,7 +60,7 @@ export default function SurgeryAccumlation() {
       '2020',
       '2021',
       '2022',
-      '2023'
+      '2023',
     ],
     xaxis: { type: 'string' },
     tooltip: {
@@ -70,12 +76,100 @@ export default function SurgeryAccumlation() {
       }
     }
   });
+  
+  
+const extractData = async() => {
+	  
+	  if(xyz<2) {
+	      setLoading(true);
+	      var path ='/patients/ivsr/summary';
+	      var summaryInfo = await axios.get(input.loginContext.apiUrl+""+path, 
+	                                  {headers:{
+	                                    'Content-Type' :'applicaiton/json',
+	                                    'X-Requested-With':'XMLHttpRequest', 
+	                                    'UCSFAUTH-TOKEN':input.loginContext.token,
+	                                     'tagId':input.loginContext.selTag.tagId,
+	                                     'Accept': 'application/json',
+	                                  }}
+	                                  );
+	      if(summaryInfo) {
+	    	  summaryInfo = summaryInfo.data;
+	    	  var lChartData = chartData;
+	    	  
+	    	  // I values
+	    	  var IValues = summaryInfo.filter(x => x.initalVsRecurrFlag == 'I');
+	    	  var cummCnt =0;
+	    	  lChartData[0].data =[];
+	    	  lChartData[3].data =[];
+	    	  
+	    	  for(let index=2015; index<=2023; index++)  {
+	    		  var lVal = IValues.filter(x=>x.year ==index);
+	    		
+	    		  if(lVal.length > 0) {
+	    			  lChartData[0].data.push(lVal[0].count);
+	    			  cummCnt =cummCnt+lVal[0].count
+	    		  } else {
+	    			  lChartData[0].data.push(0);
+	    		  }
+	    		  lChartData[3].data.push(cummCnt);
+	    	  }
+	    	  
+	    	  // R Values
+	    	  IValues = summaryInfo.filter(x => x.initalVsRecurrFlag == 'R');
+	    	  var cummCnt =0;
+	    	  lChartData[2].data =[];
+	    	  lChartData[4].data =[];
+	    	  
+	    	  for(let index=2015; index<=2023; index++)  {
+	    		  var lVal = IValues.filter(x=>x.year ==index);
+	    		
+	    		  if(lVal.length > 0) {
+	    			  lChartData[2].data.push(lVal[0].count);
+	    			  cummCnt =cummCnt+lVal[0].count
+	    		  } else {
+	    			  lChartData[2].data.push(0);
+	    		  }
+	    		  lChartData[4].data.push(cummCnt);
+	    	  }
+	    	  
+	    	  
+	    	// R Values
+	    	  IValues = summaryInfo.filter(x => x.initalVsRecurrFlag == 'N');
+	    	  var cummCnt =0;
+	    	  lChartData[1].data =[];
+	    	  
+	    	  for(let index=2015; index<=2023; index++)  {
+	    		  var lVal = IValues.filter(x=>x.year ==index);
+	    		
+	    		  if(lVal.length > 0) {
+	    			  lChartData[1].data.push(lVal[0].count);
+	    			  cummCnt =cummCnt+lVal[0].count
+	    		  } else {
+	    			  lChartData[1].data.push(0);
+	    		  }
+	    	  }
+	    	 
+	    	  setChartData(lChartData);
+	       }
+	      setLoading(false);
+	      setXyz(xyz+1);
+	  }
+ };
+  
+ 
+ 
+ 
+ 
+ 
+  useEffect(() => {
+		 extractData();
+	  }, []);
 
   return (
     <Card>
       <CardHeader title="Summary of Initial vs Recurrent Glioma Surgeries (Yearly and Cumulative Accrual), 2015-2023" subheader="" />
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-        <ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={364} />
+        <ReactApexChart type="line" series={chartData} options={chartOptions} height={364} />
       </Box>
     </Card>
   );
