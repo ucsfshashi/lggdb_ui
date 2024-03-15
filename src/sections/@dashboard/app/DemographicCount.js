@@ -101,7 +101,7 @@ export default function DemographicCount(input) {
 
   return (
     <Card>
-      <CardHeader title="Distribution of Race/Ethnicity" />
+      <CardHeader title={"Distribution of Race/Ethnicity ,["+ input.loginContext.selTag.tagName +"]"} />
     	  <ChartWrapperStyle dir="ltr">
 	      {
 	        loading == true &&  <CircularProgress disableShrink sx={{marginTop:'150px',marginLeft:'150px'}}/>
