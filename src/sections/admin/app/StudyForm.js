@@ -145,13 +145,13 @@ export default function StudyForm() {
 		  
 	};	
 		
-	const handleStudyClick=(data) => {
+	const handleStudyClick=(tagId) => {
 	
 		
       setLoading(true);	
 	  
       const fetchData = async () => {
-	      var url = loginContext.apiUrl+"/studyTag/"+data.tagId;
+	      var url = loginContext.apiUrl+"/studyTag/"+tagId;
 	   	 
 		  const response = await axios.get(url, 
 	                                {headers:{
@@ -183,11 +183,15 @@ export default function StudyForm() {
    	
    	options.customBodyRender = (value, tableMeta, updateValue) => {
 			return (
-					<Link size="small" color="primary" sx={{'cursor':'pointer'}} onClick={(event)=>handleStudyClick(data[tableMeta.rowIndex])} >
+					<Link size="small" color="primary" sx={{'cursor':'pointer'}} onClick={(event)=>handleStudyClick(tableMeta.rowData[5])} >
 					   {value}
 			        </Link>
 	      );
 		};
+		
+		
+		
+		
 		
 	       columns.push({
 	    	   name: 'tagName',
@@ -257,7 +261,7 @@ export default function StudyForm() {
 	       options = {};
 	       options.customBodyRender = (value, tableMeta, updateValue) => {
 				return (
-					<StudyChildMenu  config={loginContext} loginContext={loginContext} setSelTagInfo={setSelTagInfo} setStudyAction={setStudyAction} tag={data[tableMeta.rowIndex]} />
+					<StudyChildMenu  config={loginContext} loginContext={loginContext} setSelTagInfo={setSelTagInfo} setStudyAction={setStudyAction} tag={data.find(({ tagId }) => tagId === tableMeta.rowData[5])} />
 	           );
 			};
 	       
@@ -265,7 +269,7 @@ export default function StudyForm() {
 		  options.viewColumns=false;
 		  options.sort=false;
 	       columns.push({
-	    	   name: 'id',
+	    	   name: 'tagId',
 	    	   label: 'Actions'
 	    	});
 	       

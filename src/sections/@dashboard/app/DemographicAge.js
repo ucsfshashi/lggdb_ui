@@ -100,10 +100,10 @@ export default class DemographicAge extends React.Component {
     render() {
       return (
     	<Card>
-    	<CardHeader title="Distribution of Age Group at Diagnosis" />
+    	<CardHeader title={"Distribution of Age Group at Diagnosis ,["+ this.props.loginContext.selTag.tagName +"]"}/>
     		<ChartWrapperStyle dir="ltr">
     	    { this.state.series[0].data && this.state.series[0].data.length >0 && 
-    		<ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />}
+    		<ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
     	    }
     	    </ChartWrapperStyle>
     	</Card>

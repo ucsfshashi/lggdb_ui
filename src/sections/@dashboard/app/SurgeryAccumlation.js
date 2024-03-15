@@ -9,7 +9,7 @@ import axios from "axios";
 
 const CHART_DATA = [
   {
-    name: 'Inital count',
+    name: 'Initial count',
     type: 'column',
     data: []
   },
@@ -25,13 +25,13 @@ const CHART_DATA = [
 	   },
 	  
   {
-    name: 'Initial accumlation',
+    name: 'Initial accumulation',
     type: 'area',
     data: []
   },
   
   {
-    name: 'Recurrent accumlation',
+    name: 'Recurrent accumulation',
     type: 'line',
     data: []
   }
@@ -167,7 +167,7 @@ const extractData = async() => {
 
   return (
     <Card>
-      <CardHeader title="Summary of Initial vs Recurrent Glioma Surgeries (Yearly and Cumulative Accrual), 2015-2023" subheader="" />
+      <CardHeader title="Summary of Initial vs Recurrent Glioma Surgeries (Yearly and Cumulative), BTCDB Overall, 2015-2023" subheader="" />
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
         <ReactApexChart type="line" series={chartData} options={chartOptions} height={364} />
       </Box>

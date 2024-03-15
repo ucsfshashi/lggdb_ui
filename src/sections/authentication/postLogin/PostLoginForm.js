@@ -60,6 +60,7 @@ export default function PostLoginForm() {
       
       const {loginContext, setLoginContext} = useAuth();
       const [userInfo, setUserInfo] = useState(null);
+      const [userTags, setUserTags] = useState(null);
       const [selTagInfo, setSelTagInfo] = useState(loginContext.selTag);
       const [selTagIndex, setSelTagIndex] = useState(null);
       const [isDisabled, setIsDisabled] = useState(true);
@@ -84,7 +85,25 @@ export default function PostLoginForm() {
                   if(err.response.status != 200) 
                       setError("User name or Password is invalid");
             });    
+            
             setUserInfo(response.data.principal);
+            
+            if(response.data.principal.tags && response.data.principal.tags.length >0 ){
+	            let tags = response.data.principal.tags.sort((a, b) => {
+	            	  const nameA = a.tagName.toUpperCase(); // ignore upper and lowercase
+	            	  const nameB = b.tagName.toUpperCase(); // ignore upper and lowercase
+	            	  if (nameA < nameB) {
+	            	    return -1;
+	            	  }
+	            	  if (nameA > nameB) {
+	            	    return 1;
+	            	  }
+	
+	            	  // names must be equal
+	            	  return 0;
+	            	});
+	            setUserTags(tags);
+	        }
             
            
             if(loginContext.selTag && response.data.principal ) {
@@ -150,7 +169,7 @@ export default function PostLoginForm() {
   };
     
   const handleStudyChange = (event: SelectChangeEvent) => {
-    setSelTagInfo(userInfo.tags[event.target.value]);
+    setSelTagInfo(userTags[event.target.value]);
     setSelTagIndex(event.target.value);  
     setIsDisabled(false);    
   };
@@ -194,7 +213,7 @@ export default function PostLoginForm() {
             <FormHelperText><strong>{roles.descriptions[roleId]}</strong></FormHelperText>
             </FormControl>
             	{
-            		(roleId != 'ADMIN' && roleId != 'STUDY_ADMIN' && userInfo && (!userInfo.tags  ||  userInfo.length ==0 )) && 
+            		(roleId != 'ADMIN' && roleId != 'STUDY_ADMIN' && userInfo && (!userTags  ||  userInfo.length ==0 )) && 
                     <Alert severity="info"     variant="none"  >
                          <AlertTitle>No Studies associated with your account</AlertTitle>
                          Currently no studies are associated with your account.  
@@ -212,7 +231,7 @@ export default function PostLoginForm() {
             	}
             	{
             		(roleId && roleId != 'ADMIN'  && roleId != 'STUDY_ADMIN' && userInfo
-            			&&  userInfo.tags &&  userInfo.tags.length >0 && 
+            			&&  userTags &&  userTags.length >0 && 
         				<FormControl sx={{ m: 1, minWidth: 120 }} >
             			
                             <InputLabel id="demo-select-study-small">Select Study</InputLabel>
@@ -223,7 +242,7 @@ export default function PostLoginForm() {
                                 label="Select Study"
                                 onChange={handleStudyChange}
                                 >
-                                {userInfo && userInfo.tags && userInfo.tags.map(function(rec, index){
+                                {userInfo && userTags && userTags.map(function(rec, index){
                                 return <MenuItem value={index}>{rec.tagName}</MenuItem>;
                                 })}
                             </Select>
