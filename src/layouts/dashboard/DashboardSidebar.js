@@ -79,7 +79,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={'https://ui-avatars.com/api/?name='+loginContext.displayName} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                 {loginContext.displayName}
+                 {loginContext.displayName.replace("," ," ")}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                  {names[loginContext.selRole]}
