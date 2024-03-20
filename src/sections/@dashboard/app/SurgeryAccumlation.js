@@ -25,13 +25,13 @@ const CHART_DATA = [
 	   },
 	  
   {
-    name: 'Initial accumulation',
+    name: 'Initial Cumulative',
     type: 'area',
     data: []
   },
   
   {
-    name: 'Recurrent accumulation',
+    name: 'Recurrent Cumulative',
     type: 'line',
     data: []
   }
