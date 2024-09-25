@@ -86,7 +86,6 @@ export default class AttentionView extends React.Component {
 	   
 	   //Sort Entities
 	   entities.sort();
-	
 	   this.setState({entities:entities,
 	   				  entitiesIcons:entitiesIcons,
 	   				  fieldsInfo:fieldsInfo,

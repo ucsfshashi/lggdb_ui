@@ -13,6 +13,7 @@ import PostLogin from './pages/PostLogin';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import AdminApp from './pages/AdminApp';
+import SynonymApp from './pages/SynonymApp';
 import UsersApp from './pages/UsersApp';
 import PatientApp from './pages/PatientApp';
 import Query from './pages/Query';
@@ -39,7 +40,8 @@ export default function Router() {
         element: <AdminLayout />,
         children: [
           { path: 'app', element: <AdminApp /> },
-          { path: 'users', element: <UsersApp /> }
+          { path: 'users', element: <UsersApp /> },
+          { path: 'synonym', element: <SynonymApp /> }
         ]
     },
     {
