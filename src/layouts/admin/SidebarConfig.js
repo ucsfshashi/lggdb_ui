@@ -16,6 +16,12 @@ const sidebarConfig = [
     path: '/admin/users',
     icon: getIcon('eva:people-fill')
   }
+  ,
+  {
+    title: 'Synonym Repository',
+    path: '/admin/synonym',
+    icon: getIcon('eva:share-outline')
+  }
 ];
 
 export default sidebarConfig;
