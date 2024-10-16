@@ -248,7 +248,7 @@ export default function SynonymSaveForm() {
 				  var dataList = fieldVals[fieldIds[selVal][index]];
 			
 				  dataList.forEach(function(element,index) {
-					  if(element &&  resData.findIndex(x => x.key === element) == -1 ) {
+					  if(element &&  resData.findIndex(x => equalsIgnoreCaseAndTrim(x.key,element)) == -1 ) {
 						  resData.push({"key":element,"val":""});
 					  }
 				  });
@@ -262,7 +262,11 @@ export default function SynonymSaveForm() {
 		  }
 	  };
 	 
-     const extractData = (data) => {
+	  const equalsIgnoreCaseAndTrim = (str1, str2)  => {
+		  return str1.trim().toLowerCase() === str2.trim().toLowerCase();
+	  };
+	  
+	  const extractData = (data) => {
     	  
   	   var entities =[];
   	   var entitiesIcons=[];
