@@ -99,7 +99,7 @@ export default function SynonymSaveForm() {
           });
     	  
     	  if(response && response.data) {
-              fetchRepoInfo(selVal,selFldId);
+              fetchRepoInfo(selVal.id,selFldId.id);
               setIsLoading(false);
            } else {
         	   setRepoData([]);
@@ -146,7 +146,9 @@ export default function SynonymSaveForm() {
 	  
 	  const onFieldSelect = (event, values) => {
 		  setSelFldId(values);
-		  fetchRepoInfo(selVal,values);
+		  if(values) {
+			  fetchRepoInfo(selVal.id,values.id);
+		  }
 	  };
 	  
 	  const updateKey =(val,tableMeta) => {
@@ -241,11 +243,11 @@ export default function SynonymSaveForm() {
 	  const getKeyData = (keys,fieldName) => {
 		  
 		  if(selVal) {
-			  var index = fieldOptions[selVal].indexOf(fieldName);
+			  var index = fieldOptions[selVal.id].findIndex(e => e.id == fieldName); 
 			  var resData =keys;
 			  
 			  if(index != -1) {
-				  var dataList = fieldVals[fieldIds[selVal][index]];
+				  var dataList = fieldVals[fieldIds[selVal.id][index]];
 			
 				  dataList.forEach(function(element,index) {
 					  if(element &&  resData.findIndex(x => equalsIgnoreCaseAndTrim(x.key,element)) == -1 ) {
@@ -269,6 +271,7 @@ export default function SynonymSaveForm() {
 	  const extractData = (data) => {
     	  
   	   var entities =[];
+  	   var entitiesOptions=[];
   	   var entitiesIcons=[];
   	   var  fieldsInfo=[];
   	    var fieldIds=[];
@@ -277,21 +280,23 @@ export default function SynonymSaveForm() {
   	   data.forEach(function(element,index) {
   	   
   		   if(element.type == 'enum') {
-	  		   if(entities.indexOf(element.topic) == -1) {
-	  	    		 entities.push(element.topic);
-	  	    		 entitiesIcons[element.topic]=element.icon; 
-	  	    		 fieldsInfo[element.topic]=[]; 
-	  	    		 fieldIds[element.topic]=[]; 
-	  	    		 fieldVals[element.topic]=[]; 
+	  		  
+  			   if(entities.indexOf(element.topic) == -1) {
+	  			     entitiesOptions.push({ 'label': element.topic, 'id': element.className });
+	  			     entities.push(element.topic);
+	  	    		 entitiesIcons[element.className]=element.icon; 
+	  	    		 fieldsInfo[element.className]=[]; 
+	  	    		 fieldIds[element.className]=[]; 
+	  	    		 fieldVals[element.className]=[]; 
 	  	    		  
 	  	    	 }
-  	    		 fieldsInfo[element.topic].push(element.displayName);
-  	    		 fieldIds[element.topic].push(element.id);
+  	    		 fieldsInfo[element.className].push({ 'label':element.displayName, 'id': element.id });
+  	    		 fieldIds[element.className].push(element.id);
   	    		 fieldVals[element.id]=element.values;
   	    	 }
   	    });
   	  
-  	    setEntityOptions(entities);
+  	    setEntityOptions(entitiesOptions);
   	    setFieldOptions(fieldsInfo);
   	    setFieldIds(fieldIds);
   	    setFieldVals(fieldVals);
@@ -317,7 +322,7 @@ export default function SynonymSaveForm() {
 			        id="field-id"
 			        onChange={onFieldSelect}	
 			        value={selFldId}	
-			        options={selVal?fieldOptions[selVal]:[]}
+			        options={selVal?fieldOptions[selVal.id]:[]}
 			        sx={{ width: 300 }}
 			        renderInput={(params) => <TextField {...params} label="Field Name" />} />
 			 
@@ -331,7 +336,7 @@ export default function SynonymSaveForm() {
 		    </Stack> 
 			 
 			 <MUIDataTable
-			  title={selVal+" : "+selFldId}
+			  title={(selVal && selFldId )? selVal.label+" : "+selFldId.label:''}
 			  data={repoData}
 			  columns={getColumns()}
 			  options={options}
