@@ -79,11 +79,37 @@ export default function Upload() {
 	  
 	  const csv2Json = async (data,headerObj) => {
           const queryData = await CSVArray2JSON(data,headerObj,typesObj); 
-          setData(queryData);
+          setData(applySynonyms(queryData));
           setLoading(false);
         }
-	  
-
+        
+     
+     const applySynonyms = (queryData) => {
+     
+        for(var lIndx in queryData) { 
+             
+             for(var oIndx in queryData[lIndx]){
+                const lst = synonyms(oIndx);
+               
+                if(lst && lst[queryData[lIndx][oIndx]]) {
+                  queryData[lIndx][oIndx] = lst[queryData[lIndx][oIndx]];
+                }
+                
+             } 
+          }
+          
+          return queryData;
+     }   
+     
+     
+     const synonyms = (fieldName) => {
+     
+       if(loginContext.schema.find(ele => ele.id ==fieldName)) {
+         return  loginContext.schema.find(ele => ele.id ==fieldName).synonym;
+       } 
+     	return null;
+     }
+	
 	  const importExcel = (e) => {
 		
 		setLoading(true);
