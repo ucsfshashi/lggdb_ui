@@ -61,7 +61,8 @@ export default function PostLoginForm() {
       const {loginContext, setLoginContext} = useAuth();
       const [userInfo, setUserInfo] = useState(null);
       const [userTags, setUserTags] = useState(null);
-      const [selTagInfo, setSelTagInfo] = useState(loginContext.selTag);
+	  const [nonPhiTags, setNonPhiTags] = useState(null);
+	  const [selTagInfo, setSelTagInfo] = useState(loginContext.selTag);
       const [selTagIndex, setSelTagIndex] = useState(null);
       const [isDisabled, setIsDisabled] = useState(true);
       const [roleId, setRoleId] = useState(loginContext.authority);
@@ -104,9 +105,28 @@ export default function PostLoginForm() {
 	            	});
 	            setUserTags(tags);
 	        }
+			
+			
+			if(response.data.principal.nonPhiTags && response.data.principal.nonPhiTags.length >0 ){
+						            let nonPhiTags = response.data.principal.nonPhiTags.sort((a, b) => {
+						            	  const nameA = a.tagName.toUpperCase(); // ignore upper and lowercase
+						            	  const nameB = b.tagName.toUpperCase(); // ignore upper and lowercase
+						            	  if (nameA < nameB) {
+						            	    return -1;
+						            	  }
+						            	  if (nameA > nameB) {
+						            	    return 1;
+						            	  }
+			
+						            	  // names must be equal
+						            	  return 0;
+						            	});
+						            setNonPhiTags(nonPhiTags);
+						        }
+								
+			
             
-           
-            if(loginContext.selTag && response.data.principal ) {
+           if(loginContext.selTag && response.data.principal ) {
                 var selTagIndex = response.data.principal.tags.map(object => object.tagId).indexOf(loginContext.selTag.tagId);
                 setSelTagIndex(selTagIndex);
                 
@@ -162,7 +182,7 @@ export default function PostLoginForm() {
   
   const handleChange = (event: SelectChangeEvent) => {
     setRoleId(event.target.value);
-    setIsDisabled(!(event.target.value =='ADMIN' || event.target.value =='STUDY_ADMIN'))  
+    setIsDisabled(!(event.target.value =='ADMIN' || (event.target.value =='STUDY_ADMIN' && userInfo && userInfo.adminTags &&  userInfo.adminTags.length > 0 )));  
     setSelTagInfo(null);
     setSelTagIndex(null);  
       
@@ -173,6 +193,13 @@ export default function PostLoginForm() {
     setSelTagIndex(event.target.value);  
     setIsDisabled(false);    
   };
+  
+  const handleNonPhiStudyChange = (event: SelectChangeEvent) => {
+     setSelTagInfo(nonPhiTags[event.target.value]);
+     setSelTagIndex(event.target.value);  
+     setIsDisabled(false);    
+   };
+  
     
     const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -230,8 +257,8 @@ export default function PostLoginForm() {
                     </Alert>   
             	}
             	{
-            		(roleId && roleId != 'ADMIN'  && roleId != 'STUDY_ADMIN' && userInfo
-            			&&  userTags &&  userTags.length >0 && 
+            		(roleId && roleId == 'PHI_ACCESS' && userInfo
+            			&&  userTags &&  userTags.length >0 ) && 
         				<FormControl sx={{ m: 1, minWidth: 120 }} >
             			
                             <InputLabel id="demo-select-study-small">Select Study</InputLabel>
@@ -271,8 +298,53 @@ export default function PostLoginForm() {
                              </FormHelperText>    
                             }
                           </FormControl>
-		        		)
+		        		
             	}
+				{
+            		(roleId && roleId == 'NON_PHI' && userInfo
+            			&&  nonPhiTags &&  nonPhiTags.length >0 ) && 
+        				<FormControl sx={{ m: 1, minWidth: 120 }} >
+            			
+                            <InputLabel id="demo-select-study-small">Select Study</InputLabel>
+                            <Select
+                                labelId="demo-select-study-small"
+                                id="demo-select-study-small"
+                                value={selTagIndex}
+                                label="Select Study"
+                                onChange={handleNonPhiStudyChange}
+                                >
+                                {userInfo && nonPhiTags && nonPhiTags.map(function(rec, index){
+                                return <MenuItem value={index}>{rec.tagName}</MenuItem>;
+                                })}
+                            </Select>
+                            {selTagInfo &&
+                            <FormHelperText>
+                               <strong> {'Investigator:'} </strong>
+                               {' ' +selTagInfo.principalInvestigator} {' - '}       
+                               <strong> {'Contact:'} </strong>
+                               {' ' +selTagInfo.pointOfContact} {''}      
+                               <br/>
+                              <HtmlTooltip
+                                    title={
+                                        <Fragment>
+                                           <Typography color="inherit">{selTagInfo.tagName}</Typography>
+                                           <Typography variant="body2">
+                                                        {selTagInfo.description}
+                                            </Typography>
+                                        </Fragment>
+                                        }
+                                >
+                                    <Link underline="none" sx={{cursor:'pointer',color:'#637381'}}>
+                                   <strong> {'Description:'} </strong>
+                                   {truncate(selTagInfo.description,140)}
+                                    </Link>
+                               </HtmlTooltip>
+                             </FormHelperText>    
+                            }
+                          </FormControl>
+		        		
+				  }
+				
                 
                
         <LoadingButton
