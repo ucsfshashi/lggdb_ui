@@ -58,7 +58,7 @@ export default function SaveStudyForm({goBackList,selTagInfo}) {
            }
       };
       fetchData();
-      }, []);
+      });
 
     
   const RegisterSchema = Yup.object().shape({
