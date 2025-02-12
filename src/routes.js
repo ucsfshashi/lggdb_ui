@@ -14,6 +14,8 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import AdminApp from './pages/AdminApp';
 import SynonymApp from './pages/SynonymApp';
+import CleansingApp from './pages/CleansingApp';
+
 import UsersApp from './pages/UsersApp';
 import PatientApp from './pages/PatientApp';
 import Query from './pages/Query';
@@ -41,7 +43,9 @@ export default function Router() {
         children: [
           { path: 'app', element: <AdminApp /> },
           { path: 'users', element: <UsersApp /> },
-          { path: 'synonym', element: <SynonymApp /> }
+          { path: 'synonym', element: <SynonymApp /> },
+		  { path: 'cleansing', element: <CleansingApp /> }
+		  
         ]
     },
     {

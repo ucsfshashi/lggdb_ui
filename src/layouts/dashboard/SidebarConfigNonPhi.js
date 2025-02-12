@@ -7,26 +7,20 @@ const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 
 const sidebarConfig = [
   {
-    title: 'Studies',
-    path: '/admin/app',
+    title: 'dashboard',
+    path: '/dashboard/app',
     icon: getIcon('eva:pie-chart-2-fill')
   },
   {
-    title: 'Users',
-    path: '/admin/users',
+    title: 'Patient',
+    path: '/dashboard/patients',
     icon: getIcon('eva:people-fill')
+  },
+  {
+    title: 'Query',
+    path: '/dashboard/query',
+    icon: getIcon('eva:cloud-download-fill')
   }
-  ,
-  {
-    title: 'Synonym Repository',
-    path: '/admin/synonym',
-    icon: getIcon('eva:share-outline')
-  }	,
-  {
-    title: 'Study Overlap',
-    path: '/admin/cleansing',
-    icon: getIcon('openmoji:overlapping-white-and-black-squares')
-}
 ];
 
 export default sidebarConfig;

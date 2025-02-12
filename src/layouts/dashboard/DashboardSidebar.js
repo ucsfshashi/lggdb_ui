@@ -5,7 +5,6 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 // mocks_
-import account from '../../_mocks_/account';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
@@ -14,6 +13,8 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 //
 import sidebarConfig from './SidebarConfig';
+import SidebarConfigNonPhi from './SidebarConfigNonPhi';
+
 import {useAuth} from '../../hooks/authContext.js';
 
 
@@ -89,7 +90,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         </Link>
       </Box>
 
-      <NavSection navConfig={sidebarConfig} />
+      <NavSection navConfig={loginContext.selRole =='NON_PHI'?SidebarConfigNonPhi:sidebarConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
 
