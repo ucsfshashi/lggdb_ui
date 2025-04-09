@@ -13,17 +13,24 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import {useAuth} from '../../../hooks/authContext.js';
+import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 
-export default function TagChooser({tagInfo,value}) {
-  
-	
+
+
+
+export default function TagChooser({tagInfo,value,mrn}) {
+  	
 	const [tagMode, setTagMode] = React.useState(false);
+	const [isLoading, setIsLoading] = React.useState(false);
+
 	const [selTags, setSelTags] = React.useState(value);
 	const [initialTags, setInitialTags] = React.useState(value);
+	const {loginContext, setLoginContext} = useAuth();
+	const [error, setError] = React.useState(null);
 
-	
-	
 
 	const ITEM_HEIGHT = 48;
 	const ITEM_PADDING_TOP = 8;
@@ -38,19 +45,47 @@ export default function TagChooser({tagInfo,value}) {
 	};
 
 
-	const handleTagClick = () => {
-	      console.info('You clicked the Chip.');
-	    };
 		
 	 const handleAddTagClick= () => {
-		setTagMode(true);
+			setTagMode(true);
 	 };
 	 
 	 const handleSaveClick= () => {
-	 			setTagMode(false);
-	 		 };
+		     saveTagInfo();
+	 };
+	 
+	 
+	 
+	 const saveTagInfo = async () => {
+	 	  
+	 	  var url = loginContext.apiUrl+"/studyTag/"+mrn+"/studytags";
+		  
+		    setIsLoading(true);	
+		  
+	 		const response = await axios.post(url,JSON.stringify(selTags), 
+	                                 {headers:{
+	                                   'Content-Type' :'application/json',
+	                                   'X-Requested-With':'XMLHttpRequest', 
+	                                   'UCSFAUTH-TOKEN':loginContext.token,
+	                                   'selRole':loginContext.selRole,
+	                                 }}
+	                                 ).catch((err) => {
+	            if(err && err.response)
+	               if(err.response.status != 200) 
+	                   setError("Unable to load studies");
+	         });
+	   	  
+	   	     if(response && response.data) {
+	             setIsLoading(false);
+				 setTagMode(false);
+				 setInitialTags(selTags);
+	          } else {
+				setIsLoading(false);
+				setTagMode(false);
+	       	  }
+		}
 			 
-	 const handleCancelClick= () => {
+	    const handleCancelClick= () => {
 	 			setTagMode(false);
 				setSelTags(initialTags);
 	 	};
@@ -103,12 +138,17 @@ export default function TagChooser({tagInfo,value}) {
 					          ))}
 					     </Select>
 					  
-	  					 <IconButton  onClick={handleSaveClick} color="sucess">
-	  					      <SaveIcon color="primary"  fontSize='medium'/>
-	  				 	 </IconButton>	
-						 <IconButton  onClick={handleCancelClick} color="sucess">
- 	  					      <CancelIcon color="primary"  fontSize='medium' />
- 	  				 	 </IconButton>	
+	  					{ isLoading ? <CircularProgress sx={{marginTop:'18px'}} color="success" size={24} /> : 
+						 <Stack direction="row" spacing={0}>
+							 <IconButton  onClick={handleSaveClick} color="sucess">
+							      <SaveIcon color="primary"  fontSize='medium'/>
+		  				 	 </IconButton>	
+							 <IconButton  onClick={handleCancelClick} color="sucess">
+	 	  					      <CancelIcon color="primary"  fontSize='medium' />
+	 	  				 	 </IconButton>	
+						 </Stack> 
+						 }
+						 
 					  
 					  </Stack>
 			  	  }
