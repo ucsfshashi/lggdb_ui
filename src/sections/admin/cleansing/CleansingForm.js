@@ -30,6 +30,7 @@ export default function CleansingForm() {
   const [error, setError] = useState(null);    
   const [data, setData] = useState([]);    
   const [selSet, setSelSet] = useState([]);  
+  const [refresh, setRefresh] = useState(false);
   
   const [selMode, setSelMode] = useState(false);   
 
@@ -79,7 +80,7 @@ export default function CleansingForm() {
          
       };
       fetchData();
-      }, []);
+      }, [refresh]);
 	  
 	  const tagSummary =(lData) => {
 	  	  
@@ -135,6 +136,8 @@ export default function CleansingForm() {
 	  
 	  const returnMainPage = () => {
 		   setSelMode(false);
+		   setRefresh(!refresh);
+		  
 	  }
 	  
 	  
