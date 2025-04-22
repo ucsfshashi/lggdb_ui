@@ -36,8 +36,8 @@ export default function CleansingForm() {
   const [selection, setSelection] = React.useState([]);
   const [checked, setChecked] = React.useState([]);
   const [tagList, setTagList] = useState(null);   
-  const colors	=  ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f', '#f9a3a4', '#90ee7e',
-                    '#f48024', '#69d2e7'
+  const colors	=  ['#800000', '#9A6324', '#808000', '#469990', '#000075', '#e6194B', '#f58231', '#ffe119',
+                    '#bfef45', '#3cb44b','#4363d8','#911eb4','#911eb4','#f032e6','#a9a9a9','#ffd8b1','#ffd8b1'
                   ]	
   
 
