@@ -1,13 +1,13 @@
 import { useState,useEffect } from 'react';
 import {useNavigate } from 'react-router-dom';
-
 import TagChooser from './TagChooser.js'
-
 import MUIDataTable from "mui-datatables";
 
 import {
 	  Stack,
-	  Paper,Button
+	  Paper,Button,
+      Typography,
+      LinearProgress
 	} from '@mui/material';
 	
 	
@@ -27,13 +27,23 @@ import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Box from '@mui/material/Box';
+import {useAuth} from '../../../hooks/authContext.js';
+import axios from "axios";
+
+
 
 
 export default function CleansingSaveForm({selSet,tagInfo}) {
 	
 	  const [tagMode, setTagMode] = useState(false);   
 	  const [tagFlag, setTagFlag] = useState(null);   
+	  const [selectedData, setSelectedData] = useState(null);  
+	  
 	  const [selTags, setSelTags] = useState('');
+	  const [isLoading, setIsLoading] = useState(false);
+	  const {loginContext, setLoginContext} = useAuth();
+	  const [refresh, setRefresh] = useState(false);
+
 
 	
 	  const navigate = useNavigate();
@@ -44,7 +54,7 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 				
 		     };
 		  fetchSchema();
-	      }, []);
+	      }, [refresh]);
 		  
 		  const getOptions =() =>{
 		  		var options = {};
@@ -56,24 +66,32 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 			  	options.selectableRows = 'multiple';
 			  	//options.filterType='multiselect';
 			    options.download=false;
+			
+				
+				options.onRowsSelect=(changedRows, allRowsSelected, rowsSelected, dataIndex) => {
+				   setSelectedData(rowsSelected.map(index => selSet.elems[index]));
+				 };
+				
 				
 				options.customToolbarSelect=(selectedData, { setSelectedRows }) => {
 				      return (
 						
-						
-						
 						(tagMode ===false) ? (<Stack direction="row" spacing={2}>
-							<Button variant="outlined" onClick={handleTagClick} startIcon={<BookmarkAddIcon fontSize='large'  />}>
-							     Tag
-							</Button>
 							
-							<Button variant="outlined" onClick={handleUnTagClick} startIcon={<BookmarkRemoveIcon fontSize='large'  />}>
-								UnTag
-						 	</Button> 
+						<Button variant="outlined" onClick={handleTagClick} startIcon={<BookmarkAddIcon fontSize='large'  />}>
+						     Tag
+						</Button>
+						
+						<Button variant="outlined" onClick={handleUnTagClick} startIcon={<BookmarkRemoveIcon fontSize='large'  />}>
+							UnTag
+					 	</Button> 
+							
 						   </Stack>) :	(<Stack direction="row" spacing={2}>
 							              
 							
-							<Box sx={{ minWidth: 120 }}>
+							<Box sx={{ minWidth: 320 }}>
+							<Stack direction="row" spacing={2}>
+							<Typography variant="h6"  sx={{paddingTop:'18px'}}> {tagFlag} </Typography>
 							<FormControl fullWidth>
 							       <InputLabel id="demo-simple-select-label">Studies</InputLabel>
 							       <Select
@@ -81,7 +99,7 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 							         id="demo-simple-select"
 							         value={selTags}
 							         label="Studies"
-							         onChange={handleChange}
+							         onChange={handleTagSel}
 							       >
 						   {tagInfo.map((tag) => (
 					            <MenuItem key='{tag.tagName}' value={tag.tagName}>
@@ -90,7 +108,8 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 					          ))}
 							       </Select>
 							     </FormControl>
-								 </Box> 
+						         </Stack>		 
+							</Box> 
 											  
 		  					 <IconButton  onClick={handleSaveClick} color="sucess">
 		  					      <SaveIcon color="primary"  fontSize='medium'/>
@@ -105,30 +124,94 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 		        return options;
 		    };
 			
-			const handleChange = (event: SelectChangeEvent) => {
-				    setSelTags(event.target.innerText);
+			const handleTagSel = (event: SelectChangeEvent) => {
+				    setSelTags(event.target.value);
 			};
 			
 			
-			const handleSaveClick= () => {
-				   setTagFlag(null);
-				   setTagMode(false);
+			const handleSaveClick= async() => {
+				
+				   setIsLoading(true);
+				   let response =null;
+				   
+				   
+				   selectedData && selectedData.forEach(obj=>{
+					
+				
+					let mrn= obj.name;
+					let tags = obj.sets;
+					
+					if(tagFlag =='Tag') {
+						
+						if(obj.sets.includes(selTags) == false) {
+							tags.push(selTags);	
+							response =  postTagInfo(mrn,tags);				
+						}
+						
+						
+					} else if(tagFlag =='UnTag'){
+						
+						if(obj.sets.includes(selTags) == true) {
+							tags.splice(tags.indexOf(selTags), 1);
+							response =  postTagInfo(mrn,tags);			
+						}
+						
+					}
+				   });
+				   
+				   if(response != null) {
+						setTagFlag(null);
+						setTagMode(false); 
+						setIsLoading(false);
+						setRefresh(!refresh);
+				   }
 								 	
 			 };
+			 
+			 
+			 
+			 const postTagInfo = async (mrn,tags) => {
+			  	  
+			  	  var url = loginContext.apiUrl+"/studyTag/"+mrn+"/studytags";
+			 	  
+			 	    setIsLoading(true);	
+			 	  
+			  		const response = await axios.post(url,JSON.stringify(tags), 
+			                                  {headers:{
+			                                    'Content-Type' :'application/json',
+			                                    'X-Requested-With':'XMLHttpRequest', 
+			                                    'UCSFAUTH-TOKEN':loginContext.token,
+			                                    'selRole':loginContext.selRole,
+			                                  }}
+			                                  ).catch((err) => {
+			             if(err && err.response)
+			                if(err.response.status != 200)  {
+								
+							}
+			                    
+			          });
+					  
+					return response;  
+			   }
+			 
 					 
 			 const handleCancelClick= () => {
 				     setTagFlag(null);
 					 setTagMode(false);
+					
+
 			 	};
 
 			const handleTagClick = () => {
-			        setTagFlag('tag');
+			        setTagFlag('Tag');
 					setTagMode(true);
+					
 		    };
 				
 			const handleUnTagClick = () => {
-				setTagFlag('unTag');
-				setTagMode(false);
+				setTagFlag('UnTag');
+				setTagMode(true);
+				
 			}	
 			
 			const getColumns = () => {
@@ -183,7 +266,14 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 	 
 	 
 	  return (
-		<Paper>	  
+		<Paper>
+		{ isLoading === true && 
+				   			   
+			<Box sx={{ width: '100%' }}>
+			     <LinearProgress />
+			   </Box>
+		}
+						  
 		<MUIDataTable
             title={"Patients  "+selSet.name}
             options={getOptions()}

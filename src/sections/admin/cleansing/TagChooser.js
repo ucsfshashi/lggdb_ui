@@ -79,6 +79,7 @@ export default function TagChooser({tagInfo,value,mrn}) {
 	             setIsLoading(false);
 				 setTagMode(false);
 				 setInitialTags(selTags);
+				 
 	          } else {
 				setIsLoading(false);
 				setTagMode(false);
@@ -131,7 +132,7 @@ export default function TagChooser({tagInfo,value,mrn}) {
 					          MenuProps={MenuProps}
 					        >
 					          {tagInfo.map((tag) => (
-					            <MenuItem key={tag.tagName} value={tag.tagName}>
+					            <MenuItem key='{tag.tagName}' value={tag.tagName}>
 					              <Checkbox checked={selTags.includes(tag.tagName)} />
 					              <ListItemText primary={tag.tagName} />
 					            </MenuItem>

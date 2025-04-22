@@ -44,16 +44,15 @@ export default function CleansingForm() {
     useEffect(() => {
       const fetchData = async () => {
 		
-		  var lData = localStorage.getItem("upset_data");
+		  /*var lData = localStorage.getItem("upset_data");
 		  
-		  if(lData == null)  {
+		  if(lData == null)  {*/
 			
 			  setLoading(true);
 		
 	    	  var url = loginContext.apiUrl+"/studyTag/summary";
-	    	 
-	    	 
-	    	  const response = await axios.get(url, 
+	    	
+			    const response = await axios.get(url, 
 	                                  {headers:{
 	                                    'Content-Type' :'applicaiton/json',
 	                                    'X-Requested-With':'XMLHttpRequest', 
@@ -73,10 +72,10 @@ export default function CleansingForm() {
 				  setLoading(false);
 		       }
 		   
-		   } else {
+		  /* } else {
 			setData(JSON.parse(lData));
 			tagSummary(JSON.parse(lData));
-		   }
+		   }*/
          
       };
       fetchData();
