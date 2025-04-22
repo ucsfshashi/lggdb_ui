@@ -31,6 +31,7 @@ export default function CleansingForm() {
   const [data, setData] = useState([]);    
   const [selSet, setSelSet] = useState([]);  
   const [refresh, setRefresh] = useState(false);
+  const [edited, setEdited] = useState(false);
   
   const [selMode, setSelMode] = useState(false);   
 
@@ -135,10 +136,20 @@ export default function CleansingForm() {
 	  }	
 	  
 	  const returnMainPage = () => {
+		   
 		   setSelMode(false);
-		   setRefresh(!refresh);
+		   
+		   if(edited == true) {
+			 setRefresh(!refresh);
+			 setEdited(false);
+		   } 
+		   
 		  
-	  }
+	  };
+	  
+	  const markEdited =() => {
+		setEdited(true);
+	  };
 	  
 	  
 	  const onClickHandler = (set) => {
@@ -235,7 +246,7 @@ export default function CleansingForm() {
 		          </IconButton>    
 		        </Stack>
 		        </Box>
-				<CleansingSaveForm selSet={selSet}  tagInfo={tagList} />
+				<CleansingSaveForm selSet={selSet}  tagInfo={tagList} markEdited={markEdited} />
 		    </Stack>		
 			
 		 }

@@ -33,7 +33,7 @@ import axios from "axios";
 
 
 
-export default function CleansingSaveForm({selSet,tagInfo}) {
+export default function CleansingSaveForm({selSet,tagInfo,markEdited}) {
 	
 	  const [tagMode, setTagMode] = useState(false);   
 	  const [tagFlag, setTagFlag] = useState(null);   
@@ -164,6 +164,7 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 						setTagMode(false); 
 						setIsLoading(false);
 						setRefresh(!refresh);
+						markEdited();
 				   }
 								 	
 			 };
@@ -256,7 +257,7 @@ export default function CleansingSaveForm({selSet,tagInfo}) {
 							
 							options.customBodyRender = (value, tableMeta, updateValue) => {
 								
-								return <TagChooser mrn={tableMeta.rowData[1]} value={value} tagInfo={tagInfo} />							
+								return <TagChooser mrn={tableMeta.rowData[1]} value={value} tagInfo={tagInfo} markEdited={markEdited} />							
 															
 							};
 					columns[2].options = options;			

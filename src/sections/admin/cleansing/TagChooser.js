@@ -21,7 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 
-export default function TagChooser({tagInfo,value,mrn}) {
+export default function TagChooser({tagInfo,value,mrn,markEdited}) {
   	
 	const [tagMode, setTagMode] = React.useState(false);
 	const [isLoading, setIsLoading] = React.useState(false);
@@ -84,6 +84,7 @@ export default function TagChooser({tagInfo,value,mrn}) {
 				setIsLoading(false);
 				setTagMode(false);
 	       	  }
+			  markEdited();
 		}
 			 
 	    const handleCancelClick= () => {
