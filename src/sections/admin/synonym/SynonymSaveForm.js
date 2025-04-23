@@ -72,7 +72,7 @@ export default function SynonymSaveForm() {
     	  if(response && response.data) {
               setData(response.data);
               setRepoData(getKeyData(response.data.keys,fieldName))
-              setIsLoading(false);
+             // setIsLoading(false);
            } else {
         	   setRepoData([]);
            }
@@ -100,7 +100,7 @@ export default function SynonymSaveForm() {
     	  
     	  if(response && response.data) {
               fetchRepoInfo(selVal.id,selFldId.id);
-              setIsLoading(false);
+             // setIsLoading(false);
            } else {
         	   setRepoData([]);
            }

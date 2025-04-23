@@ -20,6 +20,7 @@ import UsersApp from './pages/UsersApp';
 import PatientApp from './pages/PatientApp';
 import Query from './pages/Query';
 import Upload from './pages/Upload';
+import Search from './pages/Search';
 import Patients from './pages/Patients';
 import NotFound from './pages/Page404';
 
@@ -34,7 +35,8 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'patients', element: <Patients /> },
         { path: 'query', element: <Query /> },
-        { path: 'upload', element: <Upload /> }
+        { path: 'upload', element: <Upload /> },
+		{ path: 'search', element: <Search /> }
       ]
     },
     {

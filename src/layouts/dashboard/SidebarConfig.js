@@ -25,6 +25,11 @@ const sidebarConfig = [
     title: 'Upload',
     path: '/dashboard/upload',
     icon: getIcon('eva:cloud-upload-fill')
+  }	,
+  {
+    title: 'Search',
+    path: '/dashboard/search',
+    icon: getIcon('eva:search-outline')
   }
 ];
 
