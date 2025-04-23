@@ -9,6 +9,8 @@ import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import NotificationsPopover from './NotificationsPopover';
+import {useAuth} from '../../hooks/authContext.js';
+
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +43,9 @@ DashboardNavbar.propTypes = {
 };
 
 export default function DashboardNavbar({ onOpenSidebar }) {
+
+	const {loginContext} = useAuth();	
+	
   return (
     <RootStyle>
       <ToolbarStyle>
@@ -51,7 +56,11 @@ export default function DashboardNavbar({ onOpenSidebar }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
-        <Searchbar />
+        
+		{loginContext.selRole !='NON_PHI'  && <Searchbar /> }
+		
+		
+		
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
