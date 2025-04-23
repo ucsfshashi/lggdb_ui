@@ -18,6 +18,12 @@ import IconButton from '@mui/material/IconButton';
 import ResetTvIcon from '@mui/icons-material/ResetTv';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+
+
+import MyTagChooser from './MyTagChooser.js'
+
+
+
  
  
 
@@ -26,10 +32,10 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function Search() {
   	
 	
-  const [filterTxt, setFilterTxt] = useState([]);
+  const [filterTxt, setFilterTxt] = useState(null);
   const {loginContext} = useAuth();
   const [loading, setLoading] = useState(false);  
-  const [data, setData] = useState(null);  
+  const [data, setData] = useState([]);  
   const [error, setError] = useState(null);  
   
  
@@ -46,30 +52,39 @@ export default function Search() {
 		
 		
 	const handleButtonClick = async() => {
-	   		console.log(filterTxt);
-			setLoading(true);
+	   		
+			
+		var mrns =  filterTxt ? filterTxt.split(',') : [];
+		 
+		  if(mrns && mrns.length >0) {
 			
 			
-	      var url = loginContext.apiUrl+"/studyTag/summary";
-	    	
-		    const response = await axios.get(url, 
-                                  {headers:{
-                                    'Content-Type' :'applicaiton/json',
-                                    'X-Requested-With':'XMLHttpRequest', 
-                                    'UCSFAUTH-TOKEN':loginContext.token,
-                                    'selRole':loginContext.selRole,
-                                  }}
-                                  ).catch((err) => {
-             if(err && err.response)
-                if(err.response.status != 200) 
-                    setError("Unable to load studies");
-          });
-    	  
-    	  if(response && response.data) {
-			  //localStorage.setItem("upset_data", JSON.stringify(response.data));
-              setData(response.data);
-			  setLoading(false);
-	       }
+		      setLoading(true);
+					
+					
+			  var url = loginContext.apiUrl+"/studyTag/filter";
+				
+					  
+			  const response = await axios.post(url,JSON.stringify(mrns), 
+	                                  {headers:{
+										'Accept': 'application/json',
+	                                    'Content-Type' :'application/json',
+	                                    'X-Requested-With':'XMLHttpRequest', 
+	                                    'UCSFAUTH-TOKEN':loginContext.token,
+	                                    'selRole':loginContext.selRole,
+	                                  }}
+	                                  ).catch((err) => {
+	             if(err && err.response)
+	                if(err.response.status != 200) 
+	                    setError("Unable to load studies");
+	          });
+	    	  
+	    	  if(response && response.data) {
+				  //localStorage.setItem("upset_data", JSON.stringify(response.data));
+	              setData(response.data.upsertInfo);
+				  setLoading(false);
+		       }
+		   }
 			
 			
 	  };
@@ -79,6 +94,68 @@ export default function Search() {
 	 const handleInputChange = (event) => {
 	     setFilterTxt(event.target.value);
 	   };  
+	   
+	   
+	   
+	   const getOptions =() =>{
+	   	  		var options = {};
+	   	  	
+	   		  	options.fixedHeader = true;
+	   		  	options.print =false;
+	   		  	options.pagination = false;
+	   		  	options.responsive='scroll';
+				options.selectableRows=false;
+	   		  	//options.selectableRows = 'multiple';
+	   		  	//options.filterType='multiselect';
+	   		    options.download=false;
+	   		
+	   			
+	   	        return options;
+	   	    };
+	   
+	   
+	   const getColumns = () => {
+	   				var columns = [];
+	   				var options = {};
+	   				
+	   				
+	   				
+	   				columns.push({
+	   				    	   name: 'name',
+	   				    	   label: 'MRN',
+	   				    	   options: {
+	   				    		   filter: true,
+	   				    		   sort: true
+	   				    		  }
+	   				    	});
+	   					 
+
+	   				 options.filter=false;
+	   				 options.viewColumns=false;
+	   				 columns[0].options = options;
+	   				 
+	   				 
+	   				 columns.push({
+	    				    	   name: 'sets',
+	    				    	   label: 'Studies',
+	    				    	   options: {
+	    				    		   filter: true,
+	    				    		   sort: true
+	    				    		  }
+	    				    	});
+	   						
+	   						
+	   						options = {};
+	   							
+	   							options.customBodyRender = (value, tableMeta, updateValue) => {
+	   								
+	   								return <MyTagChooser mrn={tableMeta.rowData[1]} value={value}   />							
+	   															
+	   							};
+	   					columns[1].options = options;			
+	   			
+	   				 return columns;
+	   			};
  
     
   return (
@@ -92,9 +169,8 @@ export default function Search() {
           </IconButton>    
         </Stack>
         </Box>
-		<Stack alignItems="center" spacing={0.5}>  
+		
 			<Paper
-			      component="form"
 			      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '1200' }}
 			    >
 		     <InputBase
@@ -118,8 +194,17 @@ export default function Search() {
 		 			<Box sx={{ width: '100%' }}>
 		 			     <LinearProgress />
 		 			   </Box>
-		 		    }
-		</Stack>
+		 		}
+								    		
+					<MUIDataTable
+			            title={"Patients  "}
+						sx={{ marginTop: '25px', width: '1200' }}
+			            options={getOptions()}
+			            data={data}
+			            columns={getColumns()} 
+					 />	
+					
+		
       </Container>            
     </Page>
   );
